@@ -1,4 +1,4 @@
-package phil.plugin;
+package edu.whimc.sciencetools;
 
 import java.text.DecimalFormat;
 
