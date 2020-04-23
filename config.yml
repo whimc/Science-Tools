@@ -1,0 +1,21 @@
+# -- WHIMC Science Tools --
+# You shouldn't have to edit this file.
+# Everything in here can be editted in game
+conversions:
+  feet:
+    expression: "{VAL} * 3.28084"
+    unit: "ft"
+  fahrenheit:
+    expression: "({VAL} * 9.0 / 5.0) + 32.0"
+    unit: "°F"
+tools:
+  ALTITUDE:
+    default-expression: "max(0, {Y})"
+    unit: "m"
+    conversions:
+      - feet
+    worlds:
+      world_nether: "min(0, {Y} - 128)"
+  OXYGEN:
+    default-expression: "30 + rand(-0.5, 0.5)"
+    unit: "%"

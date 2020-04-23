@@ -1,18 +1,18 @@
 name: ScienceTools
 version: 1.0
-main: phil.plugin.ScienceTools
+main: edu.whimc.sciencetools.ScienceTools
 author: Jack Henhapl
 description: Science Tools
 commands:
-  speed-up:
-    description: "speed up world time"
-  temperature:
-    description: "Temperature of the player's location"
-  pressure:
-    description: "Air pressure of the player's location"
-  oxygen:
-    description: "Oxygen level in the air of the player's location"
-  wind:
-    description: "Wind speed of the player's location"
   altitude:
     description: "Player's altitude"
+  oxygen:
+    description: "Oxygen level in the air of the player's location"
+  pressure:
+    description: "Air pressure of the player's location"
+  temperature:
+    description: "Temperature of the player's location"
+  wind:
+    description: "Wind speed of the player's location"
+  sciencetools:
+    description: Manage the ScienceTools plugin
