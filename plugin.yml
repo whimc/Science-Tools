@@ -3,6 +3,7 @@ version: 1.0
 main: edu.whimc.sciencetools.ScienceTools
 author: Jack Henhapl
 description: Science Tools
+softdepend: [WorldEdit, WorldGuard]
 commands:
   altitude:
     description: "Player's altitude"

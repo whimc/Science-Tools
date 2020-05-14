@@ -1,36 +1,72 @@
 package edu.whimc.sciencetools.commands;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.commands.subcommands.AbstractSubCommand;
+import edu.whimc.sciencetools.commands.subcommands.JSInterpreter;
+import edu.whimc.sciencetools.commands.subcommands.Reload;
+import edu.whimc.sciencetools.commands.subcommands.conversions.ConversionsBase;
+import edu.whimc.sciencetools.commands.subcommands.tools.ToolsBase;
 import edu.whimc.sciencetools.utils.Utils;
 
 public class BaseToolCommand implements CommandExecutor {
 
-	private static enum SubCommand {
-		JS("js - Run interpreted JavaScript"),
-		TOOLS("tools - Manage the science tools"),
-		CONVERSIONS("conversions - Manage unit conversions"),
-		RELOAD("reload - Reload the plugin");
+	public static enum SubCommand {
+		JS("Run interpreted JavaScript"),
+		TOOLS("Manage the science tools"),
+		CONVERSIONS("Manage unit conversions"),
+		RELOAD("Reload the plugin's config");
 		
-		private String usage;
+		private String description;
 		
 		private SubCommand(String usage) {
-			this.usage = usage;
+			this.description = usage;
+		}
+		
+		public String fullUsage() {
+			return "&e&o/sciencetools " + this.name().toLowerCase() + " &7- " + description;
 		}
 	}
 	
-	private ScienceTools plugin;
+	public static enum Permission {
+		ADMIN("admin"),
+		USER("user");
+		
+		private String perm;
+		
+		private Permission(String perm) {
+			this.perm = perm;
+		}
+		
+		@Override
+		public String toString() {
+			return "sciencetools." + perm;
+		}
+		
+	}
+	
+	private Map<SubCommand, AbstractSubCommand> subCommands;
 	
 	public BaseToolCommand(ScienceTools plugin) {
-		this.plugin = plugin;
+		subCommands = new HashMap<>();
+		subCommands.put(SubCommand.JS, new JSInterpreter(plugin));
+		subCommands.put(SubCommand.TOOLS, new ToolsBase(plugin));
+		subCommands.put(SubCommand.CONVERSIONS, new ConversionsBase(plugin));
+		subCommands.put(SubCommand.RELOAD, new Reload());
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		if (!sender.hasPermission(Permission.ADMIN.toString())) {
+			Utils.msg(sender, "&cYou are missing the permission \"&4" + Permission.ADMIN + "&c\" to use this command!");
+		}
 		
 		if (args.length == 0) {
 			sendSubCommands(sender);
@@ -43,48 +79,13 @@ public class BaseToolCommand implements CommandExecutor {
 			return false;
 		}
 		
-		if (subCmd == SubCommand.JS) {
-			if (args.length == 1) {
-				Utils.msg(sender, "/sciencetools js [expr]");
-				Utils.msg(sender, "Custom syntax:");
-				Utils.msg(sender, " {X}, {Y}, {Z}, rand(min, max), randInt(min, max), min(a, b), max(a, b)");
-				return false;
-			}
-			
-			StringBuilder builder = new StringBuilder();
-			for (int ind = 1; ind < args.length; ind++) {
-				builder.append(args[ind]).append(" ");
-			}
-			
-			String exp = builder.toString().trim();
-			if (sender instanceof Player) {
-				exp = plugin.getToolManager().fillIn(builder.toString().trim(), (Player) sender);
-			}
-			Object res = Utils.executeExpressionDebug(sender, exp, true);
-			
-			if (res == null) {
-				return false;
-			}
-			
-			Utils.msg(sender, res.toString());
-			
-			return true;
-		}
-		
-		if (subCmd == SubCommand.RELOAD) {
-			Utils.setDebugReceiver(sender);
-			plugin.reloadScienceTools();
-			Utils.setDebugReceiver(null);
-			Utils.msg(sender, "&aReloaded config!");
-		}
-		
-		return false;
+		return subCommands.get(subCmd).execute(sender, args);
 	}
 	
 	
-	private void sendSubCommands(CommandSender sender) {
+	public static void sendSubCommands(CommandSender sender) {
 		for (SubCommand subCmd : SubCommand.values()) {
-			Utils.msg(sender, "/sciencetools " + subCmd.usage);
+			Utils.msg(sender, subCmd.fullUsage());
 		}
 	}
 	

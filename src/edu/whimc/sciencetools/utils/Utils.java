@@ -4,6 +4,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -24,26 +25,40 @@ public class Utils {
 	}
 	
 	public static enum Placeholder {
-		VALUE("{VAL}"),
-		X_POS("{X}"),
-		Y_POS("{Y}"),
-		Z_POS("{Z}"),
-		ALTITUDE("{ALTITUDE}"),
-		OXYGEN("{OXYGEN}"),
-		PRESSURE("{PRESSURE}"),
-		TEMPERATURE("{TEMPERATURE}"),
-		WIND("{WIND}");
+		VALUE("{VAL}", "Value to convert"),
+		X_POS("{X}", "Current X value"),
+		Y_POS("{Y}", "Current Y value"),
+		Z_POS("{Z}", "Current Z value"),
+		RAND("rand(min, max)", "Random decimal between 'min' and 'max' (inclusive)"),
+		RAND_INT("randInt(min, max)", "Random integer between 'min' and 'max' (inclusive"),
+		MIN("min(a, b)", "The minimum between 'a' and 'b'"),
+		MAX("max(a, b)", "The maximum between 'a' and 'b'"),
+		ALTITUDE("{ALTITUDE}", "Value from /altitude"),
+		OXYGEN("{OXYGEN}", "Value from /oxygen"),
+		PRESSURE("{PRESSURE}", "Value from /pressure"),
+		TEMPERATURE("{TEMPERATURE}", "Value from /temperature"),
+		WIND("{WIND}", "Value from /wind");
 		
 		private String key;
+		private String usage;
 		
-		private Placeholder(String key) {
+		private Placeholder(String key, String usage) {
 			this.key = key;
+			this.usage = usage;
 		}
 		
 		@Override
 		public String toString() {
 			return key;
 		}
+		
+		public String fullUsage() {
+			return "&f\"&e&o" + key + "&f\" &7- " + usage;
+		}
+	}
+	
+	public static boolean worldGuardEnabled() {
+		return Bukkit.getPluginManager().isPluginEnabled("WorldGuard");
 	}
 	
 	public static String trim2Deci(double val) {

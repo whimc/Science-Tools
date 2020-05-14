@@ -31,16 +31,14 @@ public class ToolManager {
 		}
 	}
 	
-	private ScienceTools plugin;
 	private Map<ToolType, ScienceTool> tools;
 	
-	private ToolManager(ScienceTools plugin) {
-		this.plugin = plugin;
+	private ToolManager() {
 		this.tools = new HashMap<>();
 	}
 	
 	public static ToolManager loadTools(ScienceTools plugin, ConversionManager convManager) {
-		ToolManager manager = new ToolManager(plugin);
+		ToolManager manager = new ToolManager();
 		
 		Utils.log(plugin, ChatColor.YELLOW + "Loading Science Tools from config");
 		
@@ -84,7 +82,18 @@ public class ToolManager {
 				}
 			}
 			
-			ScienceTool tool = new ScienceTool(manager, type, defaultExpr, unit, worldExprs, convs);
+			Map<String, String> regionExprs = new HashMap<>();
+			if (plugin.getConfig().contains("tools." + type + ".regions")) {
+				Utils.log(plugin, ChatColor.AQUA + "     - Loading region-specific expressions");
+				for (String region : plugin.getConfig().getConfigurationSection("tools." + type + ".regions").getKeys(false)) {
+					String regionExpr = plugin.getConfig().getString("tools." + type + ".regions." + region);
+					
+					regionExprs.put(region, regionExpr);
+					Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.WHITE + region + " \"" + regionExpr + "\"");
+				}
+			}
+			
+			ScienceTool tool = new ScienceTool(manager, type, defaultExpr, unit, worldExprs, regionExprs, convs);
 			manager.tools.put(type, tool);
 		}
 		
