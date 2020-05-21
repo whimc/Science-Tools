@@ -18,19 +18,36 @@ import edu.whimc.sciencetools.utils.Utils;
 public class BaseToolCommand implements CommandExecutor {
 
 	public static enum SubCommand {
-		JS("Run interpreted JavaScript"),
-		TOOLS("Manage the science tools"),
-		CONVERSIONS("Manage unit conversions"),
-		RELOAD("Reload the plugin's config");
+		JS("js", "Run interpreted JavaScript"),
+		TOOL("tool", "Manage the science tools"),
+		CONVERSION("conversion", "Manage unit conversions"),
+		RELOAD("reload", "Reload the plugin's config");
 		
+		private String command;
 		private String description;
 		
-		private SubCommand(String usage) {
-			this.description = usage;
+		private SubCommand(String command, String description) {
+			this.command = command;
+			this.description = description;
 		}
 		
 		public String fullUsage() {
-			return "&e&o/sciencetools " + this.name().toLowerCase() + " &7- " + description;
+			return this + " &7- " + description;
+		}
+		
+		@Override
+		public String toString() {
+			return "&e&o/sciencetools " + this.command; 
+		}
+		
+		public static SubCommand match(String str) {
+			for (SubCommand subCmd : SubCommand.values()) {
+				if (subCmd.command.equalsIgnoreCase(str)) {
+					return subCmd;
+				}
+			}
+			
+			return null;
 		}
 	}
 	
@@ -56,9 +73,9 @@ public class BaseToolCommand implements CommandExecutor {
 	public BaseToolCommand(ScienceTools plugin) {
 		subCommands = new HashMap<>();
 		subCommands.put(SubCommand.JS, new JSInterpreter(plugin));
-		subCommands.put(SubCommand.TOOLS, new ToolsBase(plugin));
-		subCommands.put(SubCommand.CONVERSIONS, new ConversionsBase(plugin));
-		subCommands.put(SubCommand.RELOAD, new Reload());
+		subCommands.put(SubCommand.TOOL, new ToolsBase(plugin));
+		subCommands.put(SubCommand.CONVERSION, new ConversionsBase(plugin));
+		subCommands.put(SubCommand.RELOAD, new Reload(plugin));
 	}
 	
 	@Override
@@ -73,7 +90,7 @@ public class BaseToolCommand implements CommandExecutor {
 			return false;
 		}
 		
-		SubCommand subCmd = SubCommand.valueOf(args[0].toUpperCase());
+		SubCommand subCmd = SubCommand.match(args[0]);
 		if (subCmd == null) {
 			sendSubCommands(sender);
 			return false;
