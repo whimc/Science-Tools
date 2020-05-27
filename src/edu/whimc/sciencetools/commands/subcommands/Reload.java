@@ -16,7 +16,7 @@ public class Reload extends AbstractSubCommand {
 		Utils.setDebugReceiver(sender);
 		plugin.reloadScienceTools();
 		Utils.setDebugReceiver(null);
-		Utils.msg(sender, "&aoScience Tools config reload!");
+		Utils.msg(sender, "&a&oScience Tools config reload!");
 		return false;
 	}
 
