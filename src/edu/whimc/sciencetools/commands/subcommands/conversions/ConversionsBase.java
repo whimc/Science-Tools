@@ -3,18 +3,19 @@ package edu.whimc.sciencetools.commands.subcommands.conversions;
 import org.bukkit.command.CommandSender;
 
 import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
 import edu.whimc.sciencetools.commands.subcommands.AbstractSubCommand;
+import edu.whimc.sciencetools.utils.Utils;
 
 public class ConversionsBase extends AbstractSubCommand {
 
-	public ConversionsBase(ScienceTools plugin) {
-		super(plugin);
-		// TODO Auto-generated constructor stub
+	public ConversionsBase(ScienceTools plugin, SubCommand subCmd) {
+		super(plugin, subCmd);
 	}
 
 	@Override
-	public boolean execute(CommandSender sender, String[] args) {
-		// TODO Auto-generated method stub
+	public boolean routine(CommandSender sender, String[] args) {
+		Utils.msg(sender, "This command is unimplemented!");
 		return false;
 	}
 
