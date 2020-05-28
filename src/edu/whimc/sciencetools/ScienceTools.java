@@ -17,8 +17,9 @@ public class ScienceTools extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		getCommand("sciencetools").setExecutor(new BaseToolCommand(this));
+
 		saveDefaultConfig();
-		getConfig().options().copyDefaults(true);
+		getConfig().options().copyDefaults(false);
 		
 		convManager = ConversionManager.loadConversions(this);
 		toolManager = ToolManager.loadTools(this, convManager);

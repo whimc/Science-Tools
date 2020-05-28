@@ -36,10 +36,12 @@ public class Validate extends AbstractSubCommand implements Listener {
 		
 		private int taskId;
 		private double expected;
+		private ToolType type;
 		
-		public Validation(int taskId, double expected) {
+		public Validation(int taskId, double expected, ToolType type) {
 			this.taskId = taskId;
 			this.expected = expected;
+			this.type = type;
 		}
 		
 		public int getTaskId() {
@@ -48,6 +50,10 @@ public class Validate extends AbstractSubCommand implements Listener {
 		
 		public double getExpected() {
 			return expected;
+		}
+		
+		public ToolType getType() {
+			return type;
 		}
 	}
 	
@@ -84,13 +90,12 @@ public class Validate extends AbstractSubCommand implements Listener {
 		
 		
 		int id = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-			Utils.msg(player, "&c&lYou failed to tell us a value for " + type + "! Please try again!");
+			doConfigTasks(player, "timeout", type, null);
 			validationTasks.remove(player.getUniqueId());
-		}, 20 * 30);
+		}, 20 * plugin.getConfig().getInt("validation.timeout"));
 		
-		validationTasks.put(player.getUniqueId(), new Validation(id, tool.getData(player)));
-		
-		Utils.msg(player, "&aWhat value did you measure for &f&l" + type + "&a?", "&7&oPlease type your answer in chat!");
+		validationTasks.put(player.getUniqueId(), new Validation(id, tool.getData(player), type));
+		doConfigTasks(player, "prompt", type, null);
 		
 		return false;
 	}
@@ -107,26 +112,52 @@ public class Validate extends AbstractSubCommand implements Listener {
 		
 		Validation validation = validationTasks.remove(player.getUniqueId());
 		Bukkit.getScheduler().cancelTask(validation.getTaskId());
-
+		
+		ToolType type = validation.getType();
 		
 		Pattern pat = Pattern.compile("(\\d+(\\.\\d+)?)");
 		Matcher matcher = pat.matcher(event.getMessage().replace(",", ""));
 
 		if (!matcher.find()) {
-			Utils.msg(player, "&cYour message did not contain any numbers!");
+			syncDoConfigTasks(player, "no-number", type, null);
 			return;
 		}
 		
 		String match = matcher.group();
-		Utils.msg(player, "We found the number '&7" + match + "&f' in your message");
+		
+		syncDoConfigTasks(player, "found-number", type, Double.valueOf(match));
+		
 		double number = Double.parseDouble(match);
 		
-		if (Math.abs(number - validation.getExpected()) < 1) {
-			Utils.msg(player, "&a&lGood job! &2" + Utils.trim2Deci(number) + " &amatches our calculations!");
+		if (Math.abs(number - validation.getExpected()) < plugin.getConfig().getDouble("validation.tolerance")) {
+			syncDoConfigTasks(player, "success", type, number);
 		} else {
-			Utils.msg(player, "&c&lTry again! &4" + Utils.trim2Deci(number) + " &cis not quite close enough.");
+			syncDoConfigTasks(player, "failure", type, number);
 		}
 		
+	}
+	 
+	private void syncDoConfigTasks(Player player, String path, ToolType type, Double value) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> doConfigTasks(player, path, type, value));
+	}
+	
+	private void doConfigTasks(Player player, String path, ToolType type, Double value) {
+		String typeStr = type == null ? "" : type.toString();
+		String valueStr = value == null ? "" : value.toString();
+		
+		doConfigTasks(player, path + ".all", typeStr, valueStr);
+		doConfigTasks(player, path + "." + type.name(), typeStr, valueStr);
+	}
+	
+	private void doConfigTasks(Player player, String path, String type, String value) {
+		for (String msg : plugin.getConfig().getStringList("validation.messages." + path)) {
+			Utils.msg(player, msg.replace("{TOOL}", type).replace("{VAL}", value));
+		}
+		
+		for (String cmd : plugin.getConfig().getStringList("validation.commands." + path)) {
+			Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(),
+					cmd.replace("{TOOL}", type).replace("{VAL}", value).replace("{PLAYER}", player.getName()));
+		}
 	}
 
 }

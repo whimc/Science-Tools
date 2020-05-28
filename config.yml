@@ -21,3 +21,40 @@ tools:
     unit: "%"
     regions:
       enclosure: "rand(0, 0.1)"
+validation:
+  tolerance: 1.0
+  timeout: 30
+  messages:
+    prompt:
+      all:
+        - '&aWhat value did you measure for &f&l{TOOL}&a?'
+        - '&7&oPlease type your answer in chat!'
+    timeout:
+      all:
+        - '&c&lYou failed to tell us a value for {TOOL}! Please try again'
+    no-number:
+      all:
+        - '&cYour message did not contain any numbers!'
+    found-number:
+      all:
+        - 'We found the number ''&7{VAL}&f'' in your message'
+    success:
+      all:
+        - '&a&lGood job!'
+        - '&2{VAL} &amatches our calculations!'
+    failure:
+      all:
+        - '&c&lTry again!'
+        - '&4{VAL} &cis not quite close enough.'
+  commands:
+    prompt:
+      all:
+    timeout:
+      all:
+    no-number:
+      all:
+    found-number:
+      all:
+    success:
+      all:
+      - 'title {PLAYER} title {"text":"Good job!"}'
