@@ -57,6 +57,14 @@ public class Utils {
 		}
 	}
 	
+	public static Double parseDouble(String str) {
+		try {
+			return Double.valueOf(str.replace(",", ""));
+		} catch (NumberFormatException exc) {
+			return null;
+		}
+	}
+	
 	public static boolean worldGuardEnabled() {
 		return Bukkit.getPluginManager().isPluginEnabled("WorldGuard");
 	}
@@ -111,7 +119,9 @@ public class Utils {
 		return Double.valueOf(((Number) res).doubleValue());
 	}
 	
-	public static void msg(CommandSender sender, String str) {
-		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
+	public static void msg(CommandSender sender, String... strs) {
+		for (String str : strs) {
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
+		}
 	}
 }

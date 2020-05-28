@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import com.sun.xml.internal.ws.util.StringUtils;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.utils.Utils.Placeholder;
@@ -29,6 +32,20 @@ public class ToolManager {
 		public Placeholder getPlaceholder() {
 			return placeholder;
 		}
+		
+		@Override
+		public String toString() {
+			return StringUtils.capitalize(this.name().toLowerCase());
+		}
+		
+		public static ToolType match(String str) {
+			for (ToolType type : ToolType.values()) {
+				if (type.name().equalsIgnoreCase(str)) {
+					return type;
+				}
+			}
+			return null;
+		}
 	}
 	
 	private Map<ToolType, ScienceTool> tools;
@@ -43,22 +60,23 @@ public class ToolManager {
 		Utils.log(plugin, ChatColor.YELLOW + "Loading Science Tools from config");
 		
 		for (ToolType type : ToolType.values()) {
-			if (!plugin.getConfig().contains("tools." + type)) {
-				Utils.log(plugin, ChatColor.RED + " - No tool entry found for " + type + "!");
+			String name = type.name();
+			if (!plugin.getConfig().contains("tools." + name)) {
+				Utils.log(plugin, ChatColor.RED + " - No tool entry found for " + name + "!");
 				continue;
 			}
 			
-			Utils.log(plugin, ChatColor.AQUA + " - Loading " + ChatColor.WHITE + type);
-			String defaultExpr = plugin.getConfig().getString("tools." + type + ".default-expression");
-			String unit = plugin.getConfig().getString("tools." + type + ".unit");
+			Utils.log(plugin, ChatColor.AQUA + " - Loading " + ChatColor.WHITE + name);
+			String defaultExpr = plugin.getConfig().getString("tools." + name + ".default-expression");
+			String unit = plugin.getConfig().getString("tools." + name + ".unit");
 			
 			Utils.log(plugin, ChatColor.AQUA + "   - Default Expression: \"" + ChatColor.WHITE + defaultExpr + ChatColor.AQUA + "\"");
 			Utils.log(plugin, ChatColor.AQUA + "   - Unit: \"" + ChatColor.WHITE + unit + ChatColor.AQUA + "\"");
 			
 			List<Conversion> convs = new ArrayList<>();
-			if (plugin.getConfig().contains("tools." + type + ".conversions")) {
+			if (plugin.getConfig().contains("tools." + name + ".conversions")) {
 				Utils.log(plugin, ChatColor.AQUA + "     - Loading conversions");
-				for (String convName : plugin.getConfig().getStringList("tools." + type + ".conversions")) {
+				for (String convName : plugin.getConfig().getStringList("tools." + name + ".conversions")) {
 					Conversion convToAdd = convManager.getConversion(convName); 
 					
 					if (convToAdd == null) {
@@ -72,10 +90,10 @@ public class ToolManager {
 			}
 			
 			Map<String, String> worldExprs = new HashMap<>();
-			if (plugin.getConfig().contains("tools." + type + ".worlds")) {
+			if (plugin.getConfig().contains("tools." + name + ".worlds")) {
 				Utils.log(plugin, ChatColor.AQUA + "     - Loading world-specific expressions");
-				for (String world : plugin.getConfig().getConfigurationSection("tools." + type + ".worlds").getKeys(false)) {
-					String worldExpr = plugin.getConfig().getString("tools." + type + ".worlds." + world);
+				for (String world : plugin.getConfig().getConfigurationSection("tools." + name + ".worlds").getKeys(false)) {
+					String worldExpr = plugin.getConfig().getString("tools." + name + ".worlds." + world);
 					
 					worldExprs.put(world, worldExpr);
 					Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.WHITE + world + " \"" + worldExpr + "\"");
@@ -83,10 +101,10 @@ public class ToolManager {
 			}
 			
 			Map<String, String> regionExprs = new HashMap<>();
-			if (plugin.getConfig().contains("tools." + type + ".regions")) {
+			if (plugin.getConfig().contains("tools." + name + ".regions")) {
 				Utils.log(plugin, ChatColor.AQUA + "     - Loading region-specific expressions");
-				for (String region : plugin.getConfig().getConfigurationSection("tools." + type + ".regions").getKeys(false)) {
-					String regionExpr = plugin.getConfig().getString("tools." + type + ".regions." + region);
+				for (String region : plugin.getConfig().getConfigurationSection("tools." + name + ".regions").getKeys(false)) {
+					String regionExpr = plugin.getConfig().getString("tools." + name + ".regions." + region);
 					
 					regionExprs.put(region, regionExpr);
 					Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.WHITE + region + " \"" + regionExpr + "\"");
@@ -131,6 +149,10 @@ public class ToolManager {
 
 	public ScienceTool getTool(ToolType type) {
 		return tools.getOrDefault(type, null);
+	}
+	
+	public Set<ToolType> getLoadedTools() {
+		return tools.keySet();
 	}
 	
 }
