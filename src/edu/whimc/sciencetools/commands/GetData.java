@@ -30,8 +30,6 @@ public class GetData implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		// TODO: Add permissions
-		
 		ScienceTool tool = plugin.getToolManager().getTool(type);
 		
 		if (tool == null) {

@@ -4,29 +4,29 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
 import edu.whimc.sciencetools.utils.Utils;
 import edu.whimc.sciencetools.utils.Utils.Placeholder;
 
 public class JSInterpreter extends AbstractSubCommand {
 
-	public JSInterpreter(ScienceTools plugin) {
-		super(plugin);
+	public JSInterpreter(ScienceTools plugin, SubCommand subCmd) {
+		super(plugin, subCmd);
 	}
 
 	@Override
-	public boolean execute(CommandSender sender, String[] args) {
-
-		if (args.length == 1) {
-			Utils.msg(sender, "&o/sciencetools js <expr...>");
-			Utils.msg(sender, "&7Custom syntax:");
-			for (Placeholder ph : Placeholder.values()) {
-				Utils.msg(sender, ph.fullUsage());
-			}
-			return false;
+	protected void notEnoughArgs(CommandSender sender) {
+		Utils.msg(sender, "&7Custom syntax:");
+		for (Placeholder ph : Placeholder.values()) {
+			Utils.msg(sender, " " + ph.fullUsage());
 		}
-		
+	}
+	
+	@Override
+	public boolean routine(CommandSender sender, String[] args) {
+
 		StringBuilder builder = new StringBuilder();
-		for (int ind = 1; ind < args.length; ind++) {
+		for (int ind = 0; ind < args.length; ind++) {
 			builder.append(args[ind]).append(" ");
 		}
 		
