@@ -88,13 +88,18 @@ public class Validate extends AbstractSubCommand implements Listener {
 		
 		Utils.msg(sender, "&aValidating " + type + " for " + player.getName());
 		
+		UUID uuid = player.getUniqueId();
+		
+		if (validationTasks.containsKey(uuid)) {
+			Bukkit.getScheduler().cancelTask(validationTasks.remove(uuid).taskId);
+		}
 		
 		int id = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			doConfigTasks(player, "timeout", type, null);
-			validationTasks.remove(player.getUniqueId());
+			validationTasks.remove(uuid);
 		}, 20 * plugin.getConfig().getInt("validation.timeout"));
 		
-		validationTasks.put(player.getUniqueId(), new Validation(id, tool.getData(player), type));
+		validationTasks.put(uuid, new Validation(id, tool.getData(player), type));
 		doConfigTasks(player, "prompt", type, null);
 		
 		return false;
