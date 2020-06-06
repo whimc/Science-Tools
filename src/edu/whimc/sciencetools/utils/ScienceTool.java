@@ -105,6 +105,10 @@ public class ScienceTool {
 		return Utils.executeExpression(player, getExpression(player));
 	}
 	
+	public String getMainUnit() {
+		return unit;
+	}
+	
 	public void displayData(Player player) {
 		double val = getData(player);
 		

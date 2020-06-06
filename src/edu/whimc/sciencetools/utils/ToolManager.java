@@ -46,6 +46,7 @@ public class ToolManager {
 			}
 			return null;
 		}
+		
 	}
 	
 	private Map<ToolType, ScienceTool> tools;
@@ -155,4 +156,8 @@ public class ToolManager {
 		return tools.keySet();
 	}
 	
+	public String getMainUnit(ToolType type) {
+		ScienceTool tool = getTool(type);
+		return tool == null ? "" : tool.getMainUnit();
+	}
 }

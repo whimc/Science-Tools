@@ -149,19 +149,20 @@ public class Validate extends AbstractSubCommand implements Listener {
 	private void doConfigTasks(Player player, String path, ToolType type, Double value) {
 		String typeStr = type == null ? "" : type.toString();
 		String valueStr = value == null ? "" : value.toString();
+		String unit = plugin.getToolManager().getMainUnit(type);
 		
-		doConfigTasks(player, path + ".all", typeStr, valueStr);
-		doConfigTasks(player, path + "." + type.name(), typeStr, valueStr);
+		doConfigTasks(player, path + ".all", typeStr, valueStr, unit);
+		doConfigTasks(player, path + "." + type.name(), typeStr, valueStr, unit);
 	}
 	
-	private void doConfigTasks(Player player, String path, String type, String value) {
+	private void doConfigTasks(Player player, String path, String type, String value, String unit) {
 		for (String msg : plugin.getConfig().getStringList("validation.messages." + path)) {
-			Utils.msg(player, msg.replace("{TOOL}", type).replace("{VAL}", value));
+			Utils.msg(player, msg.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit));
 		}
 		
 		for (String cmd : plugin.getConfig().getStringList("validation.commands." + path)) {
 			Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(),
-					cmd.replace("{TOOL}", type).replace("{VAL}", value).replace("{PLAYER}", player.getName()));
+					cmd.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit).replace("{PLAYER}", player.getName()));
 		}
 	}
 
