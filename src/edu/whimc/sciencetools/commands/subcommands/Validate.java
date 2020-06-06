@@ -120,7 +120,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 		
 		ToolType type = validation.getType();
 		
-		Pattern pat = Pattern.compile("(\\d+(\\.\\d+)?)");
+		Pattern pat = Pattern.compile("(-?\\d+(\\.\\d+)?)");
 		Matcher matcher = pat.matcher(event.getMessage().replace(",", ""));
 
 		if (!matcher.find()) {
