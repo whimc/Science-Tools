@@ -20,15 +20,15 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
 		saveDefaultConfig();
 		getConfig().options().copyDefaults(false);
-		
+
 		convManager = ConversionManager.loadConversions(this);
 		toolManager = ToolManager.loadTools(this, convManager);
-		
+
 		for (ToolType tool : ToolType.values()) {
 			getCommand(tool.toString().toLowerCase()).setExecutor(new GetData(this, tool));
 		}
 	}
-	
+
 	public ToolManager getToolManager() {
 		return toolManager;
 	}
@@ -36,11 +36,11 @@ public class ScienceTools extends JavaPlugin implements Listener {
 	public ConversionManager getConversionManager() {
 		return convManager;
 	}
-	
+
 	public void reloadScienceTools() {
 		reloadConfig();
 		convManager = ConversionManager.loadConversions(this);
 		toolManager = ToolManager.loadTools(this, convManager);
 	}
-	
+
 }
