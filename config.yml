@@ -16,6 +16,8 @@ tools:
       - feet
     worlds:
       world_nether: "min(0, {Y} - 128)"
+    disabled-worlds:
+      - "world_the_end"
   OXYGEN:
     default-expression: "30 + rand(-0.5, 0.5)"
     unit: "%"
