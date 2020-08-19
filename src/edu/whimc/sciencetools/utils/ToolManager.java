@@ -20,6 +20,7 @@ public class ToolManager {
 		ALTITUDE(Placeholder.ALTITUDE),
 		OXYGEN(Placeholder.OXYGEN),
 		PRESSURE(Placeholder.PRESSURE),
+		RADIATION(Placeholder.RADIATION),
 		TEMPERATURE(Placeholder.TEMPERATURE),
 		WIND(Placeholder.WIND);
 		
@@ -112,7 +113,16 @@ public class ToolManager {
 				}
 			}
 			
-			ScienceTool tool = new ScienceTool(manager, type, defaultExpr, unit, worldExprs, regionExprs, convs);
+			List<String> disabledWorlds = new ArrayList<>();
+			if (plugin.getConfig().contains("tools." + name + ".disabled-worlds")) {
+				Utils.log(plugin, ChatColor.AQUA + "     - Loading disabled worlds");
+				for (String world : plugin.getConfig().getStringList("tools." + name + ".disabled-worlds")) {
+					disabledWorlds.add(world);
+					Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.WHITE + world);
+				}
+			}
+			
+			ScienceTool tool = new ScienceTool(manager, type, defaultExpr, unit, worldExprs, regionExprs, convs, disabledWorlds);
 			manager.tools.put(type, tool);
 		}
 		

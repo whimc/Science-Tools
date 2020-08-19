@@ -11,6 +11,8 @@ commands:
     description: "Oxygen level in the air of the player's location"
   pressure:
     description: "Air pressure of the player's location"
+  radiation:
+    description: "Radiation level of the player's location"
   temperature:
     description: "Temperature of the player's location"
   wind:

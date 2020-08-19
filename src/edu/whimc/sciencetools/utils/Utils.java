@@ -36,6 +36,7 @@ public class Utils {
 		ALTITUDE("{ALTITUDE}", "Value from /altitude"),
 		OXYGEN("{OXYGEN}", "Value from /oxygen"),
 		PRESSURE("{PRESSURE}", "Value from /pressure"),
+		RADIATION("{RADIATION}", "Value from /radiation"),
 		TEMPERATURE("{TEMPERATURE}", "Value from /temperature"),
 		WIND("{WIND}", "Value from /wind");
 		

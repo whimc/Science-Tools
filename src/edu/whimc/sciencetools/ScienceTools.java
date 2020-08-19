@@ -20,17 +20,15 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
 		saveDefaultConfig();
 		getConfig().options().copyDefaults(false);
-		
+
 		convManager = ConversionManager.loadConversions(this);
 		toolManager = ToolManager.loadTools(this, convManager);
-		
-		getCommand("altitude").setExecutor(new GetData(this, ToolType.ALTITUDE));
-		getCommand("oxygen").setExecutor(new GetData(this, ToolType.OXYGEN));
-		getCommand("pressure").setExecutor(new GetData(this, ToolType.PRESSURE));
-		getCommand("temperature").setExecutor(new GetData(this, ToolType.TEMPERATURE));
-		getCommand("wind").setExecutor(new GetData(this, ToolType.WIND));
+
+		for (ToolType tool : ToolType.values()) {
+			getCommand(tool.toString().toLowerCase()).setExecutor(new GetData(this, tool));
+		}
 	}
-	
+
 	public ToolManager getToolManager() {
 		return toolManager;
 	}
@@ -38,11 +36,11 @@ public class ScienceTools extends JavaPlugin implements Listener {
 	public ConversionManager getConversionManager() {
 		return convManager;
 	}
-	
+
 	public void reloadScienceTools() {
 		reloadConfig();
 		convManager = ConversionManager.loadConversions(this);
 		toolManager = ToolManager.loadTools(this, convManager);
 	}
-	
+
 }

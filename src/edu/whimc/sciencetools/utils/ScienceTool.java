@@ -26,9 +26,11 @@ public class ScienceTool {
 	private Map<String, String> regionExprs;
 	
 	private List<Conversion> conversions;
+	private List<String> disabledWorlds;
 	
 	public ScienceTool(ToolManager manager, ToolType type, String defaultExpr, String unit, 
-			Map<String, String> worldExprs, Map<String, String> regionExprs, List<Conversion> conversions) {
+			Map<String, String> worldExprs, Map<String, String> regionExprs,
+			List<Conversion> conversions, List<String> disabledWorlds) {
 		this.manager = manager;
 		this.type = type;
 		this.defaultExpr = defaultExpr;
@@ -36,6 +38,7 @@ public class ScienceTool {
 		this.worldExprs = worldExprs;
 		this.regionExprs = regionExprs;
 		this.conversions = conversions;
+		this.disabledWorlds = disabledWorlds;
 		
 		// TODO: Add methods to change values
 	}
@@ -110,6 +113,11 @@ public class ScienceTool {
 	}
 	
 	public void displayData(Player player) {
+		if (disabledWorlds.contains(player.getWorld().getName())) {
+			Utils.msg(player, "&cWe don't know how to measure " + type.toString().toLowerCase() + " here!");
+			return;
+		}
+		
 		double val = getData(player);
 		
 		String message = "&aThe measured " + type.toString().toLowerCase() + " is &f" + Utils.trim2Deci(val) + unit + "&7";
