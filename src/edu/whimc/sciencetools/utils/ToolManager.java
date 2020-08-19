@@ -20,6 +20,7 @@ public class ToolManager {
 		ALTITUDE(Placeholder.ALTITUDE),
 		OXYGEN(Placeholder.OXYGEN),
 		PRESSURE(Placeholder.PRESSURE),
+		RADIATION(Placeholder.RADIATION),
 		TEMPERATURE(Placeholder.TEMPERATURE),
 		WIND(Placeholder.WIND);
 		
