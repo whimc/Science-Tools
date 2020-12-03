@@ -1,9 +1,10 @@
-name: ScienceTools
-version: 1.0
-main: edu.whimc.sciencetools.ScienceTools
+name: ${project.artifactId}
+version: ${project.version}
+description: ${project.description}
 author: Jack Henhapl
-description: Science Tools
-softdepend: [WorldEdit, WorldGuard]
+api-version: 1.13
+main: edu.whimc.sciencetools.ScienceTools
+softdepend: [WorldGuard]
 commands:
   altitude:
     description: "Player's altitude"
