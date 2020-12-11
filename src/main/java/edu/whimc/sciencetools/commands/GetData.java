@@ -12,7 +12,7 @@ import edu.whimc.sciencetools.utils.Utils;
 
 /**
  *
- * Altitude, Oxygen, Pressure, Temperature, Wind
+ * For commands like Altitude, Oxygen, Pressure, Temperature, Wind, etc...
  * 
  * @author Jack
  *

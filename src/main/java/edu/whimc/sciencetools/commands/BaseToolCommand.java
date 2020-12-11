@@ -20,7 +20,7 @@ import edu.whimc.sciencetools.commands.subcommands.conversions.ConversionsBase;
 import edu.whimc.sciencetools.commands.subcommands.tools.ToolsBase;
 import edu.whimc.sciencetools.utils.Utils;
 
-// Plugin management commands, see GetData.java for actual commands players use to make observations
+// Plugin management commands, see sciencetools.utils for actual commands players use to make observations
 
 public class BaseToolCommand implements CommandExecutor {
 
