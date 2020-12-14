@@ -22,6 +22,10 @@ public abstract class AbstractSubCommand {
 
 	protected abstract boolean commandRoutine(CommandSender sender, String[] args);
 
+	protected List<String> tabRoutine(CommandSender sender, String[] args) {
+        return Arrays.asList();
+    }
+
 	protected void notEnoughArgs(CommandSender sender) {
 		return;
 	}
@@ -57,5 +61,12 @@ public abstract class AbstractSubCommand {
 
 		return commandRoutine(sender, Arrays.copyOfRange(args, 1, args.length));
 	}
+
+	public List<String> executeTab(CommandSender sender, String[] args) {
+        if (!sender.hasPermission(this.subCmd.getPermission().toString()) || args.length > this.subCmd.maxArgs()) {
+            return Arrays.asList();
+        }
+        return tabRoutine(sender, args);
+    }
 
 }

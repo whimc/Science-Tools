@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.commands.subcommands.AbstractSubCommand;
@@ -20,7 +21,7 @@ import edu.whimc.sciencetools.utils.Utils;
 
 // Plugin management commands, see sciencetools.utils for actual commands players use to make observations
 
-public class BaseToolCommand implements CommandExecutor {
+public class BaseToolCommand implements CommandExecutor, TabCompleter {
 
 	public static enum SubCommand {
 		JS("js", Arrays.asList("expr..."), null, "Run interpreted JavaScript", Permission.ADMIN),
@@ -168,6 +169,25 @@ public class BaseToolCommand implements CommandExecutor {
 		return subCmd.executeCommand(sender, args);
 	}
 
+	@Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        String hint = args[0].toLowerCase();
+        if (args.length <= 1) {
+            return subCommands.keySet()
+                    .stream()
+                    .map(v -> v.name().toLowerCase())
+                    .filter(v -> v.startsWith(hint))
+                    .sorted()
+                    .collect(Collectors.toList());
+        }
+
+        AbstractSubCommand subCmd = subCommands.getOrDefault(SubCommand.match(hint), null);
+        if (subCmd == null) {
+            return Arrays.asList();
+        }
+
+        return subCmd.executeTab(sender, Arrays.copyOfRange(args, 1, args.length));
+    }
 
 	private void sendSubCommands(CommandSender sender) {
 		for (SubCommand subCmd : this.subCommands.keySet()) {

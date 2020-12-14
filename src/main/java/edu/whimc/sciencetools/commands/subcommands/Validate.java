@@ -2,6 +2,7 @@ package edu.whimc.sciencetools.commands.subcommands;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -125,6 +126,40 @@ public class Validate extends AbstractSubCommand implements Listener {
 		doConfigTasks(player, "prompt", type, null);
 
 		return false;
+	}
+
+	@Override
+	protected List<String> tabRoutine(CommandSender sender, String[] args) {
+	    if (args.length == 1) {
+	        return plugin.getToolManager().toolTabComplete(args[0].toLowerCase());
+	    }
+	    if (args.length == 2) {
+	        return Bukkit.getOnlinePlayers().stream()
+	                .map(Player::getName)
+	                .filter(v -> v.toLowerCase().startsWith(args[1].toLowerCase()))
+	                .collect(Collectors.toList());
+	    }
+	    if (args.length == 3) {
+	        return Bukkit.getWorlds().stream()
+	                .map(World::getName)
+	                .filter(v -> v.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .collect(Collectors.toList());
+	    }
+	    if (!(sender instanceof Player)) {
+	        return Arrays.asList();
+	    }
+	    Location loc = ((Player) sender).getLocation();
+	    if (args.length == 4) {
+	        return Arrays.asList(Double.toString(loc.getBlockX()));
+	    }
+	    if (args.length == 5) {
+            return Arrays.asList(Double.toString(loc.getBlockY()));
+        }
+	    if (args.length == 6) {
+            return Arrays.asList(Double.toString(loc.getBlockZ()));
+        }
+
+	    return super.tabRoutine(sender, args);
 	}
 
 	@EventHandler
