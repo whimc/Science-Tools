@@ -13,42 +13,49 @@ import edu.whimc.sciencetools.utils.Utils;
 public abstract class AbstractSubCommand {
 
 	protected ScienceTools plugin;
-	private SubCommand subCmd;
-	
+	protected SubCommand subCmd;
+
 	public AbstractSubCommand(ScienceTools plugin, SubCommand subCmd) {
 		this.plugin = plugin;
 		this.subCmd = subCmd;
 	}
-	
-	protected abstract boolean routine(CommandSender sender, String[] args);
+
+	protected abstract boolean commandRoutine(CommandSender sender, String[] args);
 
 	protected void notEnoughArgs(CommandSender sender) {
 		return;
 	}
-	
-	public boolean execute(CommandSender sender, String[] args) {
-		
+
+	public boolean executeCommand(CommandSender sender, String[] args) {
+
 		if (!sender.hasPermission(subCmd.getPermission().toString())) {
 			Utils.msg(sender, "&cYou are missing the permission \"&4" + subCmd.getPermission() + "&c\" to use this command!");
 			return false;
 		}
-		
-		if (args.length < subCmd.minArgs()) {
+
+		if (!subCmd.hasEnoughArguments(args.length - 1)) {
 			List<String> missedCmdsList = new ArrayList<>();
 			for (int ind = args.length - 1; ind < subCmd.getArgs().size(); ind++) {
 				missedCmdsList.add(subCmd.formattedArg(ind));
 			}
-			
+			for (int ind = Math.max(0, args.length - subCmd.getArgs().size() - 1); ind < subCmd.getOptionalArgs().size(); ind++) {
+			    missedCmdsList.add(subCmd.formattedOptionalArg(ind));
+			}
+
 			String missedCmds = String.join("&7, ", missedCmdsList);
-			
+
 			Utils.msg(sender, "&cMissing argument" + (missedCmdsList.size() > 1 ? "s" : "") + ": " + missedCmds);
-			Utils.msg(sender, "&cUsage: " + subCmd.getUsage());
+			if (subCmd.hasOptionalArgs()) {
+			    Utils.msg(sender, "&cUsages:", "  " + subCmd.getUsage(), "  " + subCmd.getOptionalUsage());
+			} else {
+			    Utils.msg(sender, "&cUsage: " + subCmd.getUsage());
+			}
 			notEnoughArgs(sender);
-			
+
 			return false;
 		}
-		
-		return routine(sender, Arrays.copyOfRange(args, 1, args.length));
+
+		return commandRoutine(sender, Arrays.copyOfRange(args, 1, args.length));
 	}
-	
+
 }

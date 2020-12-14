@@ -14,7 +14,7 @@ public class ConversionsBase extends AbstractSubCommand {
 	}
 
 	@Override
-	public boolean routine(CommandSender sender, String[] args) {
+	public boolean commandRoutine(CommandSender sender, String[] args) {
 		Utils.msg(sender, "This command is unimplemented!");
 		return false;
 	}

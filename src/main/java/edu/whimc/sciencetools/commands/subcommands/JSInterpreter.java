@@ -21,27 +21,28 @@ public class JSInterpreter extends AbstractSubCommand {
 			Utils.msg(sender, " " + ph.fullUsage());
 		}
 	}
-	
+
 	@Override
-	public boolean routine(CommandSender sender, String[] args) {
+	public boolean commandRoutine(CommandSender sender, String[] args) {
 
 		StringBuilder builder = new StringBuilder();
 		for (int ind = 0; ind < args.length; ind++) {
 			builder.append(args[ind]).append(" ");
 		}
-		
+
 		String exp = builder.toString().trim();
 		if (sender instanceof Player) {
-			exp = plugin.getToolManager().fillIn(builder.toString().trim(), (Player) sender);
+		    Player player = (Player) sender;
+			exp = plugin.getToolManager().fillIn(player, builder.toString().trim(), player.getLocation());
 		}
 		Object res = Utils.executeExpressionDebug(sender, exp, true);
-		
+
 		if (res == null) {
 			return false;
 		}
-		
+
 		Utils.msg(sender, res.toString());
-		
+
 		return true;
 	}
 
