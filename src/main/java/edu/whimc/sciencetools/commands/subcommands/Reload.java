@@ -13,7 +13,7 @@ public class Reload extends AbstractSubCommand {
 	}
 
 	@Override
-	public boolean routine(CommandSender sender, String[] args) {
+	public boolean commandRoutine(CommandSender sender, String[] args) {
 		Utils.setDebugReceiver(sender);
 		plugin.reloadScienceTools();
 		Utils.setDebugReceiver(null);

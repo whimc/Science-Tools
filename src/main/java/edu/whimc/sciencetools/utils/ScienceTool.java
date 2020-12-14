@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -18,17 +19,17 @@ public class ScienceTool {
 
 	private ToolManager manager;
 	private ToolType type;
-	
+
 	private String defaultExpr;
 	private String unit;
-	
+
 	private Map<String, String> worldExprs;
 	private Map<String, String> regionExprs;
-	
+
 	private List<Conversion> conversions;
 	private List<String> disabledWorlds;
-	
-	public ScienceTool(ToolManager manager, ToolType type, String defaultExpr, String unit, 
+
+	public ScienceTool(ToolManager manager, ToolType type, String defaultExpr, String unit,
 			Map<String, String> worldExprs, Map<String, String> regionExprs,
 			List<Conversion> conversions, List<String> disabledWorlds) {
 		this.manager = manager;
@@ -39,37 +40,36 @@ public class ScienceTool {
 		this.regionExprs = regionExprs;
 		this.conversions = conversions;
 		this.disabledWorlds = disabledWorlds;
-		
+
 		// TODO: Add methods to change values
 	}
-	
-	public String fillIn(String expr, Player player) {
-		
+
+	public String fillIn(CommandSender sender, String expr, Location loc) {
+
 		String ph = type.getPlaceholder().toString();
 		if (expr.contains(ph)) {
-			Utils.msg(player, "&cPls don't use recursion. Replacing &7" + ph + " &cwith &f1");
+			Utils.msg(sender, "&cPls don't use recursion. Replacing &7" + ph + " &cwith &f1");
 			expr = expr.replace(ph, "1");
 		}
-		
-		return manager.fillIn(expr, player);
+
+		return manager.fillIn(sender, expr, loc);
 	}
-	
-	String getRegionExpression(Player player) {
+
+	String getRegionExpression(Location loc) {
 		if (!Utils.worldGuardEnabled()) {
 			return null;
 		}
-		
+
 		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		if (container == null) {
 			return null;
 		}
-		
-		RegionManager regionManager = container.get(BukkitAdapter.adapt(player.getWorld()));
+
+		RegionManager regionManager = container.get(BukkitAdapter.adapt(loc.getWorld()));
 		if (regionManager == null) {
 			return null;
 		}
-		
-		Location loc = player.getLocation();
+
 		BlockVector3 bv = BlockVector3.at(loc.getX(), loc.getY(), loc.getZ());
 		List<String> regions = regionManager.getApplicableRegionsIDs(bv);
 
@@ -79,56 +79,56 @@ public class ScienceTool {
 				return expr;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	String getWorldExpression(Player player) {
-		return worldExprs.getOrDefault(player.getWorld().getName(), null);
+
+	String getWorldExpression(Location loc) {
+		return worldExprs.getOrDefault(loc.getWorld().getName(), null);
 	}
-	
-	public String getExpression(Player player) {
-		
-		String expr = getRegionExpression(player);
-		
+
+	public String getExpression(CommandSender sender, Location loc) {
+
+		String expr = getRegionExpression(loc);
+
 		if (expr == null) {
-			expr = getWorldExpression(player);
+			expr = getWorldExpression(loc);
 		}
-		
+
 		if (expr == null) {
 			expr = defaultExpr;
 		}
-		
-		expr = fillIn(expr, player);
-		
+
+		expr = fillIn(sender, expr, loc);
+
 		return expr;
 	}
-	
-	public double getData(Player player) {
-		return Utils.executeExpression(player, getExpression(player));
+
+	public double getData(CommandSender sender, Location loc) {
+	    return Utils.executeExpression(sender, getExpression(sender, loc));
 	}
-	
+
 	public String getMainUnit() {
 		return unit;
 	}
-	
+
 	public void displayData(Player player) {
 		if (disabledWorlds.contains(player.getWorld().getName())) {
 			Utils.msg(player, "&cWe don't know how to measure " + type.toString().toLowerCase() + " here!");
 			return;
 		}
-		
-		double val = getData(player);
-		
+
+		double val = getData(player, player.getLocation());
+
 		String message = "&aThe measured " + type.toString().toLowerCase() + " is &f" + Utils.trim2Deci(val) + unit + "&7";
-		
+
 		for (Conversion conv : conversions) {
 			String converted = Utils.trim2Deci(conv.convert(player, val));
 			message += " (" + converted + conv.getUnit() + ")";
 		}
-		
+
 		Utils.msg(player, message);
-		
+
 	}
-	
+
 }

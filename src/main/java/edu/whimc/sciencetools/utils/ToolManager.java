@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.utils.Utils.Placeholder;
@@ -50,13 +53,15 @@ public class ToolManager {
     }
 
     private Map<ToolType, ScienceTool> tools;
+    private ScienceTools plugin;
 
-    private ToolManager() {
+    private ToolManager(ScienceTools plugin) {
         this.tools = new HashMap<>();
+        this.plugin = plugin;
     }
 
     public static ToolManager loadTools(ScienceTools plugin, ConversionManager convManager) {
-        ToolManager manager = new ToolManager();
+        ToolManager manager = new ToolManager(plugin);
 
         Utils.log(plugin, ChatColor.YELLOW + "Loading Science Tools from config");
 
@@ -130,11 +135,11 @@ public class ToolManager {
         return manager;
     }
 
-    public String fillIn(String expr, Player player) {
+    public String fillIn(CommandSender sender, String expr, Location loc) {
         // Replace position placeholders
-        expr = expr.replace("{X}", Double.toString(player.getLocation().getX()));
-        expr = expr.replace("{Y}", Double.toString(player.getLocation().getY()));
-        expr = expr.replace("{Z}", Double.toString(player.getLocation().getZ()));
+        expr = expr.replace("{X}", Double.toString(loc.getX()));
+        expr = expr.replace("{Y}", Double.toString(loc.getY()));
+        expr = expr.replace("{Z}", Double.toString(loc.getZ()));
 
         // Replace tool placeholders
         for (ToolType curType : ToolType.values()) {
@@ -145,12 +150,12 @@ public class ToolManager {
 
             ScienceTool targetTool = getTool(curType);
             if (targetTool == null) {
-                Utils.msg(player, "&f" + curType + " &cis not loaded. Replacing with &f1");
+                Utils.msg(sender, "&f" + curType + " &cis not loaded. Replacing with &f1");
                 expr = expr.replace(ph.toString(), "1");
                 continue;
             }
 
-            double val = Utils.executeExpression(player, targetTool.getExpression(player));
+            double val = Utils.executeExpression(Bukkit.getConsoleSender(), targetTool.getExpression(sender, loc));
             expr = expr.replace(ph.toString(), Double.toString(val));
         }
 
@@ -168,5 +173,17 @@ public class ToolManager {
     public String getMainUnit(ToolType type) {
         ScienceTool tool = getTool(type);
         return tool == null ? "" : tool.getMainUnit();
+    }
+
+    public ScienceTools getPlugin() {
+        return this.plugin;
+    }
+
+    public List<String> toolTabComplete(String hint) {
+        return getLoadedTools().stream()
+                .map(ToolType::name)
+                .filter(v -> v.toLowerCase().startsWith(hint.toLowerCase()))
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
