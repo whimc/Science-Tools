@@ -1,4 +1,6 @@
 # WHIMC-ScienceTools
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/whimc/Science-Tools?label=download&logo=github)](https://github.com/whimc/Science-Tools/releases/latest)
+
 Simulate values for scientific tools
 
 ## Building
