@@ -1,4 +1,4 @@
-package edu.whimc.sciencetools.utils;
+package edu.whimc.sciencetools.models;
 
 import java.util.List;
 import java.util.Map;
@@ -13,11 +13,13 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
-import edu.whimc.sciencetools.utils.ToolManager.ToolType;
+import edu.whimc.sciencetools.managers.ScienceToolManager;
+import edu.whimc.sciencetools.managers.ScienceToolManager.ToolType;
+import edu.whimc.sciencetools.utils.Utils;
 
 public class ScienceTool {
 
-	private ToolManager manager;
+	private ScienceToolManager manager;
 	private ToolType type;
 
 	private String defaultExpr;
@@ -29,7 +31,7 @@ public class ScienceTool {
 	private List<Conversion> conversions;
 	private List<String> disabledWorlds;
 
-	public ScienceTool(ToolManager manager, ToolType type, String defaultExpr, String unit,
+	public ScienceTool(ScienceToolManager manager, ToolType type, String defaultExpr, String unit,
 			Map<String, String> worldExprs, Map<String, String> regionExprs,
 			List<Conversion> conversions, List<String> disabledWorlds) {
 		this.manager = manager;

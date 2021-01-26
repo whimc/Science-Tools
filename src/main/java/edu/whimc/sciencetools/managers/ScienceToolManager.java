@@ -1,4 +1,4 @@
-package edu.whimc.sciencetools.utils;
+package edu.whimc.sciencetools.managers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,25 +14,28 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.utils.Utils.Placeholder;
+import edu.whimc.sciencetools.javascript.JSEngine;
+import edu.whimc.sciencetools.models.Conversion;
+import edu.whimc.sciencetools.models.ScienceTool;
+import edu.whimc.sciencetools.utils.Utils;
 
-public class ToolManager {
+public class ScienceToolManager {
 
     public static enum ToolType {
-        ALTITUDE(Placeholder.ALTITUDE),
-        OXYGEN(Placeholder.OXYGEN),
-        PRESSURE(Placeholder.PRESSURE),
-        RADIATION(Placeholder.RADIATION),
-        TEMPERATURE(Placeholder.TEMPERATURE),
-        WIND(Placeholder.WIND);
+        ALTITUDE(JSEngine.Placeholder.ALTITUDE),
+        OXYGEN(JSEngine.Placeholder.OXYGEN),
+        PRESSURE(JSEngine.Placeholder.PRESSURE),
+        RADIATION(JSEngine.Placeholder.RADIATION),
+        TEMPERATURE(JSEngine.Placeholder.TEMPERATURE),
+        WIND(JSEngine.Placeholder.WIND);
 
-        private Placeholder placeholder;
+        private JSEngine.Placeholder placeholder;
 
-        private ToolType(Placeholder placeholder) {
+        private ToolType(JSEngine.Placeholder placeholder) {
             this.placeholder = placeholder;
         }
 
-        public Placeholder getPlaceholder() {
+        public JSEngine.Placeholder getPlaceholder() {
             return placeholder;
         }
 
@@ -55,13 +58,13 @@ public class ToolManager {
     private Map<ToolType, ScienceTool> tools;
     private ScienceTools plugin;
 
-    private ToolManager(ScienceTools plugin) {
+    private ScienceToolManager(ScienceTools plugin) {
         this.tools = new HashMap<>();
         this.plugin = plugin;
     }
 
-    public static ToolManager loadTools(ScienceTools plugin, ConversionManager convManager) {
-        ToolManager manager = new ToolManager(plugin);
+    public static ScienceToolManager loadTools(ScienceTools plugin, ConversionManager convManager) {
+        ScienceToolManager manager = new ScienceToolManager(plugin);
 
         Utils.log(plugin, ChatColor.YELLOW + "Loading Science Tools from config");
 
@@ -143,7 +146,7 @@ public class ToolManager {
 
         // Replace tool placeholders
         for (ToolType curType : ToolType.values()) {
-            Placeholder ph = curType.getPlaceholder();
+            JSEngine.Placeholder ph = curType.getPlaceholder();
             if (!expr.contains(ph.toString())) {
                 continue;
             }
