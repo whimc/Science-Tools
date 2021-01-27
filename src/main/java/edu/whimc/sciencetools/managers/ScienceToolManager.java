@@ -14,7 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.javascript.JSEngine;
+import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.models.Conversion;
 import edu.whimc.sciencetools.models.ScienceTool;
 import edu.whimc.sciencetools.utils.Utils;
@@ -22,20 +22,21 @@ import edu.whimc.sciencetools.utils.Utils;
 public class ScienceToolManager {
 
     public static enum ToolType {
-        ALTITUDE(JSEngine.Placeholder.ALTITUDE),
-        OXYGEN(JSEngine.Placeholder.OXYGEN),
-        PRESSURE(JSEngine.Placeholder.PRESSURE),
-        RADIATION(JSEngine.Placeholder.RADIATION),
-        TEMPERATURE(JSEngine.Placeholder.TEMPERATURE),
-        WIND(JSEngine.Placeholder.WIND);
+        ALTITUDE(JSPlaceholder.ALTITUDE),
+        OXYGEN(JSPlaceholder.OXYGEN),
+        PRESSURE(JSPlaceholder.PRESSURE),
+        RADIATION(JSPlaceholder.RADIATION),
+        TEMPERATURE(JSPlaceholder.TEMPERATURE),
+        WIND(JSPlaceholder.WIND),
+        ;
 
-        private JSEngine.Placeholder placeholder;
+        private JSPlaceholder placeholder;
 
-        private ToolType(JSEngine.Placeholder placeholder) {
+        private ToolType(JSPlaceholder placeholder) {
             this.placeholder = placeholder;
         }
 
-        public JSEngine.Placeholder getPlaceholder() {
+        public JSPlaceholder getPlaceholder() {
             return placeholder;
         }
 
@@ -146,7 +147,7 @@ public class ScienceToolManager {
 
         // Replace tool placeholders
         for (ToolType curType : ToolType.values()) {
-            JSEngine.Placeholder ph = curType.getPlaceholder();
+            JSPlaceholder ph = curType.getPlaceholder();
             if (!expr.contains(ph.toString())) {
                 continue;
             }

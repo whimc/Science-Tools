@@ -31,12 +31,7 @@ public class JSExpression {
     }
 
     public boolean valid() {
-        // TODO implement this
-        return false;
-    }
-
-    private String getPreparedExpression() {
-        return null;
+        return evaluate() != null;
     }
 
     private String getPreparedExpression(CommandSender executor) {
@@ -44,27 +39,19 @@ public class JSExpression {
     }
 
     public Object run() {
-        return JSEngine.run(getPreparedExpression());
+        return runWithContext(Bukkit.getConsoleSender());
     }
 
     public Object runWithContext(CommandSender executor) {
-        return JSEngine.runWithContext(executor, getPreparedExpression());
+        return JSEngine.runWithContext(executor, getPreparedExpression(executor));
     }
 
-    public Double evaluate(JSVariable... vars) {
-        return execute(Bukkit.getConsoleSender(), vars);
+    public Double evaluate() {
+        return evaluateWithContext(Bukkit.getConsoleSender());
     }
 
-
-    public Double execute(CommandSender executor, JSVariable... vars) {
-        // TODO implement this
-        return null;
-    }
-
-    public Double execute(double defaultVal, JSVariable... vars) {
-        String subbed = JSVariable.substituteVariables(this.expr, vars);
-
-        return JSEngine.eval(subbed, defaultVal);
+    public Double evaluateWithContext(CommandSender executor) {
+        return JSEngine.evaluateWithContext(executor, getPreparedExpression(executor));
     }
 
     @Override

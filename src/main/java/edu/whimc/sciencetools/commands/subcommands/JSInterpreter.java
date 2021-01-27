@@ -17,7 +17,7 @@ public class JSInterpreter extends AbstractSubCommand {
 	@Override
 	protected void notEnoughArgs(CommandSender sender) {
 		Utils.msg(sender, "&7Custom syntax:");
-		for (JSEngine.Placeholder ph : JSEngine.Placeholder.values()) {
+		for (JSEngine.JSPlaceholder ph : JSEngine.Placeholder.values()) {
 			Utils.msg(sender, " " + ph.fullUsage());
 		}
 	}

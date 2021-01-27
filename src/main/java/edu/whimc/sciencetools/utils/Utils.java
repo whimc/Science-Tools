@@ -1,17 +1,12 @@
 package edu.whimc.sciencetools.utils;
 
-import javax.script.ScriptException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.javascript.JSEngine;
 
 public class Utils {
-
-
 
 	public static Double parseDouble(String str) {
 		try {
@@ -49,39 +44,6 @@ public class Utils {
 		}
 		plugin.getLogger().info(message);
 
-	}
-
-	public static Object executeExpressionDebug(CommandSender sender, String exp, boolean verbose) {
-		Object res = null;
-		try {
-		    res = JSEngine.eval(exp);
-		} catch (ScriptException e) {
-			msg(sender, "&cYour expression contains invalid syntax!");
-
-			if (verbose) {
-				msg(sender, e.getMessage());
-			}
-
-			return null;
-		}
-
-		return res;
-	}
-
-	public static Double executeExpression(CommandSender sender, String exp) {
-		Object res = executeExpressionDebug(sender, exp, false);
-
-		if (!(res instanceof Number)) {
-			String type = "Unknown";
-			if (res != null) {
-				type = res.getClass().getSimpleName();
-			}
-
-			msg(sender, "&cExpected a number but found type &7&o" + type);
-			return null;
-		}
-
-		return Double.valueOf(((Number) res).doubleValue());
 	}
 
 	public static void msg(CommandSender sender, String... strs) {
