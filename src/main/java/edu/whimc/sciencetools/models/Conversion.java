@@ -2,9 +2,8 @@ package edu.whimc.sciencetools.models;
 
 import org.bukkit.command.CommandSender;
 
-import edu.whimc.sciencetools.javascript.JSEngine;
 import edu.whimc.sciencetools.javascript.JSExpression;
-import edu.whimc.sciencetools.javascript.JSVariable.ConversionVariable;
+import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
 import edu.whimc.sciencetools.managers.ConversionManager;
 import edu.whimc.sciencetools.utils.Utils;
 
@@ -22,11 +21,8 @@ public class Conversion {
 		this.expression = expression;
 	}
 
-	public double convert(CommandSender sender, ConversionVariable var) {
-		String exp = expression.replace(JSEngine.Placeholder.VALUE.toString(), Double.toString(val));
-
-		Double res = Utils.executeExpression(sender, exp);
-		return res == null ? 0 : res;
+	public Double convert(double val) {
+		return expression.evaluate(JSPlaceholderContext.create(val));
 	}
 
 	public String getName() {

@@ -1,17 +1,20 @@
 package edu.whimc.sciencetools.javascript;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-
 import co.aikar.commands.BukkitCommandExecutionContext;
 import co.aikar.commands.contexts.ContextResolver;
+import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
 
 public class JSExpression {
 
     public static ContextResolver<JSExpression, BukkitCommandExecutionContext> getContextResolver() {
-        // TODO make this better
         return c -> {
             JSExpression expr = new JSExpression(c.joinArgs());
+            JSPlaceholderContext ctx = JSPlaceholderContext.create(c.getSender());
+            if (c.hasFlag("any-type")) {
+                expr.runWithArgumentCheck(ctx);
+            } else {
+                expr.evaluateWithArgumentCheck(ctx);
+            }
             return expr;
         };
     }
@@ -31,27 +34,31 @@ public class JSExpression {
     }
 
     public boolean valid() {
-        return evaluate() != null;
+        return run(JSPlaceholderContext.create()) != null;
     }
 
-    private String getPreparedExpression(CommandSender executor) {
-        return null;
+    public boolean numerical() {
+        return evaluate(JSPlaceholderContext.create()) != null;
     }
 
-    public Object run() {
-        return runWithContext(Bukkit.getConsoleSender());
+    private String getPreparedExpression(JSPlaceholderContext ctx) {
+        return JSPlaceholder.prepareExpression(ctx, this.expr);
     }
 
-    public Object runWithContext(CommandSender executor) {
-        return JSEngine.runWithContext(executor, getPreparedExpression(executor));
+    public Object run(JSPlaceholderContext ctx) {
+        return JSEngine.run(getPreparedExpression(ctx), false);
     }
 
-    public Double evaluate() {
-        return evaluateWithContext(Bukkit.getConsoleSender());
+    private Object runWithArgumentCheck(JSPlaceholderContext ctx) {
+        return JSEngine.run(getPreparedExpression(ctx), true);
     }
 
-    public Double evaluateWithContext(CommandSender executor) {
-        return JSEngine.evaluateWithContext(executor, getPreparedExpression(executor));
+    public Double evaluate(JSPlaceholderContext ctx) {
+        return JSEngine.evaluate(getPreparedExpression(ctx), false);
+    }
+
+    private Double evaluateWithArgumentCheck(JSPlaceholderContext ctx) {
+        return JSEngine.evaluate(getPreparedExpression(ctx), true);
     }
 
     @Override

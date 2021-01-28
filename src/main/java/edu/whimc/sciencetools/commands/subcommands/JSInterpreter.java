@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
-import edu.whimc.sciencetools.javascript.JSEngine;
 import edu.whimc.sciencetools.utils.Utils;
 
 public class JSInterpreter extends AbstractSubCommand {
@@ -17,9 +16,9 @@ public class JSInterpreter extends AbstractSubCommand {
 	@Override
 	protected void notEnoughArgs(CommandSender sender) {
 		Utils.msg(sender, "&7Custom syntax:");
-		for (JSEngine.JSPlaceholder ph : JSEngine.Placeholder.values()) {
-			Utils.msg(sender, " " + ph.fullUsage());
-		}
+//		for (JSEngine.JSPlaceholder ph : JSEngine.Placeholder.values()) {
+//			Utils.msg(sender, " " + ph.fullUsage());
+//		}
 	}
 
 	@Override
@@ -35,7 +34,8 @@ public class JSInterpreter extends AbstractSubCommand {
 		    Player player = (Player) sender;
 			exp = plugin.getToolManager().fillIn(player, builder.toString().trim(), player.getLocation());
 		}
-		Object res = Utils.executeExpressionDebug(sender, exp, true);
+//		Object res = Utils.executeExpressionDebug(sender, exp, true);
+		Object res = null;
 
 		if (res == null) {
 			return false;

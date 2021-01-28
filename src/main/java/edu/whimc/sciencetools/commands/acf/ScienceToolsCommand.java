@@ -12,10 +12,13 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
+import edu.whimc.sciencetools.javascript.JSExpression;
+import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
 
-@CommandAlias("st")
+@CommandAlias("%basecommand")
 @CommandPermission("%perm.admin")
 @Description("Base command for WHIMC-ScienceTools")
 public class ScienceToolsCommand extends BaseCommand {
@@ -36,9 +39,9 @@ public class ScienceToolsCommand extends BaseCommand {
     @Subcommand("js")
     @Description("Run interpreted JavaScript")
     @Syntax("<expr...>")
-    public void jsInterpreter(CommandSender sender, String expr) {
-        // TODO implement this
-        sender.sendMessage("running \"" + expr + "\"");
+    public void jsInterpreter(CommandSender sender, @Flags("any-type") JSExpression expr) {
+        Object result = expr.run(JSPlaceholderContext.create(sender));
+        sender.sendMessage("Return value: " + result);
     }
 
 }

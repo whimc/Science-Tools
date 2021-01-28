@@ -4,6 +4,8 @@ import java.util.function.Function;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public enum JSPlaceholder {
 
@@ -23,12 +25,12 @@ public enum JSPlaceholder {
 
     private String key;
     private String usage;
-    private Function<JSPlaceholderContext, Double> action;
+    private Function<JSPlaceholderContext, Double> replacement;
 
-    private JSPlaceholder(String key, String usage, Function<JSPlaceholderContext, Double> action) {
+    private JSPlaceholder(String key, String usage, Function<JSPlaceholderContext, Double> replacement) {
         this.key = key;
         this.usage = usage;
-        this.action = action;
+        this.replacement = replacement;
     }
 
     public String getKey() {
@@ -43,25 +45,52 @@ public enum JSPlaceholder {
         return "&f\"&e&o" + this.key + "&f\" &7- " + this.usage;
     }
 
-    public static String prepareExpression(JSPlaceholderContext context, String expr) {
-        return "";
+    public Double getReplacement(JSPlaceholderContext ctx) {
+        return this.replacement.apply(ctx);
     }
 
-    public class JSPlaceholderContext {
+    public static String prepareExpression(JSPlaceholderContext ctx, String expr) {
+        for (JSPlaceholder ph : JSPlaceholder.values()) {
+            expr = expr.replace(ph.getKey(), String.valueOf(ph.getReplacement(ctx)));
+        }
+        return expr;
+    }
+
+    public static class JSPlaceholderContext {
         private Location location;
         private double toConvert;
 
-        public JSPlaceholderContext(Location location) {
-            this(location, 0);
-        }
-
-        public JSPlaceholderContext(double toConvert) {
-            this(Bukkit.getWorlds().get(0).getSpawnLocation(), toConvert);
-        }
-
-        public JSPlaceholderContext(Location location, double toConvert) {
+        private JSPlaceholderContext(Location location, double toConvert) {
             this.location = location;
             this.toConvert = toConvert;
+        }
+
+        public static JSPlaceholderContext create() {
+            return create(DEFAULT);
+        }
+
+        public static JSPlaceholderContext create(CommandSender executor) {
+            return create(executor, DEFAULT);
+        }
+
+        public static JSPlaceholderContext create(CommandSender executor, double toConvert) {
+            if (executor instanceof Player) {
+                return create(((Player) executor).getLocation(), toConvert);
+            } else {
+                return create(toConvert);
+            }
+        }
+
+        public static JSPlaceholderContext create(Location location) {
+            return new JSPlaceholderContext(location, DEFAULT);
+        }
+
+        public static JSPlaceholderContext create(double toConvert) {
+            return create(Bukkit.getWorlds().get(0).getSpawnLocation(), toConvert);
+        }
+
+        public static JSPlaceholderContext create(Location location, double toConvert) {
+            return new JSPlaceholderContext(location, toConvert);
         }
 
         public double getToConvert() {

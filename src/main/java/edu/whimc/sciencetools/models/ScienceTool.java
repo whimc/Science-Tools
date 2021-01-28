@@ -13,6 +13,8 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
+import edu.whimc.sciencetools.javascript.JSExpression;
+import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
 import edu.whimc.sciencetools.managers.ScienceToolManager;
 import edu.whimc.sciencetools.managers.ScienceToolManager.ToolType;
 import edu.whimc.sciencetools.utils.Utils;
@@ -107,7 +109,9 @@ public class ScienceTool {
 	}
 
 	public double getData(CommandSender sender, Location loc) {
-	    return Utils.executeExpression(sender, getExpression(sender, loc));
+	    JSExpression expr = new JSExpression(getExpression(sender, loc));
+	    Double val = expr.evaluate(JSPlaceholderContext.create(loc));
+	    return val == null ? 0 : val;
 	}
 
 	public String getMainUnit() {
@@ -125,7 +129,7 @@ public class ScienceTool {
 		String message = "&aThe measured " + type.toString().toLowerCase() + " is &f" + Utils.trim2Deci(val) + unit + "&7";
 
 		for (Conversion conv : conversions) {
-			String converted = Utils.trim2Deci(conv.convert(player, val));
+			String converted = Utils.trim2Deci(conv.convert(val));
 			message += " (" + converted + conv.getUnit() + ")";
 		}
 

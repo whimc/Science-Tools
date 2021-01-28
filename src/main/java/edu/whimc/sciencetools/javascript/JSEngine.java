@@ -6,8 +6,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.bukkit.command.CommandSender;
-
 import co.aikar.commands.InvalidCommandArgument;
 
 public class JSEngine {
@@ -33,46 +31,37 @@ public class JSEngine {
         } catch (ScriptException e) {}
     }
 
-    protected static Object run(String code) {
+    protected static Object run(String code, boolean throwArgumentError) {
         try {
             return engine.eval(code);
         } catch (ScriptException e) {
+            if (throwArgumentError) {
+                String error = "Your expression contains invalid syntax!\n";
+                error += e.getMessage();
+
+                throw new InvalidCommandArgument(error, false);
+            }
             return null;
         }
     }
 
-    protected static Object runWithContext(CommandSender executor, String code) {
-        try {
-            return engine.eval(code);
-        } catch (ScriptException e) {
-            String error = "Your expression contains invalid syntax!\n";
-            error += e.getMessage();
+    protected static Double evaluate(String expression, boolean throwArgumentError) {
+        Object res = run(expression, throwArgumentError);
 
-            throw new InvalidCommandArgument(error, false);
-        }
-    }
-
-    protected static Double evaluate(String expression) {
-        Object res = run(expression);
-        if (!(res instanceof Number)) {
-            return Double.valueOf(0);
+        if (res instanceof Number) {
+            return Double.valueOf(((Number) res).doubleValue());
         }
 
-        return Double.valueOf(((Number) res).doubleValue());
-    }
-
-    protected static Double evaluateWithContext(CommandSender executor, String expression) {
-        Object res = runWithContext(executor, expression);
-        if (!(res instanceof Number)) {
-            String type = "Unknown";
-            if (res != null) {
-                type = res.getClass().getSimpleName();
-            }
-
-            throw new InvalidCommandArgument("Expected a number but found type " + type, false);
+        if (!throwArgumentError) {
+            return null;
         }
 
-        return Double.valueOf(((Number) res).doubleValue());
+        String type = "Unknown";
+        if (res != null) {
+            type = res.getClass().getSimpleName();
+        }
+
+        throw new InvalidCommandArgument("The JavaScript expression must resolve to a number (Found type \"" + type + "\")", false);
     }
 
 }

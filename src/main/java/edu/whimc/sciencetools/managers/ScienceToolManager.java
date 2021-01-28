@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -159,7 +158,8 @@ public class ScienceToolManager {
                 continue;
             }
 
-            double val = Utils.executeExpression(Bukkit.getConsoleSender(), targetTool.getExpression(sender, loc));
+//            double val = Utils.executeExpression(Bukkit.getConsoleSender(), targetTool.getExpression(sender, loc));
+            double val = 1.0;
             expr = expr.replace(ph.toString(), Double.toString(val));
         }
 

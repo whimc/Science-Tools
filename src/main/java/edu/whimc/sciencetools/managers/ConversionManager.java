@@ -41,7 +41,12 @@ public class ConversionManager {
 			Utils.log(plugin, ChatColor.AQUA + "   - Expression: \"" + ChatColor.WHITE + expr + ChatColor.AQUA + "\"");
 			Utils.log(plugin, ChatColor.AQUA + "   - Unit: \"" + ChatColor.WHITE + unit + ChatColor.AQUA + "\"");
 
-			manager.createConversion(convName, unit, new JSExpression(expr));
+			JSExpression jsExpr = new JSExpression(expr);
+			if (!jsExpr.numerical()) {
+			    Utils.log(plugin, ChatColor.RED + "   * Invalid expression! (Skipping this conversion)");
+			    continue;
+			}
+			manager.loadConversion(convName, unit, new JSExpression(expr));
 		}
 
 		Utils.log(plugin, ChatColor.YELLOW + "Conversions loaded!");
@@ -49,9 +54,15 @@ public class ConversionManager {
 		return manager;
 	}
 
-	public Conversion createConversion(String name, String unit, JSExpression expr) {
+	private Conversion loadConversion(String name, String unit, JSExpression expr) {
 	    Conversion conv = new Conversion(this, name, unit, expr);
 	    conversions.put(name, conv);
+	    return conv;
+	}
+
+	public Conversion createConversion(String name, String unit, JSExpression expr) {
+	    Conversion conv = loadConversion(name, unit, expr);
+	    saveToConfig(conv);
 	    return conv;
 	}
 
@@ -94,7 +105,7 @@ public class ConversionManager {
         };
     }
 
-    public ParameterCondition<String, BukkitCommandExecutionContext, BukkitCommandIssuer> getConditionHandler() {
+    public ParameterCondition<String, BukkitCommandExecutionContext, BukkitCommandIssuer> getUniqueConditionHandler() {
         return (c, exec, value) -> {
             if (getConversion(value) != null) {
                 throw new InvalidCommandArgument("\"" + value + "\" already exists!", false);

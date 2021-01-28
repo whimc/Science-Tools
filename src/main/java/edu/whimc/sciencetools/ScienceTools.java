@@ -60,7 +60,8 @@ public class ScienceTools extends JavaPlugin implements Listener {
 	    manager.enableUnstableAPI("help");
 
 	    manager.getCommandReplacements().addReplacements(
-	            "perm.admin", "whimc-sciencetools.admin"
+	            "perm.admin", "whimc-sciencetools.admin",
+	            "basecommand", "st|sciencetools"
         );
 
 	    manager.registerDependency(ConversionManager.class, convManager);
@@ -73,7 +74,7 @@ public class ScienceTools extends JavaPlugin implements Listener {
 	    manager.getCommandConditions().addCondition(
 	            String.class,
 	            "unique-conversion",
-	            convManager.getConditionHandler());
+	            convManager.getUniqueConditionHandler());
 
 	    manager.getCommandContexts().registerContext(
 	            JSExpression.class,

@@ -19,7 +19,7 @@ import edu.whimc.sciencetools.managers.ConversionManager;
 import edu.whimc.sciencetools.models.Conversion;
 import edu.whimc.sciencetools.utils.Utils;
 
-@CommandAlias("st")
+@CommandAlias("%basecommand")
 @Subcommand("conversions")
 @CommandPermission("%perm.admin")
 public class ConversionsCommand extends BaseCommand {
@@ -51,7 +51,7 @@ public class ConversionsCommand extends BaseCommand {
     @CommandCompletion("@nothing @nothing @nothing")
     public void create(CommandSender sender, @Conditions("unique-conversion") @Single String name, @Single String unit, JSExpression expr) {
         mgr.createConversion(name, unit, expr);
-        sender.sendMessage("Created new converion \"" + name + "\"");
+        sender.sendMessage("Created new conversion \"" + name + "\"");
     }
 
     @Subcommand("remove")
@@ -75,7 +75,7 @@ public class ConversionsCommand extends BaseCommand {
     @Syntax("<name> <expr...>")
     @CommandCompletion("@conversions @nothing")
     public void setExpression(CommandSender sender, Conversion conversion, JSExpression expression) {
-        conversion.setExpression(sender, expression.getExpression());
+        conversion.setExpression(sender, expression);
         Utils.msg(sender, "Expression changed to " + expression.getExpression());
     }
 

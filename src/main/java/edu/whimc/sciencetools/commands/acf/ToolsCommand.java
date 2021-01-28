@@ -7,7 +7,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 
-@CommandAlias("st")
+@CommandAlias("%basecommand")
 @Subcommand("tools")
 @CommandPermission("%perm.admin")
 public class ToolsCommand extends BaseCommand {
