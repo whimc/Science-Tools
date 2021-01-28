@@ -6,18 +6,14 @@ import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
 
 public class JSExpression {
 
-    public static ContextResolver<JSExpression, BukkitCommandExecutionContext> getContextResolver() {
+    public static ContextResolver<JSExpression, BukkitCommandExecutionContext> getJSExprContextResolver() {
         return c -> {
             JSExpression expr = new JSExpression(c.joinArgs());
-            JSPlaceholderContext ctx = JSPlaceholderContext.create(c.getSender());
-            if (c.hasFlag("any-type")) {
-                expr.runWithArgumentCheck(ctx);
-            } else {
-                expr.evaluateWithArgumentCheck(ctx);
-            }
+            expr.runWithArgumentCheck(JSPlaceholderContext.create(c.getSender()));
             return expr;
         };
     }
+
 
     private String expr;
 
@@ -37,28 +33,16 @@ public class JSExpression {
         return run(JSPlaceholderContext.create()) != null;
     }
 
-    public boolean numerical() {
-        return evaluate(JSPlaceholderContext.create()) != null;
-    }
-
-    private String getPreparedExpression(JSPlaceholderContext ctx) {
-        return JSPlaceholder.prepareExpression(ctx, this.expr);
-    }
-
     public Object run(JSPlaceholderContext ctx) {
         return JSEngine.run(getPreparedExpression(ctx), false);
     }
 
+    protected String getPreparedExpression(JSPlaceholderContext ctx) {
+        return JSPlaceholder.prepareExpression(ctx, this.expr);
+    }
+
     private Object runWithArgumentCheck(JSPlaceholderContext ctx) {
         return JSEngine.run(getPreparedExpression(ctx), true);
-    }
-
-    public Double evaluate(JSPlaceholderContext ctx) {
-        return JSEngine.evaluate(getPreparedExpression(ctx), false);
-    }
-
-    private Double evaluateWithArgumentCheck(JSPlaceholderContext ctx) {
-        return JSEngine.evaluate(getPreparedExpression(ctx), true);
     }
 
     @Override

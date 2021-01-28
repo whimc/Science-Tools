@@ -20,8 +20,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
-import edu.whimc.sciencetools.managers.ScienceToolManager.ToolType;
-import edu.whimc.sciencetools.models.ScienceTool;
+import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager.ToolType;
 import edu.whimc.sciencetools.utils.Utils;
 
 public class Validate extends AbstractSubCommand implements Listener {

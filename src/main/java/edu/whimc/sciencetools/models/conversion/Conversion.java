@@ -1,10 +1,10 @@
-package edu.whimc.sciencetools.models;
+package edu.whimc.sciencetools.models.conversion;
 
 import org.bukkit.command.CommandSender;
 
 import edu.whimc.sciencetools.javascript.JSExpression;
+import edu.whimc.sciencetools.javascript.JSNumericalExpression;
 import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
-import edu.whimc.sciencetools.managers.ConversionManager;
 import edu.whimc.sciencetools.utils.Utils;
 
 public class Conversion {
@@ -12,9 +12,9 @@ public class Conversion {
 	private ConversionManager manager;
 
 	private String name, unit;
-	private JSExpression expression;
+	private JSNumericalExpression expression;
 
-	public Conversion(ConversionManager manager, String name, String unit, JSExpression expression) {
+	public Conversion(ConversionManager manager, String name, String unit, JSNumericalExpression expression) {
 		this.manager = manager;
 		this.name = name;
 		this.unit = unit;
@@ -37,7 +37,7 @@ public class Conversion {
 		return this.expression;
 	}
 
-	public void setExpression(CommandSender sender, JSExpression expression) {
+	public void setExpression(CommandSender sender, JSNumericalExpression expression) {
 		this.expression = expression;
 		manager.saveToConfig(this);
 	}

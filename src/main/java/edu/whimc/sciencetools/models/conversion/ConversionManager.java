@@ -1,4 +1,4 @@
-package edu.whimc.sciencetools.managers;
+package edu.whimc.sciencetools.models.conversion;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,8 +14,7 @@ import co.aikar.commands.CommandConditions.ParameterCondition;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.contexts.ContextResolver;
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.javascript.JSExpression;
-import edu.whimc.sciencetools.models.Conversion;
+import edu.whimc.sciencetools.javascript.JSNumericalExpression;
 import edu.whimc.sciencetools.utils.Utils;
 
 public class ConversionManager {
@@ -41,12 +40,12 @@ public class ConversionManager {
 			Utils.log(plugin, ChatColor.AQUA + "   - Expression: \"" + ChatColor.WHITE + expr + ChatColor.AQUA + "\"");
 			Utils.log(plugin, ChatColor.AQUA + "   - Unit: \"" + ChatColor.WHITE + unit + ChatColor.AQUA + "\"");
 
-			JSExpression jsExpr = new JSExpression(expr);
-			if (!jsExpr.numerical()) {
+			JSNumericalExpression jsExpr = new JSNumericalExpression(expr);
+			if (!jsExpr.valid()) {
 			    Utils.log(plugin, ChatColor.RED + "   * Invalid expression! (Skipping this conversion)");
 			    continue;
 			}
-			manager.loadConversion(convName, unit, new JSExpression(expr));
+			manager.loadConversion(convName, unit, jsExpr);
 		}
 
 		Utils.log(plugin, ChatColor.YELLOW + "Conversions loaded!");
@@ -54,13 +53,13 @@ public class ConversionManager {
 		return manager;
 	}
 
-	private Conversion loadConversion(String name, String unit, JSExpression expr) {
+	private Conversion loadConversion(String name, String unit, JSNumericalExpression expr) {
 	    Conversion conv = new Conversion(this, name, unit, expr);
 	    conversions.put(name, conv);
 	    return conv;
 	}
 
-	public Conversion createConversion(String name, String unit, JSExpression expr) {
+	public Conversion createConversion(String name, String unit, JSNumericalExpression expr) {
 	    Conversion conv = loadConversion(name, unit, expr);
 	    saveToConfig(conv);
 	    return conv;

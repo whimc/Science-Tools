@@ -11,10 +11,11 @@ import edu.whimc.sciencetools.commands.acf.ScienceToolsCommand;
 import edu.whimc.sciencetools.commands.acf.ToolsCommand;
 import edu.whimc.sciencetools.commands.acf.ValidationsCommand;
 import edu.whimc.sciencetools.javascript.JSExpression;
-import edu.whimc.sciencetools.managers.ConversionManager;
-import edu.whimc.sciencetools.managers.ScienceToolManager;
-import edu.whimc.sciencetools.managers.ScienceToolManager.ToolType;
-import edu.whimc.sciencetools.models.Conversion;
+import edu.whimc.sciencetools.javascript.JSNumericalExpression;
+import edu.whimc.sciencetools.models.conversion.Conversion;
+import edu.whimc.sciencetools.models.conversion.ConversionManager;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager.ToolType;
 
 public class ScienceTools extends JavaPlugin implements Listener {
 
@@ -78,7 +79,10 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
 	    manager.getCommandContexts().registerContext(
 	            JSExpression.class,
-	            JSExpression.getContextResolver());
+	            JSExpression.getJSExprContextResolver());
+	    manager.getCommandContexts().registerContext(
+                JSNumericalExpression.class,
+                JSNumericalExpression.getJSNumExprContextResolver());
 
 	    manager.registerCommand(new ConversionsCommand());
 	    manager.registerCommand(new ScienceToolsCommand());

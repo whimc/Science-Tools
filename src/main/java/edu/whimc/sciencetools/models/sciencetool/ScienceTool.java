@@ -1,4 +1,4 @@
-package edu.whimc.sciencetools.models;
+package edu.whimc.sciencetools.models.sciencetool;
 
 import java.util.List;
 import java.util.Map;
@@ -13,10 +13,10 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
-import edu.whimc.sciencetools.javascript.JSExpression;
+import edu.whimc.sciencetools.javascript.JSNumericalExpression;
 import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
-import edu.whimc.sciencetools.managers.ScienceToolManager;
-import edu.whimc.sciencetools.managers.ScienceToolManager.ToolType;
+import edu.whimc.sciencetools.models.conversion.Conversion;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager.ToolType;
 import edu.whimc.sciencetools.utils.Utils;
 
 public class ScienceTool {
@@ -24,17 +24,17 @@ public class ScienceTool {
 	private ScienceToolManager manager;
 	private ToolType type;
 
-	private String defaultExpr;
+	private JSNumericalExpression defaultExpr;
 	private String unit;
 
-	private Map<String, String> worldExprs;
-	private Map<String, String> regionExprs;
+	private Map<String, JSNumericalExpression> worldExprs;
+	private Map<String, JSNumericalExpression> regionExprs;
 
 	private List<Conversion> conversions;
 	private List<String> disabledWorlds;
 
-	public ScienceTool(ScienceToolManager manager, ToolType type, String defaultExpr, String unit,
-			Map<String, String> worldExprs, Map<String, String> regionExprs,
+	public ScienceTool(ScienceToolManager manager, ToolType type, JSNumericalExpression defaultExpr, String unit,
+			Map<String, JSNumericalExpression> worldExprs, Map<String, JSNumericalExpression> regionExprs,
 			List<Conversion> conversions, List<String> disabledWorlds) {
 		this.manager = manager;
 		this.type = type;
@@ -48,18 +48,7 @@ public class ScienceTool {
 		// TODO: Add methods to change values
 	}
 
-	public String fillIn(CommandSender sender, String expr, Location loc) {
-
-		String ph = type.getPlaceholder().toString();
-		if (expr.contains(ph)) {
-			Utils.msg(sender, "&cPls don't use recursion. Replacing &7" + ph + " &cwith &f1");
-			expr = expr.replace(ph, "1");
-		}
-
-		return manager.fillIn(sender, expr, loc);
-	}
-
-	String getRegionExpression(Location loc) {
+	private JSNumericalExpression getRegionExpression(Location loc) {
 		if (!Utils.worldGuardEnabled()) {
 			return null;
 		}
@@ -78,7 +67,7 @@ public class ScienceTool {
 		List<String> regions = regionManager.getApplicableRegionsIDs(bv);
 
 		for (String region : regions) {
-			String expr = regionExprs.getOrDefault(region, null);
+			JSNumericalExpression expr = regionExprs.getOrDefault(region, null);
 			if (expr != null) {
 				return expr;
 			}
@@ -87,13 +76,13 @@ public class ScienceTool {
 		return null;
 	}
 
-	String getWorldExpression(Location loc) {
+	private JSNumericalExpression getWorldExpression(Location loc) {
 		return worldExprs.getOrDefault(loc.getWorld().getName(), null);
 	}
 
-	public String getExpression(CommandSender sender, Location loc) {
+	public JSNumericalExpression getExpression(CommandSender sender, Location loc) {
 
-		String expr = getRegionExpression(loc);
+	    JSNumericalExpression expr = getRegionExpression(loc);
 
 		if (expr == null) {
 			expr = getWorldExpression(loc);
@@ -103,13 +92,11 @@ public class ScienceTool {
 			expr = defaultExpr;
 		}
 
-		expr = fillIn(sender, expr, loc);
-
 		return expr;
 	}
 
 	public double getData(CommandSender sender, Location loc) {
-	    JSExpression expr = new JSExpression(getExpression(sender, loc));
+	    JSNumericalExpression expr = getExpression(sender, loc);
 	    Double val = expr.evaluate(JSPlaceholderContext.create(loc));
 	    return val == null ? 0 : val;
 	}

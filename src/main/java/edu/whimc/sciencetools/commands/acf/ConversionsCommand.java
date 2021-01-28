@@ -14,9 +14,9 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
-import edu.whimc.sciencetools.javascript.JSExpression;
-import edu.whimc.sciencetools.managers.ConversionManager;
-import edu.whimc.sciencetools.models.Conversion;
+import edu.whimc.sciencetools.javascript.JSNumericalExpression;
+import edu.whimc.sciencetools.models.conversion.Conversion;
+import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.utils.Utils;
 
 @CommandAlias("%basecommand")
@@ -49,7 +49,7 @@ public class ConversionsCommand extends BaseCommand {
     @Description("Create a new conversion")
     @Syntax("<name> <unit> <expr...>")
     @CommandCompletion("@nothing @nothing @nothing")
-    public void create(CommandSender sender, @Conditions("unique-conversion") @Single String name, @Single String unit, JSExpression expr) {
+    public void create(CommandSender sender, @Conditions("unique-conversion") @Single String name, @Single String unit, JSNumericalExpression expr) {
         mgr.createConversion(name, unit, expr);
         sender.sendMessage("Created new conversion \"" + name + "\"");
     }
@@ -74,7 +74,7 @@ public class ConversionsCommand extends BaseCommand {
     @Description("Set the expression of a conversion")
     @Syntax("<name> <expr...>")
     @CommandCompletion("@conversions @nothing")
-    public void setExpression(CommandSender sender, Conversion conversion, JSExpression expression) {
+    public void setExpression(CommandSender sender, Conversion conversion, JSNumericalExpression expression) {
         conversion.setExpression(sender, expression);
         Utils.msg(sender, "Expression changed to " + expression.getExpression());
     }

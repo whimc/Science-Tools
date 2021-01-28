@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.managers.ScienceToolManager.ToolType;
-import edu.whimc.sciencetools.models.ScienceTool;
+import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager.ToolType;
 import edu.whimc.sciencetools.utils.Utils;
 
 /**
