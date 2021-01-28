@@ -1,11 +1,15 @@
 package edu.whimc.sciencetools.commands.acf;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.bukkit.command.CommandSender;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager.ToolType;
 
 @CommandAlias("%basecommand")
 @Subcommand("tools")
@@ -13,7 +17,17 @@ import co.aikar.commands.annotation.Subcommand;
 public class ToolsCommand extends BaseCommand {
 
     @Subcommand("info")
-    public void info(CommandSender sender) {}
+    public void info(CommandSender sender, ToolType tool) {
+        sender.sendMessage("Info about " + tool.name());
+    }
+
+    @Subcommand("list")
+    public void list(CommandSender sender) {
+        sender.sendMessage(Stream
+                .of(ToolType.values())
+                .map(ToolType::name)
+                .collect(Collectors.joining(", ")));
+    }
 
     @Subcommand("conversions")
     public class ConversionCommands extends BaseCommand {
