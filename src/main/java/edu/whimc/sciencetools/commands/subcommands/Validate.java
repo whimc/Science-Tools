@@ -31,7 +31,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 	public Validate(ScienceTools plugin, SubCommand subCmd) {
 		super(plugin, subCmd);
 
-		validationTasks = new HashMap<>();
+		this.validationTasks = new HashMap<>();
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -48,15 +48,15 @@ public class Validate extends AbstractSubCommand implements Listener {
 		}
 
 		public int getTaskId() {
-			return taskId;
+			return this.taskId;
 		}
 
 		public double getExpected() {
-			return expected;
+			return this.expected;
 		}
 
 		public ToolType getType() {
-			return type;
+			return this.type;
 		}
 	}
 
@@ -75,7 +75,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 			return false;
 		}
 
-		ScienceTool tool = plugin.getToolManager().getTool(type);
+		ScienceTool tool = this.plugin.getToolManager().getTool(type);
 
 		if (tool == null) {
 			Utils.msg(sender, "&cThat data tool isn't loaded!");
@@ -113,16 +113,16 @@ public class Validate extends AbstractSubCommand implements Listener {
 
 		UUID uuid = player.getUniqueId();
 
-		if (validationTasks.containsKey(uuid)) {
-			Bukkit.getScheduler().cancelTask(validationTasks.remove(uuid).taskId);
+		if (this.validationTasks.containsKey(uuid)) {
+			Bukkit.getScheduler().cancelTask(this.validationTasks.remove(uuid).taskId);
 		}
 
-		int id = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+		int id = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
 			doConfigTasks(player, "timeout", type, null);
-			validationTasks.remove(uuid);
-		}, 20 * plugin.getConfig().getInt("validation.timeout"));
+			this.validationTasks.remove(uuid);
+		}, 20 * this.plugin.getConfig().getInt("validation.timeout"));
 
-		validationTasks.put(uuid, new Validation(id, expected, type));
+		this.validationTasks.put(uuid, new Validation(id, expected, type));
 		doConfigTasks(player, "prompt", type, null);
 
 		return false;
@@ -131,7 +131,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 	@Override
 	protected List<String> tabRoutine(CommandSender sender, String[] args) {
 	    if (args.length == 1) {
-	        return plugin.getToolManager().toolTabComplete(args[0].toLowerCase());
+	        return this.plugin.getToolManager().toolTabComplete(args[0].toLowerCase());
 	    }
 	    if (args.length == 2) {
 	        return Bukkit.getOnlinePlayers().stream()
@@ -166,21 +166,21 @@ public class Validate extends AbstractSubCommand implements Listener {
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 
-		if (!validationTasks.containsKey(player.getUniqueId())) {
+		if (!this.validationTasks.containsKey(player.getUniqueId())) {
 			return;
 		}
 
 		event.setCancelled(true);
 
-		Validation validation = validationTasks.remove(player.getUniqueId());
+		Validation validation = this.validationTasks.remove(player.getUniqueId());
 		Bukkit.getScheduler().cancelTask(validation.getTaskId());
 
 		ToolType type = validation.getType();
 
-		Pattern pat = Pattern.compile("(-?\\d+(\\.\\d+)?)");
+		Pattern pat = Pattern.compile("(-?\\d*(\\.\\d+)?)");
 		Matcher matcher = pat.matcher(event.getMessage().replace(",", ""));
 
-		if (!matcher.find()) {
+		if (!matcher.find() || matcher.group().isEmpty()) {
 			syncDoConfigTasks(player, "no-number", type, null);
 			return;
 		}
@@ -191,7 +191,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 
 		double number = Double.parseDouble(match);
 
-		if (Math.abs(number - validation.getExpected()) < plugin.getConfig().getDouble("validation.tolerance")) {
+		if (Math.abs(number - validation.getExpected()) < this.plugin.getConfig().getDouble("validation.tolerance")) {
 			syncDoConfigTasks(player, "success", type, number);
 		} else {
 			syncDoConfigTasks(player, "failure", type, number);
@@ -200,24 +200,24 @@ public class Validate extends AbstractSubCommand implements Listener {
 	}
 
 	private void syncDoConfigTasks(Player player, String path, ToolType type, Double value) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> doConfigTasks(player, path, type, value));
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> doConfigTasks(player, path, type, value));
 	}
 
 	private void doConfigTasks(Player player, String path, ToolType type, Double value) {
 		String typeStr = type == null ? "" : type.toString();
 		String valueStr = value == null ? "" : value.toString();
-		String unit = plugin.getToolManager().getMainUnit(type);
+		String unit = this.plugin.getToolManager().getMainUnit(type);
 
 		doConfigTasks(player, path + ".all", typeStr, valueStr, unit);
 		doConfigTasks(player, path + "." + type.name(), typeStr, valueStr, unit);
 	}
 
 	private void doConfigTasks(Player player, String path, String type, String value, String unit) {
-		for (String msg : plugin.getConfig().getStringList("validation.messages." + path)) {
+		for (String msg : this.plugin.getConfig().getStringList("validation.messages." + path)) {
 			Utils.msg(player, msg.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit));
 		}
 
-		for (String cmd : plugin.getConfig().getStringList("validation.commands." + path)) {
+		for (String cmd : this.plugin.getConfig().getStringList("validation.commands." + path)) {
 			Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(),
 					cmd.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit).replace("{PLAYER}", player.getName()));
 		}
