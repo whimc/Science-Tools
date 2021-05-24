@@ -84,9 +84,21 @@ Region names are defined using [WorldGuard](https://worldguard.enginehub.org/en/
 
 #### Placeholders
 
-| Placeholder   | Description                       |
-|---------------|-----------------------------------|
-|`{Y}`          | The player's Y position           |
+| Placeholder       | Description                                          |
+|-------------------|------------------------------------------------------|
+|`{X}`              | The player's current X position                      |
+|`{Y}`              | The player's current Y position                      |
+|`{Z}`              | The player's current Z position                      |
+|`rand(min, max)`   | A random decimal between `min` and `max` (inclusive) |
+|`randInt(min, max)`| A random integer between `min` and `max` (inclusive) |
+|`min(a, b)`        | The minimum between `a` and `b`                      |
+|`max(a, b)`        | The maximum between `a` and `b`                      |
+|`{ALTITUDE}`       | The value from `/altitude`                           |
+|`{OXYGEN}`         | The value from `/oxygen`                             |
+|`{PRESSURE}`       | The value from `/pressure`                           |
+|`{RADIATION}`      | The value from `/radiation`                          |
+|`{TEMPERATURE}`    | The value from `/temperature`                        |
+|`{WIND}`           | The value from `/wind`                               |
 
 ### Validation
 Validation config will look like this:
