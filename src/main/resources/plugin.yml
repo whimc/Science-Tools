@@ -18,7 +18,7 @@ commands:
     description: "Temperature of the player's location"
   wind:
     description: "Wind speed of the player's location"
-    ailiases:
+    aliases:
     - airflow
   sciencetools:
     description: Manage the ScienceTools plugin
