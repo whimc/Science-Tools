@@ -38,6 +38,9 @@ public class Utils {
 		OXYGEN("{OXYGEN}", "Value from /oxygen"),
 		PRESSURE("{PRESSURE}", "Value from /pressure"),
 		RADIATION("{RADIATION}", "Value from /radiation"),
+		RADIATION_EM("{RADIATION_EM}", "Value from /radiation_em"),
+		RADIATION_PARTICLE("{RADIATION_PARTICLE}", "Value from /radiation_particle"),
+		RADIATION_COSMICRAYS("{RADIATION_COSMICRAYS}", "Value from /radiation_cosmicrays"),
 		TEMPERATURE("{TEMPERATURE}", "Value from /temperature"),
 		WIND("{WIND}", "Value from /wind");
 

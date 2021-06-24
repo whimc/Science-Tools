@@ -9,13 +9,19 @@ commands:
   altitude:
     description: "Player's altitude"
   atmosphere:
-     description: "Atmospheric composition at the player's location"
+    description: "Atmospheric composition at the player's location"
   oxygen:
     description: "Oxygen level in the air of the player's location"
   pressure:
     description: "Air pressure of the player's location"
   radiation:
     description: "Radiation level of the player's location"
+  radiation_em:
+    description: "Electromagnetic radiation level of the player's location"
+  radiation_particle:
+    description: "Particle radiation level of the player's location"
+  radiation_cosmicrays:
+    description: "Cosmic ray radiation level of the player's location"
   temperature:
     description: "Temperature of the player's location"
   wind:
