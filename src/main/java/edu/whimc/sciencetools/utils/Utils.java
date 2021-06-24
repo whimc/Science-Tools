@@ -34,6 +34,7 @@ public class Utils {
 		MIN("min(a, b)", "The minimum between 'a' and 'b'"),
 		MAX("max(a, b)", "The maximum between 'a' and 'b'"),
 		ALTITUDE("{ALTITUDE}", "Value from /altitude"),
+		ATMOSPHERE("{ATMOSPHERE}", "Value from /atmosphere"),
 		OXYGEN("{OXYGEN}", "Value from /oxygen"),
 		PRESSURE("{PRESSURE}", "Value from /pressure"),
 		RADIATION("{RADIATION}", "Value from /radiation"),

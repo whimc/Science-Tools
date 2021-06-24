@@ -20,6 +20,7 @@ public class ToolManager {
 
     public static enum ToolType {
         ALTITUDE(Placeholder.ALTITUDE),
+        ATMOSPHERE(Placeholder.ATMOSPHERE),
         OXYGEN(Placeholder.OXYGEN),
         PRESSURE(Placeholder.PRESSURE),
         RADIATION(Placeholder.RADIATION),

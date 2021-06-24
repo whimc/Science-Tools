@@ -8,6 +8,8 @@ softdepend: [WorldGuard]
 commands:
   altitude:
     description: "Player's altitude"
+  atmosphere:
+     description: "Atmospheric composition at the player's location"
   oxygen:
     description: "Oxygen level in the air of the player's location"
   pressure:
