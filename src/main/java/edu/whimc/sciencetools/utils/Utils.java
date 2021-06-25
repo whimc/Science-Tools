@@ -34,9 +34,13 @@ public class Utils {
 		MIN("min(a, b)", "The minimum between 'a' and 'b'"),
 		MAX("max(a, b)", "The maximum between 'a' and 'b'"),
 		ALTITUDE("{ALTITUDE}", "Value from /altitude"),
+		ATMOSPHERE("{ATMOSPHERE}", "Value from /atmosphere"),
 		OXYGEN("{OXYGEN}", "Value from /oxygen"),
 		PRESSURE("{PRESSURE}", "Value from /pressure"),
 		RADIATION("{RADIATION}", "Value from /radiation"),
+		RADIATION_EM("{RADIATION_EM}", "Value from /radiation_em"),
+		RADIATION_PARTICLE("{RADIATION_PARTICLE}", "Value from /radiation_particle"),
+		RADIATION_COSMICRAYS("{RADIATION_COSMICRAYS}", "Value from /radiation_cosmicrays"),
 		TEMPERATURE("{TEMPERATURE}", "Value from /temperature"),
 		WIND("{WIND}", "Value from /wind");
 

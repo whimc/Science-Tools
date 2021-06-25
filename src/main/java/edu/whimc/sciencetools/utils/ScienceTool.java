@@ -130,5 +130,14 @@ public class ScienceTool {
 		Utils.msg(player, message);
 
 	}
-
+	
+	
+	
+	// getters
+	public Map<String, String> getWorldExprs() {
+		return worldExprs;
+	}
+	public List<String> getDisabledWorlds() {
+		return disabledWorlds;
+	}
 }

@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.utils.AtmosphereTool;
 import edu.whimc.sciencetools.utils.ScienceTool;
 import edu.whimc.sciencetools.utils.ToolManager.ToolType;
 import edu.whimc.sciencetools.utils.Utils;
@@ -39,6 +40,17 @@ public class GetData implements CommandExecutor {
 
 		if (!(sender instanceof Player)) {
 			Utils.msg(sender, "&cYou must be a player to use this command!");
+			return false;
+		}
+		
+		// display a message if using /atmosphere
+		if (type == ToolType.ATMOSPHERE) {
+			//String message = this.plugin.getConfig().getString("tools.ATMOSPHERE.default-expression");	
+			//Utils.msg(sender, message);
+			
+			AtmosphereTool atmosTool = new AtmosphereTool(plugin, tool);
+			atmosTool.displayData((Player) sender);
+			
 			return false;
 		}
 		
