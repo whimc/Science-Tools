@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSNumericalExpression;
 import edu.whimc.sciencetools.javascript.JSPlaceholder;
+import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.utils.Utils;
@@ -22,13 +23,8 @@ import edu.whimc.sciencetools.utils.Utils;
 public class ScienceToolManager {
 
     public static enum ToolType {
-        ALTITUDE(JSPlaceholder.ALTITUDE),
-        OXYGEN(JSPlaceholder.OXYGEN),
-        PRESSURE(JSPlaceholder.PRESSURE),
-        RADIATION(JSPlaceholder.RADIATION),
-        TEMPERATURE(JSPlaceholder.TEMPERATURE),
-        WIND(JSPlaceholder.WIND),
-        ;
+        ALTITUDE(JSPlaceholder.ALTITUDE), OXYGEN(JSPlaceholder.OXYGEN), PRESSURE(JSPlaceholder.PRESSURE),
+        RADIATION(JSPlaceholder.RADIATION), TEMPERATURE(JSPlaceholder.TEMPERATURE), WIND(JSPlaceholder.WIND),;
 
         private JSPlaceholder placeholder;
 
@@ -37,7 +33,7 @@ public class ScienceToolManager {
         }
 
         public JSPlaceholder getPlaceholder() {
-            return placeholder;
+            return this.placeholder;
         }
 
         @Override
@@ -77,14 +73,16 @@ public class ScienceToolManager {
             }
 
             Utils.log(plugin, ChatColor.AQUA + " - Loading " + ChatColor.WHITE + name);
-            JSNumericalExpression defaultExpr = new JSNumericalExpression(plugin.getConfig().getString("tools." + name + ".default-expression"));
+            JSNumericalExpression defaultExpr = new JSNumericalExpression(
+                    plugin.getConfig().getString("tools." + name + ".default-expression"));
             if (!defaultExpr.valid()) {
                 Utils.log(plugin, ChatColor.RED + " * Invalid default expression. Skipping!");
                 continue;
             }
             String unit = plugin.getConfig().getString("tools." + name + ".unit");
 
-            Utils.log(plugin, ChatColor.AQUA + "   - Default Expression: \"" + ChatColor.WHITE + defaultExpr + ChatColor.AQUA + "\"");
+            Utils.log(plugin, ChatColor.AQUA + "   - Default Expression: \"" + ChatColor.WHITE + defaultExpr
+                    + ChatColor.AQUA + "\"");
             Utils.log(plugin, ChatColor.AQUA + "   - Unit: \"" + ChatColor.WHITE + unit + ChatColor.AQUA + "\"");
 
             List<Conversion> convs = new ArrayList<>();
@@ -94,7 +92,8 @@ public class ScienceToolManager {
                     Conversion convToAdd = convManager.getConversion(convName);
 
                     if (convToAdd == null) {
-                        Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.RED + convName + " is not a valid conversion!");
+                        Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.RED + convName
+                                + " is not a valid conversion!");
                         continue;
                     }
 
@@ -106,32 +105,38 @@ public class ScienceToolManager {
             Map<String, JSNumericalExpression> worldExprs = new HashMap<>();
             if (plugin.getConfig().contains("tools." + name + ".worlds")) {
                 Utils.log(plugin, ChatColor.AQUA + "     - Loading world-specific expressions");
-                for (String world : plugin.getConfig().getConfigurationSection("tools." + name + ".worlds").getKeys(false)) {
+                for (String world : plugin.getConfig().getConfigurationSection("tools." + name + ".worlds")
+                        .getKeys(false)) {
                     String worldExpr = plugin.getConfig().getString("tools." + name + ".worlds." + world);
 
                     JSNumericalExpression jsExpr = new JSNumericalExpression(worldExpr);
                     if (!jsExpr.valid()) {
-                        Utils.log(plugin, ChatColor.RED + "       - " + world + " \"" + worldExpr + "\" (Invalid expression)");
+                        Utils.log(plugin,
+                                ChatColor.RED + "       - " + world + " \"" + worldExpr + "\" (Invalid expression)");
                         continue;
                     }
                     worldExprs.put(world, jsExpr);
-                    Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.WHITE + world + " \"" + worldExpr + "\"");
+                    Utils.log(plugin,
+                            ChatColor.AQUA + "       - " + ChatColor.WHITE + world + " \"" + worldExpr + "\"");
                 }
             }
 
             Map<String, JSNumericalExpression> regionExprs = new HashMap<>();
             if (plugin.getConfig().contains("tools." + name + ".regions")) {
                 Utils.log(plugin, ChatColor.AQUA + "     - Loading region-specific expressions");
-                for (String region : plugin.getConfig().getConfigurationSection("tools." + name + ".regions").getKeys(false)) {
+                for (String region : plugin.getConfig().getConfigurationSection("tools." + name + ".regions")
+                        .getKeys(false)) {
                     String regionExpr = plugin.getConfig().getString("tools." + name + ".regions." + region);
 
                     JSNumericalExpression jsExpr = new JSNumericalExpression(regionExpr);
                     if (!jsExpr.valid()) {
-                        Utils.log(plugin, ChatColor.RED + "       - " + region + " \"" + regionExpr + "\" (Invalid expression)");
+                        Utils.log(plugin,
+                                ChatColor.RED + "       - " + region + " \"" + regionExpr + "\" (Invalid expression)");
                         continue;
                     }
                     regionExprs.put(region, jsExpr);
-                    Utils.log(plugin, ChatColor.AQUA + "       - " + ChatColor.WHITE + region + " \"" + regionExpr + "\"");
+                    Utils.log(plugin,
+                            ChatColor.AQUA + "       - " + ChatColor.WHITE + region + " \"" + regionExpr + "\"");
                 }
             }
 
@@ -144,7 +149,8 @@ public class ScienceToolManager {
                 }
             }
 
-            ScienceTool tool = new ScienceTool(manager, type, defaultExpr, unit, worldExprs, regionExprs, convs, disabledWorlds);
+            ScienceTool tool = new ScienceTool(manager, type, defaultExpr, unit, worldExprs, regionExprs, convs,
+                    disabledWorlds);
             manager.tools.put(type, tool);
         }
 
@@ -155,6 +161,7 @@ public class ScienceToolManager {
 
     public String fillIn(CommandSender sender, String expr, Location loc) {
         // Replace position placeholders
+        String filledExpression = JSPlaceholder.prepareExpression(JSPlaceholderContext.create(loc), expr);
         expr = expr.replace("{X}", Double.toString(loc.getX()));
         expr = expr.replace("{Y}", Double.toString(loc.getY()));
         expr = expr.replace("{Z}", Double.toString(loc.getZ()));
@@ -182,11 +189,11 @@ public class ScienceToolManager {
     }
 
     public ScienceTool getTool(ToolType type) {
-        return tools.getOrDefault(type, null);
+        return this.tools.getOrDefault(type, null);
     }
 
     public Set<ToolType> getLoadedTools() {
-        return tools.keySet();
+        return this.tools.keySet();
     }
 
     public String getMainUnit(ToolType type) {
@@ -199,10 +206,7 @@ public class ScienceToolManager {
     }
 
     public List<String> toolTabComplete(String hint) {
-        return getLoadedTools().stream()
-                .map(ToolType::name)
-                .filter(v -> v.toLowerCase().startsWith(hint.toLowerCase()))
-                .sorted()
+        return getLoadedTools().stream().map(ToolType::name).filter(v -> v.toLowerCase().startsWith(hint.toLowerCase()))
                 .collect(Collectors.toList());
     }
 }

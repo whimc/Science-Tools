@@ -38,7 +38,7 @@ public class ScienceTools extends JavaPlugin implements Listener {
 			getCommand(tool.toString().toLowerCase()).setExecutor(new GetData(this, tool));
 		}
 
-		registerCommands();
+//		registerCommands();
 	}
 
 	public ScienceToolManager getToolManager() {
