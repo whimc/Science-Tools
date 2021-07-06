@@ -19,11 +19,6 @@
 			<id>sk89q-repo</id>
 			<url>https://maven.enginehub.org/repo/</url>
 		</repository>
-		<!-- Maven repo for ACF -->
-		<repository>
-			<id>aikar</id>
-			<url>https://repo.aikar.co/content/groups/aikar/</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
@@ -40,12 +35,6 @@
 			<artifactId>worldguard-bukkit</artifactId>
 			<version>7.0.5-SNAPSHOT</version>
 			<scope>provided</scope>
-		</dependency>
-		<!-- Add ACF to the build -->
-		<dependency>
-			<groupId>co.aikar</groupId>
-			<artifactId>acf-paper</artifactId>
-			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -65,7 +54,7 @@
 			<url>http://dl.bintray.com/cy6ergn0m/maven</url>
 		</pluginRepository>
 	</pluginRepositories>
-	
+
 	<!-- Repo for plugin -->
 	<scm>
 		<connection>scm:git:git@github.com:whimc/Science-Tools.git</connection>
@@ -95,50 +84,6 @@
 				<configuration>
 					<releaseTitle>${project.artifactId}-${project.version}</releaseTitle>
 				</configuration>
-			</plugin>
-			
-			<!-- Used to shade in ACF -->			
-			<plugin>
-				<version>3.7.0</version>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<compilerArgs>
-						<arg>-parameters</arg>
-					</compilerArgs>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.1.1</version>
-				<configuration>
-					<dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml
-					</dependencyReducedPomLocation>
-					<relocations>
-						<relocation>
-							<pattern>co.aikar.commands</pattern>
-							<shadedPattern>${project.groupId}.sciencetools.lib.acf</shadedPattern>
-						</relocation>
-						<relocation>
-							<pattern>co.aikar.locales</pattern>
-							<shadedPattern>${project.groupId}.sciencetools.lib.locales</shadedPattern>
-						</relocation>
-					</relocations>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<minimizeJar>true</minimizeJar>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
