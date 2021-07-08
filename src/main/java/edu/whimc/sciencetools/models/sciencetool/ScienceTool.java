@@ -1,41 +1,37 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-
+import edu.whimc.sciencetools.javascript.JSContext;
 import edu.whimc.sciencetools.javascript.JSNumericalExpression;
-import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
 import edu.whimc.sciencetools.models.conversion.Conversion;
-import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager.ToolType;
 import edu.whimc.sciencetools.utils.Utils;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.Map;
 
 public class ScienceTool {
 
-    private ScienceToolManager manager;
-    private ToolType type;
+    private final ScienceToolManager manager;
+    private final ToolType type;
 
-    private JSNumericalExpression defaultExpr;
-    private String unit;
+    private final JSNumericalExpression defaultExpr;
+    private final String unit;
 
-    private Map<String, JSNumericalExpression> worldExprs;
-    private Map<String, JSNumericalExpression> regionExprs;
+    private final Map<String, JSNumericalExpression> worldExprs;
+    private final Map<String, JSNumericalExpression> regionExprs;
 
-    private List<Conversion> conversions;
-    private List<String> disabledWorlds;
+    private final List<Conversion> conversions;
+    private final List<String> disabledWorlds;
 
     public ScienceTool(ScienceToolManager manager, ToolType type, JSNumericalExpression defaultExpr, String unit,
-            Map<String, JSNumericalExpression> worldExprs, Map<String, JSNumericalExpression> regionExprs,
-            List<Conversion> conversions, List<String> disabledWorlds) {
+                       Map<String, JSNumericalExpression> worldExprs, Map<String, JSNumericalExpression> regionExprs,
+                       List<Conversion> conversions, List<String> disabledWorlds) {
         this.manager = manager;
         this.type = type;
         this.defaultExpr = defaultExpr;
@@ -80,7 +76,7 @@ public class ScienceTool {
         return this.worldExprs.getOrDefault(loc.getWorld().getName(), null);
     }
 
-    public JSNumericalExpression getExpression(CommandSender sender, Location loc) {
+    public JSNumericalExpression getExpression(Location loc) {
 
         JSNumericalExpression expr = getRegionExpression(loc);
 
@@ -95,9 +91,9 @@ public class ScienceTool {
         return expr;
     }
 
-    public double getData(CommandSender sender, Location loc) {
-        JSNumericalExpression expr = getExpression(sender, loc);
-        Double val = expr.evaluate(JSPlaceholderContext.create(loc));
+    public double getData(Location loc) {
+        JSNumericalExpression expr = getExpression(loc);
+        Double val = expr.evaluate(JSContext.create(loc));
         return val == null ? 0 : val;
     }
 
@@ -111,7 +107,7 @@ public class ScienceTool {
             return;
         }
 
-        double val = getData(player, player.getLocation());
+        double val = getData(player.getLocation());
 
         String message = "&aThe measured " + this.type.toString().toLowerCase() + " is &f" + Utils.trim2Deci(val)
                 + this.unit + "&7";

@@ -1,12 +1,8 @@
 package edu.whimc.sciencetools.javascript;
 
-import javax.script.Bindings;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import edu.whimc.sciencetools.commands.CommandError;
 
-import co.aikar.commands.InvalidCommandArgument;
+import javax.script.*;
 
 public class JSEngine {
 
@@ -14,9 +10,7 @@ public class JSEngine {
     private static final ScriptEngine engine = engineManager.getEngineByName("Nashorn");
     private static final Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 
-    /**
-     * Set up the engine and remove some harmful bindings
-     */
+    /* Set up the engine and remove some harmful bindings */
     static {
         bindings.remove("print");
         bindings.remove("load");
@@ -28,31 +22,28 @@ public class JSEngine {
             for (JSFunction func : JSFunction.values()) {
                 engine.eval(func.getDefinition());
             }
-        } catch (ScriptException e) {}
+        } catch (ScriptException ignored) { }
     }
 
-    protected static Object run(String code, boolean throwArgumentError) {
+    protected static Object run(String code, boolean throwCommandError) {
         try {
             return engine.eval(code);
-        } catch (ScriptException e) {
-            if (throwArgumentError) {
-                String error = "Your expression contains invalid syntax!\n";
-                error += e.getMessage();
-
-                throw new InvalidCommandArgument(error, false);
+        } catch (ScriptException exc) {
+            if (throwCommandError) {
+                throw new CommandError("&eYour expression contains invalid syntax!\n" + exc.getMessage(), false);
             }
             return null;
         }
     }
 
-    protected static Double evaluate(String expression, boolean throwArgumentError) {
-        Object res = run(expression, throwArgumentError);
+    protected static Double evaluate(String expression, boolean throwCommandError) {
+        Object res = run(expression, throwCommandError);
 
         if (res instanceof Number) {
-            return Double.valueOf(((Number) res).doubleValue());
+            return ((Number) res).doubleValue();
         }
 
-        if (!throwArgumentError) {
+        if (!throwCommandError) {
             return null;
         }
 
@@ -61,7 +52,7 @@ public class JSEngine {
             type = res.getClass().getSimpleName();
         }
 
-        throw new InvalidCommandArgument("The JavaScript expression must resolve to a number (Found type \"" + type + "\")", false);
+        throw new CommandError("&eThe JavaScript expression must resolve to a number (Found type \"" + type + "\")", false);
     }
 
 }

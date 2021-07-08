@@ -1,33 +1,31 @@
 package edu.whimc.sciencetools.javascript;
 
-import java.util.function.Function;
+import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.commands.CommandError;
+import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
+import edu.whimc.sciencetools.models.sciencetool.ToolType;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import java.util.function.Function;
 
 public enum JSPlaceholder {
 
-    VALUE("{VAL}", "Value to convert", JSPlaceholderContext::getToConvert),
+    VALUE("{VAL}", "Value to convert", JSContext::getToConvert),
     X_POS("{X}", "Current X value", c -> c.getLocation().getX()),
     Y_POS("{Y}", "Current Y value", c -> c.getLocation().getY()),
     Z_POS("{Z}", "Current Z value", c -> c.getLocation().getZ()),
-    ALTITUDE("{ALTITUDE}", "Value from /altitude", c -> 0.0),
-    OXYGEN("{OXYGEN}", "Value from /oxygen", c -> 0.0),
-    PRESSURE("{PRESSURE}", "Value from /pressure", c -> 0.0),
-    RADIATION("{RADIATION}", "Value from /radiation", c -> 0.0),
-    TEMPERATURE("{TEMPERATURE}", "Value from /temperature", c -> 0.0),
-    WIND("{WIND}", "Value from /wind", c -> 0.0),
+    ALTITUDE("{ALTITUDE}", "Value from /altitude", c -> getToolValue(c, ToolType.ALTITUDE)),
+    OXYGEN("{OXYGEN}", "Value from /oxygen", c -> getToolValue(c, ToolType.OXYGEN)),
+    PRESSURE("{PRESSURE}", "Value from /pressure", c -> getToolValue(c, ToolType.PRESSURE)),
+    RADIATION("{RADIATION}", "Value from /radiation", c -> getToolValue(c, ToolType.RADIATION)),
+    TEMPERATURE("{TEMPERATURE}", "Value from /temperature", c -> getToolValue(c, ToolType.TEMPERATURE)),
+    WIND("{WIND}", "Value from /wind", c -> getToolValue(c, ToolType.WIND)),
     ;
 
-    public static final double DEFAULT = 1.0;
+    private final String key;
+    private final String usage;
+    private final Function<JSContext, Double> replacement;
 
-    private String key;
-    private String usage;
-    private Function<JSPlaceholderContext, Double> replacement;
-
-    private JSPlaceholder(String key, String usage, Function<JSPlaceholderContext, Double> replacement) {
+    JSPlaceholder(String key, String usage, Function<JSContext, Double> replacement) {
         this.key = key;
         this.usage = usage;
         this.replacement = replacement;
@@ -45,61 +43,25 @@ public enum JSPlaceholder {
         return "&f\"&e&o" + this.key + "&f\" &7- " + this.usage;
     }
 
-    public Double getReplacement(JSPlaceholderContext ctx) {
+    public Double getReplacement(JSContext ctx) {
         return this.replacement.apply(ctx);
     }
 
-    public static String prepareExpression(JSPlaceholderContext ctx, String expr) {
+    public static String prepareExpression(JSContext ctx, String expr) {
         for (JSPlaceholder ph : JSPlaceholder.values()) {
-            expr = expr.replace(ph.getKey(), String.valueOf(ph.getReplacement(ctx)));
+            if (expr.contains(ph.getKey())) {
+                expr = expr.replace(ph.getKey(), String.valueOf(ph.getReplacement(ctx)));
+            }
         }
         return expr;
     }
 
-    public static class JSPlaceholderContext {
-        private Location location;
-        private double toConvert;
-
-        private JSPlaceholderContext(Location location, double toConvert) {
-            this.location = location;
-            this.toConvert = toConvert;
+    private static double getToolValue(JSContext ctx, ToolType toolType) {
+        ScienceTool tool = ScienceTools.getInstance().getToolManager().getTool(toolType);
+        if (tool == null) {
+            throw new CommandError("&c" + toolType.name() + " is not loaded.", false);
         }
-
-        public static JSPlaceholderContext create() {
-            return create(DEFAULT);
-        }
-
-        public static JSPlaceholderContext create(CommandSender executor) {
-            return create(executor, DEFAULT);
-        }
-
-        public static JSPlaceholderContext create(CommandSender executor, double toConvert) {
-            if (executor instanceof Player) {
-                return create(((Player) executor).getLocation(), toConvert);
-            } else {
-                return create(toConvert);
-            }
-        }
-
-        public static JSPlaceholderContext create(Location location) {
-            return new JSPlaceholderContext(location, DEFAULT);
-        }
-
-        public static JSPlaceholderContext create(double toConvert) {
-            return create(Bukkit.getWorlds().get(0).getSpawnLocation(), toConvert);
-        }
-
-        public static JSPlaceholderContext create(Location location, double toConvert) {
-            return new JSPlaceholderContext(location, toConvert);
-        }
-
-        public double getToConvert() {
-            return this.toConvert;
-        }
-
-        public Location getLocation() {
-            return this.location;
-        }
+        return ScienceTools.getInstance().getToolManager().getTool(toolType).getData(ctx.getLocation());
     }
 
 }

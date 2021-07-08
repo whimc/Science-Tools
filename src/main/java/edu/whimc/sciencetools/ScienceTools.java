@@ -1,93 +1,60 @@
 package edu.whimc.sciencetools;
 
+import edu.whimc.sciencetools.commands.BaseToolCommand;
+import edu.whimc.sciencetools.commands.GetData;
+import edu.whimc.sciencetools.models.conversion.ConversionManager;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
+import edu.whimc.sciencetools.models.sciencetool.ToolType;
+import edu.whimc.sciencetools.models.validation.ValidationManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import co.aikar.commands.PaperCommandManager;
-import edu.whimc.sciencetools.commands.BaseToolCommand;
-import edu.whimc.sciencetools.commands.GetData;
-import edu.whimc.sciencetools.commands.acf.ConversionsCommand;
-import edu.whimc.sciencetools.commands.acf.ScienceToolsCommand;
-import edu.whimc.sciencetools.commands.acf.ToolsCommand;
-import edu.whimc.sciencetools.commands.acf.ValidationsCommand;
-import edu.whimc.sciencetools.javascript.JSExpression;
-import edu.whimc.sciencetools.javascript.JSNumericalExpression;
-import edu.whimc.sciencetools.models.conversion.Conversion;
-import edu.whimc.sciencetools.models.conversion.ConversionManager;
-import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
-import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager.ToolType;
-
 public class ScienceTools extends JavaPlugin implements Listener {
 
-	private ScienceToolManager toolManager;
-	private ConversionManager convManager;
+    private ScienceToolManager toolManager;
+    private ConversionManager conversionManager;
+    private ValidationManager validationManager;
 
-	PaperCommandManager manager;
+    private static ScienceTools instance;
 
-	@Override
-	public void onEnable() {
-		getCommand("sciencetools").setExecutor(new BaseToolCommand(this));
+    @Override
+    public void onEnable() {
+        ScienceTools.instance = this;
 
-		saveDefaultConfig();
-		getConfig().options().copyDefaults(false);
+        getCommand("sciencetools").setExecutor(new BaseToolCommand(this));
 
-		convManager = ConversionManager.loadConversions(this);
-		toolManager = ScienceToolManager.loadTools(this, convManager);
+        saveDefaultConfig();
+        getConfig().options().copyDefaults(false);
 
-		for (ToolType tool : ToolType.values()) {
-			getCommand(tool.toString().toLowerCase()).setExecutor(new GetData(this, tool));
-		}
+        conversionManager = new ConversionManager(this);
+        toolManager = new ScienceToolManager(this, conversionManager);
+//        validationManager = ValidationManager(this);
 
-//		registerCommands();
-	}
+        for (ToolType tool : ToolType.values()) {
+            getCommand(tool.toString().toLowerCase()).setExecutor(new GetData(this, tool));
+        }
+    }
 
-	public ScienceToolManager getToolManager() {
-		return toolManager;
-	}
+    public ScienceToolManager getToolManager() {
+        return this.toolManager;
+    }
 
-	public ConversionManager getConversionManager() {
-		return convManager;
-	}
+    public ConversionManager getConversionManager() {
+        return this.conversionManager;
+    }
 
-	public void reloadScienceTools() {
-		reloadConfig();
-		convManager = ConversionManager.loadConversions(this);
-		toolManager = ScienceToolManager.loadTools(this, convManager);
-	}
+    public ValidationManager getValidationManager() {
+        return this.validationManager;
+    }
 
-	private void registerCommands() {
-	    manager = new PaperCommandManager(this);
+    public void reloadScienceTools() {
+        reloadConfig();
+        this.conversionManager = new ConversionManager(this);
+        this.toolManager = new ScienceToolManager(this, this.conversionManager);
+    }
 
-	    manager.enableUnstableAPI("help");
-
-	    manager.getCommandReplacements().addReplacements(
-	            "perm.admin", "whimc-sciencetools.admin",
-	            "basecommand", "st|sciencetools"
-        );
-
-	    manager.registerDependency(ConversionManager.class, convManager);
-	    manager.getCommandContexts().registerContext(
-	            Conversion.class,
-	            convManager.getContextResolver());
-	    manager.getCommandCompletions().registerCompletion(
-	            "conversions",
-	            convManager.getCommandCompletionHandler());
-	    manager.getCommandConditions().addCondition(
-	            String.class,
-	            "unique-conversion",
-	            convManager.getUniqueConditionHandler());
-
-	    manager.getCommandContexts().registerContext(
-	            JSExpression.class,
-	            JSExpression.getJSExprContextResolver());
-	    manager.getCommandContexts().registerContext(
-                JSNumericalExpression.class,
-                JSNumericalExpression.getJSNumExprContextResolver());
-
-	    manager.registerCommand(new ConversionsCommand());
-	    manager.registerCommand(new ScienceToolsCommand());
-	    manager.registerCommand(new ToolsCommand());
-	    manager.registerCommand(new ValidationsCommand());
-	}
+    public static ScienceTools getInstance() {
+        return ScienceTools.instance;
+    }
 
 }

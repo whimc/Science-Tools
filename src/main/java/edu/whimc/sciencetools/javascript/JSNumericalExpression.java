@@ -1,19 +1,6 @@
 package edu.whimc.sciencetools.javascript;
 
-import co.aikar.commands.BukkitCommandExecutionContext;
-import co.aikar.commands.contexts.ContextResolver;
-import edu.whimc.sciencetools.javascript.JSPlaceholder.JSPlaceholderContext;
-
 public class JSNumericalExpression extends JSExpression {
-
-    public static ContextResolver<JSNumericalExpression, BukkitCommandExecutionContext> getJSNumExprContextResolver() {
-        return c -> {
-            JSNumericalExpression expr = new JSNumericalExpression(c.joinArgs());
-            expr.evaluateWithArgumentCheck(JSPlaceholderContext.create(c.getSender()));
-            return expr;
-        };
-    }
-
 
     public JSNumericalExpression(String expr) {
         super(expr);
@@ -21,14 +8,14 @@ public class JSNumericalExpression extends JSExpression {
 
     @Override
     public boolean valid() {
-        return evaluate(JSPlaceholderContext.create()) != null;
+        return evaluate(JSContext.create()) != null;
     }
 
-    public Double evaluate(JSPlaceholderContext ctx) {
+    public Double evaluate(JSContext ctx) {
         return JSEngine.evaluate(getPreparedExpression(ctx), false);
     }
 
-    private Double evaluateWithArgumentCheck(JSPlaceholderContext ctx) {
+    private Double evaluateWithArgumentCheck(JSContext ctx) {
         return JSEngine.evaluate(getPreparedExpression(ctx), true);
     }
 
