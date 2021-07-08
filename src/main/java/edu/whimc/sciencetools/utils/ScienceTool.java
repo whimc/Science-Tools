@@ -134,8 +134,14 @@ public class ScienceTool {
 	
 	
 	// getters
+	public ToolType getType() {
+		return type;
+	}
 	public Map<String, String> getWorldExprs() {
 		return worldExprs;
+	}
+	public Map<String, String> getRegionExprs() {
+		return regionExprs;
 	}
 	public List<String> getDisabledWorlds() {
 		return disabledWorlds;
