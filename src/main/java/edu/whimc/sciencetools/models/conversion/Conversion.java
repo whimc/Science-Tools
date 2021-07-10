@@ -12,7 +12,7 @@ public class Conversion {
     private final ConversionManager manager = ScienceTools.getInstance().getConversionManager();
 
     private final String name;
-	private String unit;
+    private String unit;
     private JSNumericalExpression expression;
 
     protected Conversion(String name, String unit, JSNumericalExpression expression) {

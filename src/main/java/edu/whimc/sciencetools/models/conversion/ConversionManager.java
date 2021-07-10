@@ -3,6 +3,7 @@ package edu.whimc.sciencetools.models.conversion;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSNumericalExpression;
 import edu.whimc.sciencetools.utils.Utils;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -11,33 +12,32 @@ import java.util.Map;
 
 public class ConversionManager {
 
-    private final ScienceTools plugin;
     private final Map<String, Conversion> conversions;
 
-    public ConversionManager(ScienceTools plugin) {
-        this.plugin = plugin;
+    public ConversionManager() {
         this.conversions = new HashMap<>();
         loadConversions();
     }
 
     private void loadConversions() {
+        FileConfiguration config = ScienceTools.getInstance().getConfig();
         Utils.log("&eLoading Conversions from config");
 
-        for (String convName : plugin.getConfig().getConfigurationSection("conversions").getKeys(false)) {
-            Utils.log("&b - Loading &f" + convName);
-            String expr = plugin.getConfig().getString("conversions." + convName + ".expression");
-            String unit = plugin.getConfig().getString("conversions." + convName + ".unit");
+        for (String conversion : config.getConfigurationSection("conversions").getKeys(false)) {
+            Utils.log("&b - Loading &f" + conversion);
+            String expr = config.getString("conversions." + conversion + ".expression");
+            String unit = config.getString("conversions." + conversion + ".unit");
 
-            Utils.log("&b   - Expression: \"&f" + expr + "&b\"");
-            Utils.log("&b   - Unit: \"&f" + unit + "&b\"");
+            Utils.log("&b\t- Expression: \"&f" + expr + "&b\"");
+            Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");
 
             JSNumericalExpression jsExpr = new JSNumericalExpression(expr);
             if (!jsExpr.valid()) {
-                Utils.log("&e   * Invalid expression! (Skipping this conversion)");
+                Utils.log("&c\t* Invalid expression! Skipping.");
                 continue;
             }
 
-            loadConversion(convName, unit, jsExpr);
+            loadConversion(conversion, unit, jsExpr);
         }
 
         Utils.log("&eConversions loaded!");
@@ -76,8 +76,8 @@ public class ConversionManager {
     }
 
     private void setConfig(String key, Object value) {
-        plugin.getConfig().set("conversions." + key, value);
-        plugin.saveConfig();
+        ScienceTools.getInstance().getConfig().set("conversions." + key, value);
+        ScienceTools.getInstance().saveConfig();
     }
 
 }

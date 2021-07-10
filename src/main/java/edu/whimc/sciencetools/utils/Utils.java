@@ -4,6 +4,7 @@ import edu.whimc.sciencetools.ScienceTools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 
 public class Utils {
 
@@ -35,10 +36,16 @@ public class Utils {
     }
 
     public static void setDebugReceiver(CommandSender sender) {
+        // Avoid duplicate debug messages in console
+        if (sender instanceof ConsoleCommandSender) {
+            return;
+        }
         debugReceiver = sender;
     }
 
     public static void log(String message) {
+        // Make tabs more consistent
+        message = message.replace("\t", "    ");
         if (debugReceiver != null) {
             Utils.msg(debugReceiver, message);
         }

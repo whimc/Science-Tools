@@ -22,7 +22,8 @@ public class JSEngine {
             for (JSFunction func : JSFunction.values()) {
                 engine.eval(func.getDefinition());
             }
-        } catch (ScriptException ignored) { }
+        } catch (ScriptException ignored) {
+        }
     }
 
     protected static Object run(String code, boolean throwCommandError) {

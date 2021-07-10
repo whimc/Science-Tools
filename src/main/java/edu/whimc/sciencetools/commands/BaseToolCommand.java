@@ -142,10 +142,9 @@ public class BaseToolCommand implements CommandExecutor, TabCompleter {
 
     }
 
-    private final Map<SubCommand, AbstractSubCommand> subCommands;
+    private final Map<SubCommand, AbstractSubCommand> subCommands = new HashMap<>();
 
     public BaseToolCommand(ScienceTools plugin) {
-        subCommands = new HashMap<>();
         subCommands.put(SubCommand.JS, new JSInterpreter(plugin, SubCommand.JS));
 //		subCommands.put(SubCommand.TOOL, new ToolsBase(plugin, SubCommand.TOOL));
 //		subCommands.put(SubCommand.CONVERSION, new ConversionsBase(plugin, SubCommand.CONVERSION));

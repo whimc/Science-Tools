@@ -1,6 +1,4 @@
 # -- WHIMC Science Tools --
-# You shouldn't have to edit this file.
-# Everything in here can be edited in game
 conversions:
   feet:
     expression: "{VAL} * 3.28084"
@@ -10,7 +8,7 @@ conversions:
     unit: "°F"
 tools:
   ALTITUDE:
-    default-expression: "max(0, {Y})"
+    default: "max(0, {Y})"
     unit: "m"
     conversions:
       - feet
@@ -19,7 +17,7 @@ tools:
     disabled-worlds:
       - "world_the_end"
   OXYGEN:
-    default-expression: "30 + rand(-0.5, 0.5)"
+    default: "30 + rand(-0.5, 0.5)"
     unit: "%"
     regions:
       enclosure: "rand(0, 0.1)"

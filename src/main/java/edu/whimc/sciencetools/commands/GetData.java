@@ -9,12 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.utils.StringScienceTool;
-import edu.whimc.sciencetools.utils.ScienceTool;
-import edu.whimc.sciencetools.utils.ToolManager.ToolType;
-import edu.whimc.sciencetools.utils.Utils;
-
 /**
  * For commands like Altitude, Oxygen, Pressure, Temperature, Wind, etc...
  *
@@ -45,25 +39,17 @@ public class GetData implements CommandExecutor {
             return false;
         }
 
-        tool.displayData((Player) sender);
-
+        tool.displayMeasurement((Player) sender);
         return false;
+//		// handle as a StringScienceTool if using /atmosphere or /radiation_em
+//		if (type == ToolType.ATMOSPHERE || type == ToolType.RADIATION_EM) {
+//			StringScienceTool atmosTool = new StringScienceTool(plugin, tool);
+//			atmosTool.displayData((Player) sender);
+//			return false;
+//		}
+//
+//		tool.displayData((Player) sender);
+//		return false;
     }
-
-		if (!(sender instanceof Player)) {
-			Utils.msg(sender, "&cYou must be a player to use this command!");
-			return false;
-		}
-
-		// handle as a StringScienceTool if using /atmosphere or /radiation_em
-		if (type == ToolType.ATMOSPHERE || type == ToolType.RADIATION_EM) {
-			StringScienceTool atmosTool = new StringScienceTool(plugin, tool);
-			atmosTool.displayData((Player) sender);
-			return false;
-		}
-
-		tool.displayData((Player) sender);
-		return false;
-	}
 
 }

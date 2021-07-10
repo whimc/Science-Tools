@@ -1,26 +1,15 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
-import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import org.apache.commons.lang.StringUtils;
 
 public enum ToolType {
-    ALTITUDE(JSPlaceholder.ALTITUDE),
-    OXYGEN(JSPlaceholder.OXYGEN),
-    PRESSURE(JSPlaceholder.PRESSURE),
-    RADIATION(JSPlaceholder.RADIATION),
-    TEMPERATURE(JSPlaceholder.TEMPERATURE),
-    WIND(JSPlaceholder.WIND),
+    ALTITUDE,
+    OXYGEN,
+    PRESSURE,
+    RADIATION,
+    TEMPERATURE,
+    WIND,
     ;
-
-    private final JSPlaceholder placeholder;
-
-    ToolType(JSPlaceholder placeholder) {
-        this.placeholder = placeholder;
-    }
-
-    public JSPlaceholder getPlaceholder() {
-        return this.placeholder;
-    }
 
     @Override
     public String toString() {

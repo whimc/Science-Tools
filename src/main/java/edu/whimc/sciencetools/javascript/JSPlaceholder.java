@@ -2,6 +2,7 @@ package edu.whimc.sciencetools.javascript;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.commands.CommandError;
+import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ToolType;
 
@@ -61,7 +62,11 @@ public enum JSPlaceholder {
         if (tool == null) {
             throw new CommandError("&c" + toolType.name() + " is not loaded.", false);
         }
-        return ScienceTools.getInstance().getToolManager().getTool(toolType).getData(ctx.getLocation());
+        if (!(tool instanceof NumericScienceTool)) {
+            throw new CommandError("&c" + toolType.toString() + " is not a numeric science tool!", false);
+        }
+
+        return ((NumericScienceTool) tool).getData(ctx.getLocation());
     }
 
 }

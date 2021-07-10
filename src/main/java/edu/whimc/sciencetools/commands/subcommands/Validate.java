@@ -2,6 +2,7 @@ package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
+import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ToolType;
 import edu.whimc.sciencetools.utils.Utils;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -30,16 +32,16 @@ public class Validate extends AbstractSubCommand implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    private class Validation {
+    private static class Validation {
 
         private final int taskId;
         private final double expected;
-        private final ToolType type;
+        private final NumericScienceTool tool;
 
-        public Validation(int taskId, double expected, ToolType type) {
+        public Validation(int taskId, double expected, NumericScienceTool tool) {
             this.taskId = taskId;
             this.expected = expected;
-            this.type = type;
+            this.tool = tool;
         }
 
         public int getTaskId() {
@@ -50,8 +52,8 @@ public class Validate extends AbstractSubCommand implements Listener {
             return this.expected;
         }
 
-        public ToolType getType() {
-            return this.type;
+        public NumericScienceTool getTool() {
+            return this.tool;
         }
     }
 
@@ -63,20 +65,23 @@ public class Validate extends AbstractSubCommand implements Listener {
         if (type == null) {
             Utils.msg(sender, "&cThe tool \"&4" + args[0] + "&c\" does not exist!");
             Utils.msg(sender, "&cAvailable tools: &7" +
-                    String.join(", ", Arrays.asList(ToolType.values())
-                            .stream()
-                            .map(ToolType::name)
-                            .collect(Collectors.toList())));
+                    String.join(", ", plugin.getToolManager().numericToolTabComplete("")));
             return false;
         }
 
-        ScienceTool tool = this.plugin.getToolManager().getTool(type);
+        ScienceTool baseTool = this.plugin.getToolManager().getTool(type);
 
-        if (tool == null) {
+        if (baseTool == null) {
             Utils.msg(sender, "&cThat data tool isn't loaded!");
             return false;
         }
 
+        if (!(baseTool instanceof NumericScienceTool)) {
+            Utils.msg(sender, "&cYou can only validate numeric tools!");
+            return false;
+        }
+
+        NumericScienceTool tool = (NumericScienceTool) baseTool;
         Player player = Bukkit.getPlayer(args[1]);
 
         if (player == null) {
@@ -84,7 +89,7 @@ public class Validate extends AbstractSubCommand implements Listener {
             return false;
         }
 
-        double expected = 0;
+        double expected;
 
         if (args.length > this.subCmd.minArgs()) {
             World world = Bukkit.getWorld(args[2]);
@@ -113,12 +118,12 @@ public class Validate extends AbstractSubCommand implements Listener {
         }
 
         int id = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
-            doConfigTasks(player, "timeout", type, null);
+            doConfigTasks(player, "timeout", tool, null);
             this.validationTasks.remove(uuid);
         }, 20 * this.plugin.getConfig().getInt("validation.timeout"));
 
-        this.validationTasks.put(uuid, new Validation(id, expected, type));
-        doConfigTasks(player, "prompt", type, null);
+        this.validationTasks.put(uuid, new Validation(id, expected, tool));
+        doConfigTasks(player, "prompt", tool, null);
 
         return false;
     }
@@ -126,7 +131,7 @@ public class Validate extends AbstractSubCommand implements Listener {
     @Override
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return this.plugin.getToolManager().toolTabComplete(args[0].toLowerCase());
+            return this.plugin.getToolManager().numericToolTabComplete(args[0].toLowerCase());
         }
         if (args.length == 2) {
             return Bukkit.getOnlinePlayers().stream()
@@ -141,17 +146,17 @@ public class Validate extends AbstractSubCommand implements Listener {
                     .collect(Collectors.toList());
         }
         if (!(sender instanceof Player)) {
-            return Arrays.asList();
+            return Collections.emptyList();
         }
         Location loc = ((Player) sender).getLocation();
         if (args.length == 4) {
-            return Arrays.asList(Double.toString(loc.getBlockX()));
+            return Collections.singletonList(Double.toString(loc.getBlockX()));
         }
         if (args.length == 5) {
-            return Arrays.asList(Double.toString(loc.getBlockY()));
+            return Collections.singletonList(Double.toString(loc.getBlockY()));
         }
         if (args.length == 6) {
-            return Arrays.asList(Double.toString(loc.getBlockZ()));
+            return Collections.singletonList(Double.toString(loc.getBlockZ()));
         }
 
         return super.tabRoutine(sender, args);
@@ -170,41 +175,41 @@ public class Validate extends AbstractSubCommand implements Listener {
         Validation validation = this.validationTasks.remove(player.getUniqueId());
         Bukkit.getScheduler().cancelTask(validation.getTaskId());
 
-        ToolType type = validation.getType();
+        NumericScienceTool tool = validation.getTool();
 
         Pattern pat = Pattern.compile("(-?\\d*(\\.\\d+)?)");
         Matcher matcher = pat.matcher(event.getMessage().replace(",", ""));
 
         if (!matcher.find() || matcher.group().isEmpty()) {
-            syncDoConfigTasks(player, "no-number", type, null);
+            syncDoConfigTasks(player, "no-number", tool, null);
             return;
         }
 
         String match = matcher.group();
 
-        syncDoConfigTasks(player, "found-number", type, Double.valueOf(match));
+        syncDoConfigTasks(player, "found-number", tool, Double.valueOf(match));
 
         double number = Double.parseDouble(match);
 
         if (Math.abs(number - validation.getExpected()) < this.plugin.getConfig().getDouble("validation.tolerance")) {
-            syncDoConfigTasks(player, "success", type, number);
+            syncDoConfigTasks(player, "success", tool, number);
         } else {
-            syncDoConfigTasks(player, "failure", type, number);
+            syncDoConfigTasks(player, "failure", tool, number);
         }
 
     }
 
-    private void syncDoConfigTasks(Player player, String path, ToolType type, Double value) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> doConfigTasks(player, path, type, value));
+    private void syncDoConfigTasks(Player player, String path, NumericScienceTool tool, Double value) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> doConfigTasks(player, path, tool, value));
     }
 
-    private void doConfigTasks(Player player, String path, ToolType type, Double value) {
-        String typeStr = type == null ? "" : type.toString();
+    private void doConfigTasks(Player player, String path, NumericScienceTool tool, @Nullable Double value) {
+        String typeStr = tool.getType().toString();
         String valueStr = value == null ? "" : value.toString();
-        String unit = this.plugin.getToolManager().getMainUnit(type);
+        String unit = tool.getMainUnit();
 
         doConfigTasks(player, path + ".all", typeStr, valueStr, unit);
-        doConfigTasks(player, path + "." + type.name(), typeStr, valueStr, unit);
+        doConfigTasks(player, path + "." + tool.getType().name(), typeStr, valueStr, unit);
     }
 
     private void doConfigTasks(Player player, String path, String type, String value, String unit) {

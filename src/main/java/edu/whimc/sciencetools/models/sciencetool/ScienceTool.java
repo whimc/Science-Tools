@@ -5,46 +5,44 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import edu.whimc.sciencetools.javascript.JSContext;
-import edu.whimc.sciencetools.javascript.JSNumericalExpression;
-import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ScienceTool {
 
-    private final ScienceToolManager manager;
-    private final ToolType type;
+    protected ToolType type;
 
-    private final JSNumericalExpression defaultExpr;
-    private final String unit;
+    protected String defaultMeasurement;
 
-    private final Map<String, JSNumericalExpression> worldExprs;
-    private final Map<String, JSNumericalExpression> regionExprs;
+    protected Map<World, String> worldMeasurements;
+    protected Map<String, String> regionMeasurements;
+    protected Set<World> disabledWorlds;
 
-    private final List<Conversion> conversions;
-    private final List<String> disabledWorlds;
-
-    public ScienceTool(ScienceToolManager manager, ToolType type, JSNumericalExpression defaultExpr, String unit,
-                       Map<String, JSNumericalExpression> worldExprs, Map<String, JSNumericalExpression> regionExprs,
-                       List<Conversion> conversions, List<String> disabledWorlds) {
-        this.manager = manager;
+    public ScienceTool(ToolType type, String defaultMeasurement,
+                       Map<World, String> worldMeasurements,
+                       Map<String, String> regionMeasurements,
+                       Set<World> disabledWorlds) {
         this.type = type;
-        this.defaultExpr = defaultExpr;
-        this.unit = unit;
-        this.worldExprs = worldExprs;
-        this.regionExprs = regionExprs;
-        this.conversions = conversions;
+        this.defaultMeasurement = defaultMeasurement;
+        this.worldMeasurements = worldMeasurements;
+        this.regionMeasurements = regionMeasurements;
         this.disabledWorlds = disabledWorlds;
-
-        // TODO: Add methods to change values
     }
 
-    private JSNumericalExpression getRegionExpression(Location loc) {
+    /**
+     * Get the measurement string for this tool based off the region the location is located in.
+     *
+     * @param loc The location to take the measurement.
+     * @return The measurement string or null if none exists.
+     */
+    private @Nullable String getRegionMeasurement(Location loc) {
         if (!Utils.worldGuardEnabled()) {
             return null;
         }
@@ -63,62 +61,66 @@ public class ScienceTool {
         List<String> regions = regionManager.getApplicableRegionsIDs(bv);
 
         for (String region : regions) {
-            JSNumericalExpression expr = this.regionExprs.getOrDefault(region, null);
-            if (expr != null) {
-                return expr;
+            String measurement = this.regionMeasurements.getOrDefault(region, null);
+            if (measurement != null) {
+                return measurement;
             }
         }
 
         return null;
     }
 
-    private JSNumericalExpression getWorldExpression(Location loc) {
-        return this.worldExprs.getOrDefault(loc.getWorld().getName(), null);
+    /**
+     * Get the measurement string for this tool based off the world the location is located in.
+     *
+     * @param loc The location to take the measurement.
+     * @return The measurement string or null if none exists.
+     */
+    private @Nullable String getWorldMeasurement(Location loc) {
+        return this.worldMeasurements.getOrDefault(loc.getWorld(), null);
     }
 
-    public JSNumericalExpression getExpression(Location loc) {
+    /**
+     * Get the measurement string for this tool based off the given location.
+     *
+     * @param loc The location to take the measurement.
+     * @return The measurement string.
+     */
+    protected String getMeasurement(Location loc) {
+        String measurement = getRegionMeasurement(loc);
 
-        JSNumericalExpression expr = getRegionExpression(loc);
-
-        if (expr == null) {
-            expr = getWorldExpression(loc);
+        if (measurement == null) {
+            measurement = getWorldMeasurement(loc);
         }
 
-        if (expr == null) {
-            expr = this.defaultExpr;
+        if (measurement == null) {
+            measurement = this.defaultMeasurement;
         }
 
-        return expr;
+        return measurement;
     }
 
-    public double getData(Location loc) {
-        JSNumericalExpression expr = getExpression(loc);
-        Double val = expr.evaluate(JSContext.create(loc));
-        return val == null ? 0 : val;
-    }
-
-    public String getMainUnit() {
-        return this.unit;
-    }
-
-    public void displayData(Player player) {
-        if (this.disabledWorlds.contains(player.getWorld().getName())) {
+    /**
+     * Display the measurement string to the player based off their current location.
+     *
+     * @param player The target player.
+     */
+    public void displayMeasurement(Player player) {
+        if (this.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, "&cWe don't know how to measure " + this.type.toString().toLowerCase() + " here!");
             return;
         }
 
-        double val = getData(player.getLocation());
+        Utils.msg(player, getMeasurement(player.getLocation()));
+    }
 
-        String message = "&aThe measured " + this.type.toString().toLowerCase() + " is &f" + Utils.trim2Deci(val)
-                + this.unit + "&7";
-
-        for (Conversion conv : this.conversions) {
-            String converted = Utils.trim2Deci(conv.convert(val));
-            message += " (" + converted + conv.getUnit() + ")";
-        }
-
-        Utils.msg(player, message);
-
+    /**
+     * Get the type of this science tool.
+     *
+     * @return The science tool's type.
+     */
+    public ToolType getType() {
+        return this.type;
     }
 
 }

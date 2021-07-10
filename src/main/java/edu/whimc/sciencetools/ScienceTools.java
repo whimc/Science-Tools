@@ -23,12 +23,12 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
         getCommand("sciencetools").setExecutor(new BaseToolCommand(this));
 
+//        getConfig().options().copyDefaults(false);
         saveDefaultConfig();
-        getConfig().options().copyDefaults(false);
 
-        conversionManager = new ConversionManager(this);
-        toolManager = new ScienceToolManager(this, conversionManager);
-//        validationManager = ValidationManager(this);
+        this.conversionManager = new ConversionManager();
+        this.toolManager = new ScienceToolManager(this.conversionManager);
+//        this.validationManager = new ValidationManager(this);
 
         for (ToolType tool : ToolType.values()) {
             getCommand(tool.toString().toLowerCase()).setExecutor(new GetData(this, tool));
@@ -49,8 +49,9 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
     public void reloadScienceTools() {
         reloadConfig();
-        this.conversionManager = new ConversionManager(this);
-        this.toolManager = new ScienceToolManager(this, this.conversionManager);
+        this.conversionManager = new ConversionManager();
+        this.toolManager = new ScienceToolManager(this.conversionManager);
+//        this.validationManager = new ValidationManager(this);
     }
 
     public static ScienceTools getInstance() {

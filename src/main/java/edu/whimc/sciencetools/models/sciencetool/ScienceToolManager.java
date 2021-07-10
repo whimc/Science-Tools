@@ -1,14 +1,14 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.javascript.JSContext;
 import edu.whimc.sciencetools.javascript.JSNumericalExpression;
-import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.utils.Utils;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -16,106 +16,118 @@ import java.util.stream.Collectors;
 
 public class ScienceToolManager {
 
+    /* Tools are identified by their lowercase name */
     private final Map<ToolType, ScienceTool> tools;
-    private final ScienceTools plugin;
 
-    public ScienceToolManager(ScienceTools plugin, ConversionManager conversionManager) {
+    public ScienceToolManager(ConversionManager conversionManager) {
         this.tools = new HashMap<>();
-        this.plugin = plugin;
         loadTools(conversionManager);
     }
 
     public void loadTools(@NotNull ConversionManager conversionManager) {
+        FileConfiguration config = ScienceTools.getInstance().getConfig();
+
         Utils.log("&eLoading Science Tools from config");
 
         for (ToolType type : ToolType.values()) {
             String name = type.name();
-            if (!plugin.getConfig().contains("tools." + name)) {
+            if (!config.isSet("tools." + name)) {
                 Utils.log("&e - No tool entry found for " + name + "!");
                 continue;
             }
 
             Utils.log("&b - Loading &f" + name);
-            JSNumericalExpression defaultExpr = new JSNumericalExpression(
-                    plugin.getConfig().getString("tools." + name + ".default-expression"));
-            if (!defaultExpr.valid()) {
-                Utils.log("&e * Invalid default expression. Skipping!");
+            ConfigurationSection section = config.getConfigurationSection("tools." + name);
+
+            // Ensure there is a default measurement
+            if (!section.isSet("default")) {
+                Utils.log("&c * `" + section.getCurrentPath() + ".default` does not exist. Skipping!");
                 continue;
             }
-            String unit = plugin.getConfig().getString("tools." + name + ".unit");
 
-            Utils.log("&b   - Default Expression: \"&f" + defaultExpr + "&b\"");
-            Utils.log("&b   - Unit: \"&f" + unit + "&b\"");
+            String defaultMeasurement = section.getString("default");
+            Utils.log("&b\t- Default measurement: \"&f" + defaultMeasurement + "&b\"");
 
-            List<Conversion> convs = new ArrayList<>();
-            if (plugin.getConfig().contains("tools." + name + ".conversions")) {
-                Utils.log("&b     - Loading conversions");
-                for (String convName : plugin.getConfig().getStringList("tools." + name + ".conversions")) {
-                    Conversion convToAdd = conversionManager.getConversion(convName);
-
-                    if (convToAdd == null) {
-                        Utils.log("&b       - &e" + convName + " is not a valid conversion!");
+            // Load disabled worlds
+            Set<World> disabledWorlds = new HashSet<>();
+            if (section.isSet("disabled-worlds")) {
+                Utils.log("&b\t- Loading disabled worlds");
+                for (String worldName : section.getStringList("disabled-worlds")) {
+                    World world = Bukkit.getWorld(worldName);
+                    if (world == null) {
+                        Utils.log("&c\t\t- Unknown world " + worldName);
                         continue;
                     }
-
-                    convs.add(convToAdd);
-                    Utils.log("&b       - &f" + convName);
-                }
-            }
-
-            Map<String, JSNumericalExpression> worldExprs = new HashMap<>();
-            if (plugin.getConfig().contains("tools." + name + ".worlds")) {
-                Utils.log("&b     - Loading world-specific expressions");
-                for (String world : plugin.getConfig().getConfigurationSection("tools." + name + ".worlds")
-                        .getKeys(false)) {
-                    String worldExpr = plugin.getConfig().getString("tools." + name + ".worlds." + world);
-
-                    JSNumericalExpression jsExpr = new JSNumericalExpression(worldExpr);
-                    if (!jsExpr.valid()) {
-                        Utils.log("&b       - " + world + " \"" + worldExpr + "\" (Invalid expression)");
-                        continue;
-                    }
-                    worldExprs.put(world, jsExpr);
-                    Utils.log("&b       - &f" + world + " \"" + worldExpr + "\"");
-                }
-            }
-
-            Map<String, JSNumericalExpression> regionExprs = new HashMap<>();
-            if (plugin.getConfig().contains("tools." + name + ".regions")) {
-                Utils.log("&b     - Loading region-specific expressions");
-                for (String region : plugin.getConfig().getConfigurationSection("tools." + name + ".regions")
-                        .getKeys(false)) {
-                    String regionExpr = plugin.getConfig().getString("tools." + name + ".regions." + region);
-
-                    JSNumericalExpression jsExpr = new JSNumericalExpression(regionExpr);
-                    if (!jsExpr.valid()) {
-                        Utils.log("&e       - " + region + " \"" + regionExpr + "\" (Invalid expression)");
-                        continue;
-                    }
-                    regionExprs.put(region, jsExpr);
-                    Utils.log("&b       - &f" + region + " \"" + regionExpr + "\"");
-                }
-            }
-
-            List<String> disabledWorlds = new ArrayList<>();
-            if (plugin.getConfig().contains("tools." + name + ".disabled-worlds")) {
-                Utils.log("&b     - Loading disabled worlds");
-                for (String world : plugin.getConfig().getStringList("tools." + name + ".disabled-worlds")) {
+                    Utils.log("&b\t\t- &f" + worldName);
                     disabledWorlds.add(world);
-                    Utils.log("&b       - &f" + world);
                 }
             }
 
-            ScienceTool tool = new ScienceTool(this, type, defaultExpr, unit, worldExprs, regionExprs, convs,
-                    disabledWorlds);
+            // Load world-specific measurements
+            Map<World, String> worldMeasurements = new HashMap<>();
+            if (section.isSet("worlds")) {
+                Utils.log("&b\t- Loading world-specific measurements");
+                for (String worldName : section.getConfigurationSection("worlds").getKeys(false)) {
+                    World world = Bukkit.getWorld(worldName);
+                    if (world == null) {
+                        Utils.log("&c\t\t- Unknown world " + worldName);
+                        continue;
+                    }
+
+                    String worldMeasurement = section.getString("worlds." + worldName);
+                    Utils.log("&b\t\t- &f" + worldName + "&b: \"&f" + worldMeasurement + "&b\"");
+                    worldMeasurements.put(world, worldMeasurement);
+                }
+            }
+
+            // Load region-specific measurements
+            Map<String, String> regionMeasurements = new HashMap<>();
+            if (section.isSet("regions")) {
+                Utils.log("&b\t- Loading region-specific measurements");
+                for (String region : section.getConfigurationSection("regions").getKeys(false)) {
+                    String regionMeasurement = section.getString("regions." + region);
+                    Utils.log("&b\t\t- &f" + region + "&b: \"&f" + regionMeasurement + "&b\"");
+                    regionMeasurements.put(region, regionMeasurement);
+                }
+            }
+
+            // If the default measurement is not a valid numerical expression, parse as a string-based science tool
+            JSNumericalExpression defaultExpression = new JSNumericalExpression(defaultMeasurement);
+            if (!defaultExpression.valid()) {
+                ScienceTool tool = new ScienceTool(type, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
+                this.tools.put(type, tool);
+                continue;
+            }
+
+
+            // Continue parsing as a numerical tool
+
+            String unit = section.getString("unit", "");
+            Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");
+
+            // Load conversions
+            List<Conversion> conversions = new ArrayList<>();
+            if (section.isSet("conversions")) {
+                Utils.log("&b\t- Loading conversions");
+                for (String conversionName : section.getStringList("conversions")) {
+                    Conversion conversion = conversionManager.getConversion(conversionName);
+
+                    if (conversion == null) {
+                        Utils.log("&c\t\t- Unknown conversion " + conversionName);
+                        continue;
+                    }
+
+                    Utils.log("&b\t\t- &f" + conversionName);
+                    conversions.add(conversion);
+                }
+            }
+
+            NumericScienceTool tool = new NumericScienceTool(type, defaultMeasurement, worldMeasurements,
+                    regionMeasurements, disabledWorlds, unit, conversions);
             this.tools.put(type, tool);
         }
 
         Utils.log("&eScience tools loaded!");
-    }
-
-    public String fillIn(CommandSender sender, String expr, Location loc) {
-        return JSPlaceholder.prepareExpression(JSContext.create(loc), expr);
     }
 
     public ScienceTool getTool(ToolType type) {
@@ -126,19 +138,18 @@ public class ScienceToolManager {
         return this.tools.keySet();
     }
 
-    public String getMainUnit(ToolType type) {
-        ScienceTool tool = getTool(type);
-        return tool == null ? "" : tool.getMainUnit();
-    }
-
-    public ScienceTools getPlugin() {
-        return this.plugin;
-    }
-
     public List<String> toolTabComplete(String hint) {
         return getLoadedTools().stream()
                 .map(ToolType::name)
-                .filter(v -> v.toLowerCase().startsWith(hint.toLowerCase()))
+                .filter(tool -> tool.toLowerCase().startsWith(hint.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> numericToolTabComplete(String hint) {
+        return this.tools.values().stream()
+                .filter(tool -> tool instanceof  NumericScienceTool)
+                .map(tool -> tool.getType().name())
+                .filter(tool -> tool.toLowerCase().startsWith(hint.toLowerCase()))
                 .collect(Collectors.toList());
     }
 }
