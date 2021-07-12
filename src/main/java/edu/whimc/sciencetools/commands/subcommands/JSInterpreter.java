@@ -23,8 +23,8 @@ public class JSInterpreter extends AbstractSubCommand {
             Utils.msg(sender, " " + function.fullUsage());
         }
 
-        for (JSPlaceholder placeholder : JSPlaceholder.values()) {
-            Utils.msg(sender, " " + placeholder.fullUsage());
+        for (JSPlaceholder placeholder : JSPlaceholder.getPlaceholders()) {
+            Utils.msg(sender, " " + placeholder.getUsage());
         }
     }
 

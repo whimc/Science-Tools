@@ -2,6 +2,7 @@ package edu.whimc.sciencetools.models.sciencetool;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSNumericalExpression;
+import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.utils.Utils;
@@ -125,6 +126,7 @@ public class ScienceToolManager {
             NumericScienceTool tool = new NumericScienceTool(type, defaultMeasurement, worldMeasurements,
                     regionMeasurements, disabledWorlds, unit, conversions);
             this.tools.put(type, tool);
+            JSPlaceholder.registerPlaceholder(tool);
         }
 
         Utils.log("&eScience tools loaded!");
