@@ -30,6 +30,9 @@ public class ScienceToolManager {
 
         Utils.log("&eLoading Science Tools from config");
 
+        // Remove potentially pre-existing placeholders
+        JSPlaceholder.unregisterCustomPlaceholders();
+
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);
 
@@ -148,7 +151,7 @@ public class ScienceToolManager {
             NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, defaultMeasurement,
                     worldMeasurements, worldRegionMeasurements, disabledWorlds, unit, precision, conversions);
             this.tools.put(toolKey.toLowerCase(), tool);
-            JSPlaceholder.registerPlaceholder(tool);
+            JSPlaceholder.registerCustomPlaceholder(tool);
         }
 
         Utils.log("&eScience tools loaded!");
