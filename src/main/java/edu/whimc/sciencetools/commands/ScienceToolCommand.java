@@ -21,8 +21,6 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
     public ScienceToolCommand() {
         subCommands.put("js", new JSInterpreter());
         subCommands.put("measure", new Measure());
-//		subCommands.put(SubCommand.TOOL, new ToolsBase(plugin, SubCommand.TOOL));
-//		subCommands.put(SubCommand.CONVERSION, new ConversionsBase(plugin, SubCommand.CONVERSION));
         subCommands.put("reload", new Reload());
         subCommands.put("validate", new Validate());
     }
