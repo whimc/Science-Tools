@@ -15,7 +15,7 @@ import java.util.Set;
 public class NumericScienceTool extends ScienceTool {
 
     private final String unit;
-    private int precision;
+    private final int precision;
     private final List<Conversion> conversions;
 
     public NumericScienceTool(String toolKey,

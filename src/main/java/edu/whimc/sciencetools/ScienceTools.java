@@ -3,13 +3,8 @@ package edu.whimc.sciencetools;
 import edu.whimc.sciencetools.commands.ScienceToolCommand;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
-import edu.whimc.sciencetools.models.validation.ValidationManager;
-import org.bukkit.command.Command;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ScienceTools extends JavaPlugin implements Listener {
 

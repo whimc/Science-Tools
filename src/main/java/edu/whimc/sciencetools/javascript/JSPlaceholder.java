@@ -17,7 +17,7 @@ public class JSPlaceholder {
             new JSPlaceholder("{Z}", "Current Z value", ctx -> ctx.getLocation().getZ())
     ));
 
-    private static List<JSPlaceholder> placeholders = new ArrayList<>();
+    private static final List<JSPlaceholder> placeholders = new ArrayList<>();
 
     private final String key;
     private final String usage;
