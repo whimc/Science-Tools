@@ -8,6 +8,7 @@ conversions:
     unit: "°F"
 tools:
   ALTITUDE:
+    display-name: "altitude"
     default: "max(0, {Y})"
     unit: "m"
     conversions:
@@ -17,6 +18,7 @@ tools:
     disabled-worlds:
       - "world_the_end"
   OXYGEN:
+    display-name: "oxygen level"
     default: "30 + rand(-0.5, 0.5)"
     unit: "%"
     regions:
