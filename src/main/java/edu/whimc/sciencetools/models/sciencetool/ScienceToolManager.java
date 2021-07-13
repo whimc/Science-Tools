@@ -33,6 +33,11 @@ public class ScienceToolManager {
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - Loading &f" + toolKey);
 
+            if (toolKey.contains(" ")) {
+                Utils.log("&c* Tool name cannot contain whitespace! Skipping.");
+                continue;
+            }
+
             // Prevent duplicate tool keys
             if (this.tools.containsKey(toolKey.toLowerCase())) {
                 Utils.log("&c* A tool with the same key already exists! Skipping.");
