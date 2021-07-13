@@ -9,20 +9,31 @@ conversions:
 tools:
   ALTITUDE:
     display-name: "altitude"
-    default: "max(0, {Y})"
+    default-measurement: "max(0, {Y})"
     unit: "m"
     conversions:
       - feet
     worlds:
-      world_nether: "min(0, {Y} - 128)"
+      world:
+        global-measurement: "{Y}"
+      world_nether:
+        global-measurement: "min(0, {Y} - 128)"
     disabled-worlds:
-      - "world_the_end"
+      - world_the_end
   OXYGEN:
     display-name: "oxygen level"
-    default: "30 + rand(-0.5, 0.5)"
+    default-measurement: "30 + rand(-0.5, 0.5)"
     unit: "%"
-    regions:
-      enclosure: "rand(0, 0.1)"
+    worlds:
+      world:
+        regions:
+          enclosure: "rand(0, 0.1)"
+          high_oxygen: "100"
+      world_the_end:
+        global-measurement: "0"
+        regions:
+          cage: "10"
+          castle: "5"
 validation:
   tolerance: 1.0
   timeout: 30

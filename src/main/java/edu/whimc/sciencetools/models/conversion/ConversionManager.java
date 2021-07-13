@@ -24,7 +24,7 @@ public class ConversionManager {
         Utils.log("&eLoading Conversions from config");
 
         for (String conversion : config.getConfigurationSection("conversions").getKeys(false)) {
-            Utils.log("&b - Loading &f" + conversion);
+            Utils.log("&b - &f" + conversion);
             String expr = config.getString("conversions." + conversion + ".expression");
             String unit = config.getString("conversions." + conversion + ".unit");
 

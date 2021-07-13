@@ -21,7 +21,7 @@ public class NumericScienceTool extends ScienceTool {
                               String displayName,
                               String defaultMeasurement,
                               Map<World, String> worldMeasurements,
-                              Map<String, String> regionMeasurements,
+                              Map<World, Map<String, String>> regionMeasurements,
                               Set<World> disabledWorlds,
                               String unit,
                               List<Conversion> conversions) {

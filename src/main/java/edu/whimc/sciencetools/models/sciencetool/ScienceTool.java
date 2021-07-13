@@ -27,8 +27,8 @@ public class ScienceTool {
 
     /* World-specific global measurements. */
     protected Map<World, String> worldMeasurements;
-    /* Region-specific measurements. */
-    protected Map<String, String> regionMeasurements;
+    /* Region-specific measurements. Each world has separate regions. */
+    protected Map<World, Map<String, String>> regionMeasurements;
     /* Worlds where you cannot measure the science tool. */
     protected Set<World> disabledWorlds;
 
@@ -36,7 +36,7 @@ public class ScienceTool {
                        String displayName,
                        String defaultMeasurement,
                        Map<World, String> worldMeasurements,
-                       Map<String, String> regionMeasurements,
+                       Map<World, Map<String, String>> regionMeasurements,
                        Set<World> disabledWorlds) {
         this.toolKey = toolKey;
         this.displayName = displayName;
@@ -57,6 +57,10 @@ public class ScienceTool {
             return null;
         }
 
+        if (!this.regionMeasurements.containsKey(loc.getWorld())) {
+            return null;
+        }
+
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         if (container == null) {
             return null;
@@ -71,7 +75,7 @@ public class ScienceTool {
         List<String> regions = regionManager.getApplicableRegionsIDs(bv);
 
         for (String region : regions) {
-            String measurement = this.regionMeasurements.getOrDefault(region, null);
+            String measurement = this.regionMeasurements.get(loc.getWorld()).getOrDefault(region, null);
             if (measurement != null) {
                 return measurement;
             }

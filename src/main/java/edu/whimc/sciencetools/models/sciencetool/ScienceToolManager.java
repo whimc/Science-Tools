@@ -31,7 +31,7 @@ public class ScienceToolManager {
         Utils.log("&eLoading Science Tools from config");
 
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
-            Utils.log("&b - Loading &f" + toolKey);
+            Utils.log("&b - &f" + toolKey);
 
             if (toolKey.contains(" ")) {
                 Utils.log("&c* Tool name cannot contain whitespace! Skipping.");
@@ -47,12 +47,11 @@ public class ScienceToolManager {
             ConfigurationSection section = config.getConfigurationSection("tools." + toolKey);
 
             // Ensure there is a default measurement
-            if (!section.isSet("default")) {
-                Utils.log("&c * `" + section.getCurrentPath() + ".default` does not exist! Skipping.");
+            String defaultMeasurement = section.getString("default-measurement");
+            if (defaultMeasurement == null) {
+                Utils.log("&c * `" + section.getCurrentPath() + ".default-measurement` does not exist! Skipping.");
                 continue;
             }
-
-            String defaultMeasurement = section.getString("default");
             Utils.log("&b\t- Default measurement: \"&f" + defaultMeasurement + "&b\"");
 
             String displayName = section.getString("display-name", toolKey);
@@ -61,7 +60,7 @@ public class ScienceToolManager {
             // Load disabled worlds
             Set<World> disabledWorlds = new HashSet<>();
             if (section.isSet("disabled-worlds")) {
-                Utils.log("&b\t- Loading disabled worlds");
+                Utils.log("&b\t- Disabled worlds");
                 for (String worldName : section.getStringList("disabled-worlds")) {
                     World world = Bukkit.getWorld(worldName);
                     if (world == null) {
@@ -73,10 +72,12 @@ public class ScienceToolManager {
                 }
             }
 
-            // Load world-specific measurements
+            // Load world settings
             Map<World, String> worldMeasurements = new HashMap<>();
+            Map<World, Map<String, String>> worldRegionMeasurements = new HashMap<>();
+
             if (section.isSet("worlds")) {
-                Utils.log("&b\t- Loading world-specific measurements");
+                Utils.log("&b\t- World settings");
                 for (String worldName : section.getConfigurationSection("worlds").getKeys(false)) {
                     World world = Bukkit.getWorld(worldName);
                     if (world == null) {
@@ -84,27 +85,34 @@ public class ScienceToolManager {
                         continue;
                     }
 
-                    String worldMeasurement = section.getString("worlds." + worldName);
-                    Utils.log("&b\t\t- &f" + worldName + "&b: \"&f" + worldMeasurement + "&b\"");
-                    worldMeasurements.put(world, worldMeasurement);
-                }
-            }
+                    Utils.log("&b\t\t- &f" + worldName);
 
-            // Load region-specific measurements
-            Map<String, String> regionMeasurements = new HashMap<>();
-            if (section.isSet("regions")) {
-                Utils.log("&b\t- Loading region-specific measurements");
-                for (String region : section.getConfigurationSection("regions").getKeys(false)) {
-                    String regionMeasurement = section.getString("regions." + region);
-                    Utils.log("&b\t\t- &f" + region + "&b: \"&f" + regionMeasurement + "&b\"");
-                    regionMeasurements.put(region, regionMeasurement);
+                    ConfigurationSection worldSection = section.getConfigurationSection("worlds." + worldName);
+                    String globalMeasurement = worldSection.getString("global-measurement");
+                    if (globalMeasurement != null) {
+                        Utils.log("&b\t\t\t- Global measurement: \"&f" + globalMeasurement + "&b\"");
+                        worldMeasurements.put(world, globalMeasurement);
+                    }
+
+                    if (worldSection.isSet("regions")) {
+                        Utils.log("&b\t\t\t- Regions");
+                        Map<String, String> regionMeasurements = new HashMap<>();
+                        for (String region : worldSection.getConfigurationSection("regions").getKeys(false)) {
+                            String regionMeasurement = worldSection.getString("regions." + region);
+                            Utils.log("&b\t\t\t\t- &f" + region + "&b: \"&f" + regionMeasurement + "&b\"");
+                            regionMeasurements.put(region, regionMeasurement);
+                        }
+                        worldRegionMeasurements.put(world, regionMeasurements);
+                    }
+
                 }
             }
 
             // If the default measurement is not a valid numerical expression, parse as a string-based science tool
             JSNumericalExpression defaultExpression = new JSNumericalExpression(defaultMeasurement);
             if (!defaultExpression.valid()) {
-                ScienceTool tool = new ScienceTool(toolKey, displayName, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
+                ScienceTool tool = new ScienceTool(toolKey, displayName, defaultMeasurement, worldMeasurements,
+                        worldRegionMeasurements, disabledWorlds);
                 this.tools.put(toolKey.toLowerCase(), tool);
                 continue;
             }
@@ -118,7 +126,7 @@ public class ScienceToolManager {
             // Load conversions
             List<Conversion> conversions = new ArrayList<>();
             if (section.isSet("conversions")) {
-                Utils.log("&b\t- Loading conversions");
+                Utils.log("&b\t- Conversions");
                 for (String conversionName : section.getStringList("conversions")) {
                     Conversion conversion = conversionManager.getConversion(conversionName);
 
@@ -132,8 +140,8 @@ public class ScienceToolManager {
                 }
             }
 
-            NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, defaultMeasurement, worldMeasurements,
-                    regionMeasurements, disabledWorlds, unit, conversions);
+            NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, defaultMeasurement,
+                    worldMeasurements, worldRegionMeasurements, disabledWorlds, unit, conversions);
             this.tools.put(toolKey.toLowerCase(), tool);
             JSPlaceholder.registerPlaceholder(tool);
         }
