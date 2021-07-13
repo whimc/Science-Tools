@@ -3,7 +3,7 @@ package edu.whimc.sciencetools.models.conversion;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSContext;
 import edu.whimc.sciencetools.javascript.JSExpression;
-import edu.whimc.sciencetools.javascript.JSNumericalExpression;
+import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.command.CommandSender;
 
@@ -13,9 +13,9 @@ public class Conversion {
 
     private final String name;
     private String unit;
-    private JSNumericalExpression expression;
+    private JSNumericExpression expression;
 
-    protected Conversion(String name, String unit, JSNumericalExpression expression) {
+    protected Conversion(String name, String unit, JSNumericExpression expression) {
         this.name = name;
         this.unit = unit;
         this.expression = expression;
@@ -37,7 +37,7 @@ public class Conversion {
         return this.expression;
     }
 
-    public void setExpression(CommandSender sender, JSNumericalExpression expression) {
+    public void setExpression(CommandSender sender, JSNumericExpression expression) {
         this.expression = expression;
         this.manager.saveToConfig(this);
     }

@@ -1,7 +1,7 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.javascript.JSNumericalExpression;
+import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
@@ -110,8 +110,8 @@ public class ScienceToolManager {
                 }
             }
 
-            // If the default measurement is not a valid numerical expression, parse as a string-based science tool
-            JSNumericalExpression defaultExpression = new JSNumericalExpression(defaultMeasurement);
+            // If the default measurement is not a valid numeric expression, parse as a string-based science tool
+            JSNumericExpression defaultExpression = new JSNumericExpression(defaultMeasurement);
             if (!defaultExpression.valid()) {
                 ScienceTool tool = new ScienceTool(toolKey, displayName, defaultMeasurement, worldMeasurements,
                         worldRegionMeasurements, disabledWorlds);
@@ -120,7 +120,7 @@ public class ScienceToolManager {
             }
 
 
-            // Continue parsing as a numerical tool
+            // Continue parsing as a numeric tool
 
             String unit = section.getString("unit", "");
             Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");

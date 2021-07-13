@@ -1,8 +1,8 @@
 package edu.whimc.sciencetools.javascript;
 
-public class JSNumericalExpression extends JSExpression {
+public class JSNumericExpression extends JSExpression {
 
-    public JSNumericalExpression(String expr) {
+    public JSNumericExpression(String expr) {
         super(expr);
     }
 

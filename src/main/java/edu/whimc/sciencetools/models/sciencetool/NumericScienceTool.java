@@ -1,7 +1,7 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
 import edu.whimc.sciencetools.javascript.JSContext;
-import edu.whimc.sciencetools.javascript.JSNumericalExpression;
+import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.Location;
@@ -54,7 +54,7 @@ public class NumericScienceTool extends ScienceTool {
     }
 
     public double getData(Location loc) {
-        JSNumericalExpression expression = new JSNumericalExpression(super.getMeasurement(loc));
+        JSNumericExpression expression = new JSNumericExpression(super.getMeasurement(loc));
         return expression.evaluate(JSContext.create(loc));
     }
 

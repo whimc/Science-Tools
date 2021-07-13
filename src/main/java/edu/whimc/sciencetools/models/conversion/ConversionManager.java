@@ -1,7 +1,7 @@
 package edu.whimc.sciencetools.models.conversion;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.javascript.JSNumericalExpression;
+import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ public class ConversionManager {
             Utils.log("&b\t- Expression: \"&f" + expr + "&b\"");
             Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");
 
-            JSNumericalExpression jsExpr = new JSNumericalExpression(expr);
+            JSNumericExpression jsExpr = new JSNumericExpression(expr);
             if (!jsExpr.valid()) {
                 Utils.log("&c\t* Invalid expression! Skipping.");
                 continue;
@@ -43,13 +43,13 @@ public class ConversionManager {
         Utils.log("&eConversions loaded!");
     }
 
-    private @NotNull Conversion loadConversion(String name, String unit, JSNumericalExpression expr) {
+    private @NotNull Conversion loadConversion(String name, String unit, JSNumericExpression expr) {
         Conversion conversion = new Conversion(name, unit, expr);
         conversions.put(name, conversion);
         return conversion;
     }
 
-    public Conversion createConversion(String name, String unit, JSNumericalExpression expr) {
+    public Conversion createConversion(String name, String unit, JSNumericExpression expr) {
         Conversion conversion = loadConversion(name, unit, expr);
         saveToConfig(conversion);
         return conversion;
