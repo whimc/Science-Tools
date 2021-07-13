@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ScienceToolManager {
 
     /* Tools are identified by their lowercase name */
-    private final Map<ToolType, ScienceTool> tools;
+    private final Map<String, ScienceTool> tools;
 
     public ScienceToolManager(ConversionManager conversionManager) {
         this.tools = new HashMap<>();
@@ -30,24 +30,28 @@ public class ScienceToolManager {
 
         Utils.log("&eLoading Science Tools from config");
 
-        for (ToolType type : ToolType.values()) {
-            String name = type.name();
-            if (!config.isSet("tools." + name)) {
-                Utils.log("&e - No tool entry found for " + name + "!");
+        for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
+            Utils.log("&b - Loading &f" + toolKey);
+
+            // Prevent duplicate tool keys
+            if (this.tools.containsKey(toolKey.toLowerCase())) {
+                Utils.log("&c* A tool with the same key already exists! Skipping.");
                 continue;
             }
 
-            Utils.log("&b - Loading &f" + name);
-            ConfigurationSection section = config.getConfigurationSection("tools." + name);
+            ConfigurationSection section = config.getConfigurationSection("tools." + toolKey);
 
             // Ensure there is a default measurement
             if (!section.isSet("default")) {
-                Utils.log("&c * `" + section.getCurrentPath() + ".default` does not exist. Skipping!");
+                Utils.log("&c * `" + section.getCurrentPath() + ".default` does not exist! Skipping.");
                 continue;
             }
 
             String defaultMeasurement = section.getString("default");
             Utils.log("&b\t- Default measurement: \"&f" + defaultMeasurement + "&b\"");
+
+            String displayName = section.getString("display-name", toolKey);
+            Utils.log("&b\t- Display name: \"&f" + displayName + "&b\"");
 
             // Load disabled worlds
             Set<World> disabledWorlds = new HashSet<>();
@@ -95,8 +99,8 @@ public class ScienceToolManager {
             // If the default measurement is not a valid numerical expression, parse as a string-based science tool
             JSNumericalExpression defaultExpression = new JSNumericalExpression(defaultMeasurement);
             if (!defaultExpression.valid()) {
-                ScienceTool tool = new ScienceTool(type, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
-                this.tools.put(type, tool);
+                ScienceTool tool = new ScienceTool(toolKey, displayName, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
+                this.tools.put(toolKey.toLowerCase(), tool);
                 continue;
             }
 
@@ -123,35 +127,35 @@ public class ScienceToolManager {
                 }
             }
 
-            NumericScienceTool tool = new NumericScienceTool(type, defaultMeasurement, worldMeasurements,
+            NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, defaultMeasurement, worldMeasurements,
                     regionMeasurements, disabledWorlds, unit, conversions);
-            this.tools.put(type, tool);
+            this.tools.put(toolKey.toLowerCase(), tool);
             JSPlaceholder.registerPlaceholder(tool);
         }
 
         Utils.log("&eScience tools loaded!");
     }
 
-    public ScienceTool getTool(ToolType type) {
-        return this.tools.getOrDefault(type, null);
+    public ScienceTool getTool(String key) {
+        return this.tools.getOrDefault(key.toLowerCase(), null);
     }
 
-    public Set<ToolType> getLoadedTools() {
-        return this.tools.keySet();
+    public Collection<ScienceTool> getTools() {
+        return this.tools.values();
     }
 
     public List<String> toolTabComplete(String hint) {
-        return getLoadedTools().stream()
-                .map(ToolType::name)
-                .filter(tool -> tool.toLowerCase().startsWith(hint.toLowerCase()))
+        return getTools().stream()
+                .map(ScienceTool::getToolKey)
+                .filter(key -> key.toLowerCase().startsWith(hint.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
     public List<String> numericToolTabComplete(String hint) {
-        return this.tools.values().stream()
-                .filter(tool -> tool instanceof  NumericScienceTool)
-                .map(tool -> tool.getType().name())
-                .filter(tool -> tool.toLowerCase().startsWith(hint.toLowerCase()))
+        return getTools().stream()
+                .filter(tool -> tool instanceof NumericScienceTool)
+                .map(ScienceTool::getToolKey)
+                .filter(key -> key.toLowerCase().startsWith(hint.toLowerCase()))
                 .collect(Collectors.toList());
     }
 }

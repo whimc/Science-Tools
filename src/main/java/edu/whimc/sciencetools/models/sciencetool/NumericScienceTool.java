@@ -17,20 +17,17 @@ public class NumericScienceTool extends ScienceTool {
     private final String unit;
     private final List<Conversion> conversions;
 
-    public NumericScienceTool(ToolType type, String defaultMeasurement,
+    public NumericScienceTool(String toolKey,
+                              String displayName,
+                              String defaultMeasurement,
                               Map<World, String> worldMeasurements,
                               Map<String, String> regionMeasurements,
                               Set<World> disabledWorlds,
                               String unit,
                               List<Conversion> conversions) {
-        super(type, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
+        super(toolKey, displayName, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
         this.unit = unit;
         this.conversions = conversions;
-    }
-
-    public double getData(Location loc) {
-        JSNumericalExpression expression = new JSNumericalExpression(super.getMeasurement(loc));
-        return expression.evaluate(JSContext.create(loc));
     }
 
     @Override
@@ -42,7 +39,7 @@ public class NumericScienceTool extends ScienceTool {
 
         double data = getData(player.getLocation());
 
-        StringBuilder message = new StringBuilder("&aThe measured " + this.type.toString().toLowerCase()
+        StringBuilder message = new StringBuilder("&aThe measured " + this.displayName
                 + " is &f" + Utils.trim2Deci(data) + this.unit + "&7");
 
         for (Conversion conversion : this.conversions) {
@@ -51,6 +48,11 @@ public class NumericScienceTool extends ScienceTool {
         }
 
         Utils.msg(player, message.toString());
+    }
+
+    public double getData(Location loc) {
+        JSNumericalExpression expression = new JSNumericalExpression(super.getMeasurement(loc));
+        return expression.evaluate(JSContext.create(loc));
     }
 
     public String getMainUnit() {

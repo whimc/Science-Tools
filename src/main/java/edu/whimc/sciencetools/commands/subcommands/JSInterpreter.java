@@ -1,7 +1,5 @@
 package edu.whimc.sciencetools.commands.subcommands;
 
-import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
 import edu.whimc.sciencetools.javascript.JSContext;
 import edu.whimc.sciencetools.javascript.JSExpression;
 import edu.whimc.sciencetools.javascript.JSFunction;
@@ -9,10 +7,13 @@ import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
+
 public class JSInterpreter extends AbstractSubCommand {
 
-    public JSInterpreter(ScienceTools plugin, SubCommand subCmd) {
-        super(plugin, subCmd);
+    public JSInterpreter() {
+        super("js", Arrays.asList("expr..."), null,
+                "Run interpreted JavaScript", Permission.ADMIN);
     }
 
     @Override

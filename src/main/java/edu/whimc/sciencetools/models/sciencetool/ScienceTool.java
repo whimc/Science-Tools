@@ -17,19 +17,29 @@ import java.util.Set;
 
 public class ScienceTool {
 
-    protected ToolType type;
+    /* The key for this tool within the config. */
+    protected String toolKey;
+    /* Displayed when referencing the tool in game. */
+    protected String displayName;
 
+    /* Default measurement to be used when no region or world measurement is found. */
     protected String defaultMeasurement;
 
+    /* World-specific global measurements. */
     protected Map<World, String> worldMeasurements;
+    /* Region-specific measurements. */
     protected Map<String, String> regionMeasurements;
+    /* Worlds where you cannot measure the science tool. */
     protected Set<World> disabledWorlds;
 
-    public ScienceTool(ToolType type, String defaultMeasurement,
+    public ScienceTool(String toolKey,
+                       String displayName,
+                       String defaultMeasurement,
                        Map<World, String> worldMeasurements,
                        Map<String, String> regionMeasurements,
                        Set<World> disabledWorlds) {
-        this.type = type;
+        this.toolKey = toolKey;
+        this.displayName = displayName;
         this.defaultMeasurement = defaultMeasurement;
         this.worldMeasurements = worldMeasurements;
         this.regionMeasurements = regionMeasurements;
@@ -107,7 +117,7 @@ public class ScienceTool {
      */
     public void displayMeasurement(Player player) {
         if (this.disabledWorlds.contains(player.getWorld())) {
-            Utils.msg(player, "&cWe don't know how to measure " + this.type.toString().toLowerCase() + " here!");
+            Utils.msg(player, "&cWe don't know how to measure " + this.displayName + " here!");
             return;
         }
 
@@ -115,12 +125,17 @@ public class ScienceTool {
     }
 
     /**
-     * Get the type of this science tool.
-     *
-     * @return The science tool's type.
+     * @return The tool's key.
      */
-    public ToolType getType() {
-        return this.type;
+    public String getToolKey() {
+        return this.toolKey;
+    }
+
+    /**
+     * @return The tool's display name.
+     */
+    public String getDisplayName() {
+        return this.displayName;
     }
 
 }

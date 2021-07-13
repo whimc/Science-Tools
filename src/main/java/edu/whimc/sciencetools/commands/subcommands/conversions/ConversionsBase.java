@@ -1,15 +1,13 @@
 package edu.whimc.sciencetools.commands.subcommands.conversions;
 
-import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
 import edu.whimc.sciencetools.commands.subcommands.AbstractSubCommand;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.command.CommandSender;
 
 public class ConversionsBase extends AbstractSubCommand {
 
-    public ConversionsBase(ScienceTools plugin, SubCommand subCmd) {
-        super(plugin, subCmd);
+    public ConversionsBase() {
+        super("conversion", null, null, "Manage unit conversions", Permission.ADMIN);
     }
 
     @Override

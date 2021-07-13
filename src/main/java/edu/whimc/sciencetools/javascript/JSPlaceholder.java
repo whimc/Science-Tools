@@ -49,8 +49,8 @@ public class JSPlaceholder {
     }
 
     public static void registerPlaceholder(NumericScienceTool tool) {
-        String key = "{" + tool.getType().name() + "}";
-        String usage = "Value from " + tool.getType().toString();
+        String key = "{" + tool.getToolKey() + "}";
+        String usage = "Value from " + tool.getDisplayName();
         Function<JSContext, Double> replacement = ctx -> tool.getData(ctx.getLocation());
 
         JSPlaceholder.placeholders.add(new JSPlaceholder(key, usage, replacement));

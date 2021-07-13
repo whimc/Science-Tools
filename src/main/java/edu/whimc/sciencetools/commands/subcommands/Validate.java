@@ -1,15 +1,15 @@
 package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.commands.BaseToolCommand.SubCommand;
 import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
-import edu.whimc.sciencetools.models.sciencetool.ToolType;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,11 +25,12 @@ public class Validate extends AbstractSubCommand implements Listener {
 
     private final Map<UUID, Validation> validationTasks;
 
-    public Validate(ScienceTools plugin, SubCommand subCmd) {
-        super(plugin, subCmd);
+    public Validate() {
+        super("validate", Arrays.asList("tool", "player"), Arrays.asList("world", "x", "y", "z"),
+                "Have a user validate a tool", Permission.ADMIN);
 
         this.validationTasks = new HashMap<>();
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, ScienceTools.getInstance());
     }
 
     private static class Validation {
@@ -59,20 +60,13 @@ public class Validate extends AbstractSubCommand implements Listener {
 
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {
-
-        ToolType type = ToolType.match(args[0]);
-
-        if (type == null) {
-            Utils.msg(sender, "&cThe tool \"&4" + args[0] + "&c\" does not exist!");
-            Utils.msg(sender, "&cAvailable tools: &7" +
-                    String.join(", ", plugin.getToolManager().numericToolTabComplete("")));
-            return false;
-        }
-
-        ScienceTool baseTool = this.plugin.getToolManager().getTool(type);
+        ScienceToolManager manager = ScienceTools.getInstance().getToolManager();
+        ScienceTool baseTool = manager.getTool(args[0]);
 
         if (baseTool == null) {
-            Utils.msg(sender, "&cThat data tool isn't loaded!");
+            Utils.msg(sender, "&cThe tool \"&4" + args[0] + "&c\" does not exist!");
+            Utils.msg(sender, "&cAvailable tools: &7" +
+                    String.join(", ", manager.numericToolTabComplete("")));
             return false;
         }
 
@@ -91,7 +85,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 
         double expected;
 
-        if (args.length > this.subCmd.minArgs()) {
+        if (args.length > super.getMinArgs()) {
             World world = Bukkit.getWorld(args[2]);
             if (world == null) {
                 Utils.msg(sender, "&4" + args[2] + " &cis an invalid world!");
@@ -109,7 +103,7 @@ public class Validate extends AbstractSubCommand implements Listener {
         }
 
 
-        Utils.msg(sender, "&aValidating " + type + " for " + player.getName());
+        Utils.msg(sender, "&aValidating " + tool.getDisplayName() + " for " + player.getName());
 
         UUID uuid = player.getUniqueId();
 
@@ -117,10 +111,10 @@ public class Validate extends AbstractSubCommand implements Listener {
             Bukkit.getScheduler().cancelTask(this.validationTasks.remove(uuid).taskId);
         }
 
-        int id = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
+        int id = Bukkit.getScheduler().scheduleSyncDelayedTask(ScienceTools.getInstance(), () -> {
             doConfigTasks(player, "timeout", tool, null);
             this.validationTasks.remove(uuid);
-        }, 20 * this.plugin.getConfig().getInt("validation.timeout"));
+        }, 20 * ScienceTools.getInstance().getConfig().getInt("validation.timeout"));
 
         this.validationTasks.put(uuid, new Validation(id, expected, tool));
         doConfigTasks(player, "prompt", tool, null);
@@ -131,7 +125,7 @@ public class Validate extends AbstractSubCommand implements Listener {
     @Override
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return this.plugin.getToolManager().numericToolTabComplete(args[0].toLowerCase());
+            return ScienceTools.getInstance().getToolManager().numericToolTabComplete(args[0].toLowerCase());
         }
         if (args.length == 2) {
             return Bukkit.getOnlinePlayers().stream()
@@ -191,7 +185,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 
         double number = Double.parseDouble(match);
 
-        if (Math.abs(number - validation.getExpected()) < this.plugin.getConfig().getDouble("validation.tolerance")) {
+        if (Math.abs(number - validation.getExpected()) < ScienceTools.getInstance().getConfig().getDouble("validation.tolerance")) {
             syncDoConfigTasks(player, "success", tool, number);
         } else {
             syncDoConfigTasks(player, "failure", tool, number);
@@ -200,24 +194,25 @@ public class Validate extends AbstractSubCommand implements Listener {
     }
 
     private void syncDoConfigTasks(Player player, String path, NumericScienceTool tool, Double value) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> doConfigTasks(player, path, tool, value));
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ScienceTools.getInstance(), () -> doConfigTasks(player, path, tool, value));
     }
 
     private void doConfigTasks(Player player, String path, NumericScienceTool tool, @Nullable Double value) {
-        String typeStr = tool.getType().toString();
+        String typeStr = tool.getDisplayName();
         String valueStr = value == null ? "" : value.toString();
         String unit = tool.getMainUnit();
 
         doConfigTasks(player, path + ".all", typeStr, valueStr, unit);
-        doConfigTasks(player, path + "." + tool.getType().name(), typeStr, valueStr, unit);
+        doConfigTasks(player, path + "." + tool.getToolKey(), typeStr, valueStr, unit);
     }
 
     private void doConfigTasks(Player player, String path, String type, String value, String unit) {
-        for (String msg : this.plugin.getConfig().getStringList("validation.messages." + path)) {
+        FileConfiguration config = ScienceTools.getInstance().getConfig();
+        for (String msg : config.getStringList("validation.messages." + path)) {
             Utils.msg(player, msg.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit));
         }
 
-        for (String cmd : this.plugin.getConfig().getStringList("validation.commands." + path)) {
+        for (String cmd : config.getStringList("validation.commands." + path)) {
             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(),
                     cmd.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit).replace("{PLAYER}", player.getName()));
         }
