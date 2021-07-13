@@ -152,7 +152,8 @@ public class ScienceToolManager {
     public List<String> toolTabComplete(String hint) {
         return getTools().stream()
                 .map(ScienceTool::getToolKey)
-                .filter(key -> key.toLowerCase().startsWith(hint.toLowerCase()))
+                .map(String::toLowerCase)
+                .filter(key -> key.startsWith(hint.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
@@ -160,7 +161,8 @@ public class ScienceToolManager {
         return getTools().stream()
                 .filter(tool -> tool instanceof NumericScienceTool)
                 .map(ScienceTool::getToolKey)
-                .filter(key -> key.toLowerCase().startsWith(hint.toLowerCase()))
+                .map(String::toLowerCase)
+                .filter(key -> key.startsWith(hint.toLowerCase()))
                 .collect(Collectors.toList());
     }
 }
