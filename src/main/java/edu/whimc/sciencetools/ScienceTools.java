@@ -1,46 +1,44 @@
 package edu.whimc.sciencetools;
 
+import edu.whimc.sciencetools.commands.ScienceToolCommand;
+import edu.whimc.sciencetools.models.conversion.ConversionManager;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import edu.whimc.sciencetools.commands.BaseToolCommand;
-import edu.whimc.sciencetools.commands.GetData;
-import edu.whimc.sciencetools.utils.ConversionManager;
-import edu.whimc.sciencetools.utils.ToolManager;
-import edu.whimc.sciencetools.utils.ToolManager.ToolType;
-
 public class ScienceTools extends JavaPlugin implements Listener {
 
-	private ToolManager toolManager;
-	private ConversionManager convManager;
-	
-	@Override
-	public void onEnable() {
-		getCommand("sciencetools").setExecutor(new BaseToolCommand(this));
+    private ScienceToolManager toolManager;
+    private ConversionManager conversionManager;
 
-		saveDefaultConfig();
-		getConfig().options().copyDefaults(false);
+    private static ScienceTools instance;
 
-		convManager = ConversionManager.loadConversions(this);
-		toolManager = ToolManager.loadTools(this, convManager);
+    @Override
+    public void onEnable() {
+        ScienceTools.instance = this;
+        saveDefaultConfig();
 
-		for (ToolType tool : ToolType.values()) {
-			getCommand(tool.toString().toLowerCase()).setExecutor(new GetData(this, tool));
-		}
-	}
+        getCommand("sciencetools").setExecutor(new ScienceToolCommand());
 
-	public ToolManager getToolManager() {
-		return toolManager;
-	}
+        reloadScienceTools();
+    }
 
-	public ConversionManager getConversionManager() {
-		return convManager;
-	}
+    public ScienceToolManager getToolManager() {
+        return this.toolManager;
+    }
 
-	public void reloadScienceTools() {
-		reloadConfig();
-		convManager = ConversionManager.loadConversions(this);
-		toolManager = ToolManager.loadTools(this, convManager);
-	}
+    public ConversionManager getConversionManager() {
+        return this.conversionManager;
+    }
+
+    public void reloadScienceTools() {
+        reloadConfig();
+        this.conversionManager = new ConversionManager();
+        this.toolManager = new ScienceToolManager(this.conversionManager);
+    }
+
+    public static ScienceTools getInstance() {
+        return ScienceTools.instance;
+    }
 
 }

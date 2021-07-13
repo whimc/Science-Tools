@@ -21,20 +21,23 @@ Unit conversions config will look like this:
 
 ```yaml
 conversions:
-  unit_name:
-    expression: "{VAL} rest_of_formula"
-    unit: "unit_name"
+  # The name of the conversion 
+  conversion_name:
+    # The expression that will be used to convert the value
+    expression: "{VAL} * 1.0"
+    # The unit of the conversion
+    unit: "unit"
 ```
 
 Example:
 ```yaml
 conversions:
-  fahrenheit: # Celcius -> Fahrenheit
-    expression: '({VAL} * 9.0 / 5.0) + 32.0'
-    unit: °F
+  fahrenheit: # Celsius -> Fahrenheit
+    expression: "({VAL} * 9.0 / 5.0) + 32.0"
+    unit: "°F"
   feet: # Meters -> Feet
-    expression: '{VAL} * 3.28084'
-    unit: ft
+    expression: "{VAL} * 3.28084"
+    unit: "ft"
 ```
 
 #### Placeholders
@@ -44,40 +47,53 @@ conversions:
 |`{VAL}`        | The value that is being converted |
 
 ### Science Tools
-Science tool config will look like this:
+
+A science tool can either be string-based or numeric. The `default-measurement` will determine this behavior.
+If the `default-measurement` is valid JavaScript syntax, the tool will be considered numeric.
+Numeric science tools have extra options for configuration.
+
+String-based science tool example:
 ```yaml
 tools:
-  TOOL_NAME:
-    default-expression: "value"
-    unit: "unit_name"
-    conversions:
-      - conversion_name
+  # The tool key
+  STRING_TOOL:
+    # (optional: defaults to the tool key) A formatted version of the tool
+    display-name: "String Tool"
+    # The default fallback measurement to be used
+    default-expression: "Value"
+    # (optional) World settings
     worlds:
-      WorldName: "value"
-    regions:
-      region_name: "value"
+      # Name of the world to configure
+      WorldName:
+        # (optional: Defaults to `default-expression`)
+        #  The fallback measurement for this world
+        global-measurement: "Value within worldName"
+        # (optional) Region-specific measurements
+        regions:
+          region1: "Value within region1"
+          region2: "Value within region2"
+    # (optional) List of worlds where this tool cannot be measured
+    disabled-worlds:
+      - disabledWorld1
+      - disabledWorld2
 ```
 
-Example:
+Numeric science tool example:
 ```yaml
 tools:
-  PRESSURE:
-    default-expression: "101.3"
-    unit: "kPa"
+  NUMERIC_TOOL:
+    display-name: "Numeric Tool"
+    default-measurement: "1 + 1"
+    
+    # The following are for numeric science tools only!
+
+    # The unit of the tool
+    unit: "m"
+    # The number of decimals to show in the printout
+    precision: "4"
+    # A list of conversions that will be showed with the tool's printout
     conversions:
-      - psi
-    worlds:
-      LunarCrater: "0"
-    regions:
-      moon_main_dome: "101.3 + rand(-0.01, 0.03)"
-      newhouse1: "101.3"
-      airlockleak: "0"
-  RADIATION:
-    default-expression: "2.4"
-    unit: "mSv"
-    worlds:
-      LunarCrater: "380"
-      Gliese: "42"
+      - conversion_name
 ```
 
 Region names are defined using [WorldGuard](https://worldguard.enginehub.org/en/latest/regions/commands/).
@@ -93,19 +109,16 @@ Region names are defined using [WorldGuard](https://worldguard.enginehub.org/en/
 |`randInt(min, max)`| A random integer between `min` and `max` (inclusive) |
 |`min(a, b)`        | The minimum between `a` and `b`                      |
 |`max(a, b)`        | The maximum between `a` and `b`                      |
-|`{ALTITUDE}`       | The value from `/altitude`                           |
-|`{OXYGEN}`         | The value from `/oxygen`                             |
-|`{PRESSURE}`       | The value from `/pressure`                           |
-|`{RADIATION}`      | The value from `/radiation`                          |
-|`{TEMPERATURE}`    | The value from `/temperature`                        |
-|`{WIND}`           | The value from `/wind`                               |
+| `{<tool key>}`    | The value from the given _numeric_ tool 
 
 ### Validation
 Validation config will look like this:
 ```yaml
 validation:
-  tolerance: error value
-  timeout: time (in seconds) until timeout
+  # Amount of 'wiggle room' given when accepting answers
+  tolerance: 10
+  # time (in seconds) until timeout
+  timeout: 30
   messages:
     prompt:
       all:
@@ -230,13 +243,14 @@ validation:
 ---
 
 ## Commands
-| Command                     | Description                   |
-|-----------------------------|-------------------------------|
-| `/sciencetools`             | Display command help          |
-| `/sciencetools validate <tool> <player>`| Take the value of the tool at the target player's current location |
-| `/sciencetools validate <tool> <player> <world> <x> <y> <z>`| Take the value of the tool at the provided location |
-| `/sciencetools reload `     | Reload the plugin's config    |
-| `/sciencetools js`          | Run interpreted JavaScript    |
+| Command                                                     | Description                                                        |
+|-------------------------------------------------------------|--------------------------------------------------------------------|
+| `/sciencetools`                                             | Display command help                                               |
+| `/sciencetools validate <tool> <player>`                    | Take the value of the tool at the target player's current location |
+| `/sciencetools validate <tool> <player> <world> <x> <y> <z>`| Take the value of the tool at the provided location                |
+| `/sciencetools reload`                                      | Reload the plugin's config                                         |
+| `/sciencetools js`                                          | Run interpreted JavaScript                                         |
+| `/sciencetools measure <tool>`                              | Measure the given science tool                                     |
 
 &nbsp;
 
@@ -250,21 +264,6 @@ on our server will open a data entry computer prompt in the chat that accepts a
 value (input by typing a number in the chat). It will want a value 101.30kPa since
 the specified coordinates are in a specific building with a different pressure
 than the outside (0kPa).
-
-&nbsp;
-
-`/[tool_name]` will measure the current value in the region that the player is standing in.
-
-We currently support:
-- altitude
-- oxygen
-- pressure
-- radiation
-- temperature
-- wind
-
-We are planning on adding:
-- atmospheric makeup
 
 ---
 

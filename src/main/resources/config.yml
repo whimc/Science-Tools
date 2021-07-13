@@ -1,6 +1,4 @@
 # -- WHIMC Science Tools --
-# You shouldn't have to edit this file.
-# Everything in here can be edited in game
 conversions:
   feet:
     expression: "{VAL} * 3.28084"
@@ -10,19 +8,33 @@ conversions:
     unit: "°F"
 tools:
   ALTITUDE:
-    default-expression: "max(0, {Y})"
+    display-name: "altitude"
+    default-measurement: "max(0, {Y})"
     unit: "m"
+    precision: "4"
     conversions:
       - feet
     worlds:
-      world_nether: "min(0, {Y} - 128)"
+      world:
+        global-measurement: "{Y}"
+      world_nether:
+        global-measurement: "min(0, {Y} - 128)"
     disabled-worlds:
-      - "world_the_end"
+      - world_the_end
   OXYGEN:
-    default-expression: "30 + rand(-0.5, 0.5)"
+    display-name: "oxygen level"
+    default-measurement: "30 + rand(-0.5, 0.5)"
     unit: "%"
-    regions:
-      enclosure: "rand(0, 0.1)"
+    worlds:
+      world:
+        regions:
+          enclosure: "rand(0, 0.1)"
+          high_oxygen: "100"
+      world_the_end:
+        global-measurement: "0"
+        regions:
+          cage: "10"
+          castle: "5"
 validation:
   tolerance: 1.0
   timeout: 30

@@ -5,28 +5,7 @@ author: Jack Henhapl
 api-version: 1.13
 main: edu.whimc.sciencetools.ScienceTools
 softdepend: [WorldGuard]
+load: POSTWORLD
 commands:
-  altitude:
-    description: "Player's altitude"
-  atmosphere:
-    description: "Atmospheric composition at the player's location"
-  oxygen:
-    description: "Oxygen level in the air of the player's location"
-  pressure:
-    description: "Air pressure of the player's location"
-  radiation:
-    description: "Radiation level of the player's location"
-  radiation_em:
-    description: "Electromagnetic radiation level of the player's location"
-  radiation_particle:
-    description: "Particle radiation level of the player's location"
-  radiation_cosmicrays:
-    description: "Cosmic ray radiation level of the player's location"
-  temperature:
-    description: "Temperature of the player's location"
-  wind:
-    description: "Wind speed of the player's location"
-    aliases:
-    - airflow
   sciencetools:
     description: Manage the ScienceTools plugin
