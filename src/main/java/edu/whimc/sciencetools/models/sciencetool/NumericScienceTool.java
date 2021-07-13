@@ -15,6 +15,7 @@ import java.util.Set;
 public class NumericScienceTool extends ScienceTool {
 
     private final String unit;
+    private int precision;
     private final List<Conversion> conversions;
 
     public NumericScienceTool(String toolKey,
@@ -24,9 +25,11 @@ public class NumericScienceTool extends ScienceTool {
                               Map<World, Map<String, String>> regionMeasurements,
                               Set<World> disabledWorlds,
                               String unit,
+                              int precision,
                               List<Conversion> conversions) {
         super(toolKey, displayName, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
         this.unit = unit;
+        this.precision = precision;
         this.conversions = conversions;
     }
 
@@ -40,10 +43,10 @@ public class NumericScienceTool extends ScienceTool {
         double data = getData(player.getLocation());
 
         StringBuilder message = new StringBuilder("&aThe measured " + this.displayName
-                + " is &f" + Utils.trim2Deci(data) + this.unit + "&7");
+                + " is &f" + Utils.trimDecimals(data, this.precision) + this.unit + "&7");
 
         for (Conversion conversion : this.conversions) {
-            String converted = Utils.trim2Deci(conversion.convert(data));
+            String converted = Utils.trimDecimals(conversion.convert(data), this.precision);
             message.append(" (").append(converted).append(conversion.getUnit()).append(")");
         }
 

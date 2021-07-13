@@ -11,6 +11,7 @@ tools:
     display-name: "altitude"
     default-measurement: "max(0, {Y})"
     unit: "m"
+    precision: "4"
     conversions:
       - feet
     worlds:

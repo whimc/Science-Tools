@@ -87,6 +87,7 @@ public class ScienceToolManager {
 
                     Utils.log("&b\t\t- &f" + worldName);
 
+                    // Global measurement
                     ConfigurationSection worldSection = section.getConfigurationSection("worlds." + worldName);
                     String globalMeasurement = worldSection.getString("global-measurement");
                     if (globalMeasurement != null) {
@@ -94,6 +95,7 @@ public class ScienceToolManager {
                         worldMeasurements.put(world, globalMeasurement);
                     }
 
+                    // Region measurements
                     if (worldSection.isSet("regions")) {
                         Utils.log("&b\t\t\t- Regions");
                         Map<String, String> regionMeasurements = new HashMap<>();
@@ -123,6 +125,9 @@ public class ScienceToolManager {
             String unit = section.getString("unit", "");
             Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");
 
+            int precision = section.getInt("precision", 2);
+            Utils.log("&b\t- Precision: &f" + precision + "&b decimal" + (precision == 1 ? "" : "s"));
+
             // Load conversions
             List<Conversion> conversions = new ArrayList<>();
             if (section.isSet("conversions")) {
@@ -141,7 +146,7 @@ public class ScienceToolManager {
             }
 
             NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, defaultMeasurement,
-                    worldMeasurements, worldRegionMeasurements, disabledWorlds, unit, conversions);
+                    worldMeasurements, worldRegionMeasurements, disabledWorlds, unit, precision, conversions);
             this.tools.put(toolKey.toLowerCase(), tool);
             JSPlaceholder.registerPlaceholder(tool);
         }

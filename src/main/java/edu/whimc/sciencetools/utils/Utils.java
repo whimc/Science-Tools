@@ -31,8 +31,8 @@ public class Utils {
         return Bukkit.getPluginManager().isPluginEnabled("WorldGuard");
     }
 
-    public static String trim2Deci(double val) {
-        return String.format("%,.2f", val);
+    public static String trimDecimals(double val, int precision) {
+        return String.format("%,." + precision + "f", val);
     }
 
     public static void setDebugReceiver(CommandSender sender) {
