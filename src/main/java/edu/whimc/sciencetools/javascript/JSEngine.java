@@ -4,6 +4,9 @@ import edu.whimc.sciencetools.commands.CommandError;
 
 import javax.script.*;
 
+/**
+ * The JavaScript engine.
+ */
 public class JSEngine {
 
     private static final ScriptEngineManager engineManager = new ScriptEngineManager();
@@ -26,6 +29,13 @@ public class JSEngine {
         }
     }
 
+    /**
+     * Runs the passed JavaScript code.
+     *
+     * @param code the JavaScript code to run
+     * @param throwCommandError whether or not to throw a CommandError
+     * @return the value returned from the execution of the script
+     */
     protected static Object run(String code, boolean throwCommandError) {
         try {
             return engine.eval(code);
@@ -37,6 +47,13 @@ public class JSEngine {
         }
     }
 
+    /**
+     * Evaluates the passed JavaScript expression.
+     *
+     * @param expression the JavaScript expression to evaluate
+     * @param throwCommandError whether or not to throw a CommandError
+     * @return the resulting Double value
+     */
     protected static Double evaluate(String expression, boolean throwCommandError) {
         Object res = run(expression, throwCommandError);
 
