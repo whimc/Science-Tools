@@ -1,5 +1,8 @@
 package edu.whimc.sciencetools.javascript;
 
+/**
+ * The JavaScript functions that can be used in the config.
+ */
 public enum JSFunction {
     RAND(
             "rand(min, max)",
@@ -23,10 +26,20 @@ public enum JSFunction {
     ),
     ;
 
+    /* The String used in the config to call the function */
     private final String key;
+    /* A description of how the function is used */
     private final String usage;
+    /* The JavaScript definition of the function */
     private final String definition;
 
+    /**
+     * Constructs a JSFunction.
+     *
+     * @param key the String used in the config to call the function
+     * @param usage a description of how the function is used
+     * @param definition the JavaScript definition of the function
+     */
     JSFunction(String key, String usage, String definition) {
         this.key = key;
         this.usage = usage;
@@ -34,18 +47,30 @@ public enum JSFunction {
 
     }
 
+    /**
+     * @return the String used in the config to call the function
+     */
     public String getKey() {
         return this.key;
     }
 
+    /**
+     * @return a description of how the function is used
+     */
     public String getUsage() {
         return this.usage;
     }
 
+    /**
+     * @return the JavaScript definition of the function
+     */
     public String getDefinition() {
         return this.definition == null ? "" : this.definition;
     }
 
+    /**
+     * @return the function's key and description of how it is used
+     */
     public String fullUsage() {
         return "&f\"&e&o" + this.key + "&f\" &7- " + this.usage;
     }
