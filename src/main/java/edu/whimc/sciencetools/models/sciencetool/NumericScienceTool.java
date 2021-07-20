@@ -12,12 +12,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A ScienceTool that only uses numeric values. Measurements from this type of tool can be validated.
+ */
 public class NumericScienceTool extends ScienceTool {
 
+    /* The tool's main unit of measurement */
     private final String unit;
+    /* The decimal precision of the tool */
     private final int precision;
+    /* The accepted unit conversions of the tool */
     private final List<Conversion> conversions;
 
+    /**
+     * Constructs a NumericScienceTool.
+     *
+     * @param toolKey the key for this tool in the config
+     * @param displayName the name to be displayed in-game for this tool
+     * @param defaultMeasurement the default measurement used when no region or world value is found
+     * @param worldMeasurements the world-specific global measurements
+     * @param regionMeasurements the region-specific measurements
+     * @param disabledWorlds the worlds where the tool cannot be measured
+     * @param unit the unit of measurement
+     * @param precision the decimal precision
+     * @param conversions the accepted unit conversions
+     */
     public NumericScienceTool(String toolKey,
                               String displayName,
                               String defaultMeasurement,
@@ -33,8 +52,14 @@ public class NumericScienceTool extends ScienceTool {
         this.conversions = conversions;
     }
 
+    /**
+     * Display the measured number to the player based off their current location.
+     *
+     * @param player the target player
+     */
     @Override
     public void displayMeasurement(Player player) {
+        // check if player in disabled world
         if (super.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, "&cWe don't know how to measure that here!");
             return;
@@ -45,6 +70,7 @@ public class NumericScienceTool extends ScienceTool {
         StringBuilder message = new StringBuilder("&aThe measured " + this.displayName
                 + " is &f" + Utils.trimDecimals(data, this.precision) + this.unit + "&7");
 
+        // display converted values
         for (Conversion conversion : this.conversions) {
             String converted = Utils.trimDecimals(conversion.convert(data), this.precision);
             message.append(" (").append(converted).append(conversion.getUnit()).append(")");
@@ -53,6 +79,12 @@ public class NumericScienceTool extends ScienceTool {
         Utils.msg(player, message.toString());
     }
 
+    /**
+     * Gets the measurement data at a specified location.
+     *
+     * @param loc the location to get the measurement data from
+     * @return the measurement data at the specified location
+     */
     public double getData(Location loc) {
         JSNumericExpression expression = new JSNumericExpression(super.getMeasurement(loc));
         return expression.evaluate(JSContext.create(loc));
