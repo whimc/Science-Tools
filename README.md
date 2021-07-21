@@ -3,6 +3,8 @@
 
 ScienceTools is a Minecraft plugin to simulate values for scientific tools. This plugin uses [WorldGuard](https://worldguard.enginehub.org/en/latest/developer/dependency/) to define regions in which to set scientific values. To set values, edit the config file.
 
+_**Requires Java 11+**_
+
 ---
 
 ## Building
