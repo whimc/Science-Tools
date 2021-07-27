@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Holds ScienceTool information.
+ */
 public class ScienceTool {
 
     /* The key for this tool within the config. */
@@ -32,6 +35,16 @@ public class ScienceTool {
     /* Worlds where you cannot measure the science tool. */
     protected Set<World> disabledWorlds;
 
+    /**
+     * Constructs a ScienceTool.
+     *
+     * @param toolKey the tool's key within the config
+     * @param displayName the tool's in-game name
+     * @param defaultMeasurement the measurement used when no region- or world-specific measurements are found
+     * @param worldMeasurements all world-specific global measurements
+     * @param regionMeasurements all region-specific measurements
+     * @param disabledWorlds all worlds where the tool cannot be measured
+     */
     public ScienceTool(String toolKey,
                        String displayName,
                        String defaultMeasurement,
