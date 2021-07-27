@@ -14,10 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The ScienceTools command.
+ */
 public class ScienceToolCommand implements CommandExecutor, TabCompleter {
 
     private final Map<String, AbstractSubCommand> subCommands = new HashMap<>();
 
+    /**
+     * Constructs the ScienceTools command and adds all subcommands.
+     */
     public ScienceToolCommand() {
         subCommands.put("js", new JSInterpreter());
         subCommands.put("measure", new Measure());
@@ -25,13 +31,24 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
         subCommands.put("validate", new Validate());
     }
 
+    /**
+     * Runs the provided subcommand if it is valid.
+     *
+     * @param sender the command's sender
+     * @param command the command
+     * @param label the label
+     * @param args the arguments passed
+     * @return false
+     */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        // if no arguments provided, send user list of subcommands
         if (args.length == 0) {
             sendSubCommands(sender);
             return false;
         }
 
+        // if argument invalid subcommand, send user list of subcommands
         AbstractSubCommand subCmd = subCommands.getOrDefault(args[0].toLowerCase(), null);
         if (subCmd == null) {
             sendSubCommands(sender);
@@ -49,6 +66,15 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    /**
+     * Handles auto-completing the command.
+     *
+     * @param sender the command's sender
+     * @param command the command
+     * @param alias the command's alias
+     * @param args the command's arguments
+     * @return the list of auto-fillable arguments
+     */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String @NotNull [] args) {
         String hint = args[0].toLowerCase();
@@ -68,6 +94,11 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
         return subCmd.executeTab(sender, Arrays.copyOfRange(args, 1, args.length));
     }
 
+    /**
+     * Displays the full usage of each sub command to the sender.
+     *
+     * @param sender the command's sender
+     */
     private void sendSubCommands(CommandSender sender) {
         for (AbstractSubCommand subCommand : subCommands.values()) {
             Utils.msg(sender, subCommand.fullDescription());
