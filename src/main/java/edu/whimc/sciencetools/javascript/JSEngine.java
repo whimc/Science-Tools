@@ -1,13 +1,13 @@
 package edu.whimc.sciencetools.javascript;
 
 import edu.whimc.sciencetools.commands.CommandError;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.*;
 
 public class JSEngine {
 
-    private static final ScriptEngineManager engineManager = new ScriptEngineManager();
-    private static final ScriptEngine engine = engineManager.getEngineByName("Nashorn");
+    private static final ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
     private static final Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 
     /* Set up the engine and remove some harmful bindings */
