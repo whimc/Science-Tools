@@ -17,25 +17,25 @@ import java.util.Set;
  */
 public class NumericScienceTool extends ScienceTool {
 
-    /* The tool's main unit of measurement */
+    /* The tool's main unit of measurement. */
     private final String unit;
-    /* The decimal precision of the tool */
+    /* The decimal precision of the tool. */
     private final int precision;
-    /* The accepted unit conversions of the tool */
+    /* The accepted unit conversions of the tool. */
     private final List<Conversion> conversions;
 
     /**
      * Constructs a NumericScienceTool.
      *
-     * @param toolKey the key for this tool in the config
-     * @param displayName the name to be displayed in-game for this tool
-     * @param defaultMeasurement the default measurement used when no region or world value is found
-     * @param worldMeasurements the world-specific global measurements
-     * @param regionMeasurements the region-specific measurements
-     * @param disabledWorlds the worlds where the tool cannot be measured
-     * @param unit the unit of measurement
-     * @param precision the decimal precision
-     * @param conversions the accepted unit conversions
+     * @param toolKey The key for this tool in the config.
+     * @param displayName The name to be displayed in-game for this tool.
+     * @param defaultMeasurement The default measurement used when no region or world value is found.
+     * @param worldMeasurements The world-specific global measurements.
+     * @param regionMeasurements The region-specific measurements.
+     * @param disabledWorlds The worlds where the tool cannot be measured.
+     * @param unit The unit of measurement.
+     * @param precision The decimal precision.
+     * @param conversions The accepted unit conversions.
      */
     public NumericScienceTool(String toolKey,
                               String displayName,
@@ -55,7 +55,7 @@ public class NumericScienceTool extends ScienceTool {
     /**
      * Display the measured number to the player based off their current location.
      *
-     * @param player the target player
+     * @param player The target player.
      */
     @Override
     public void displayMeasurement(Player player) {
@@ -82,14 +82,17 @@ public class NumericScienceTool extends ScienceTool {
     /**
      * Gets the measurement data at a specified location.
      *
-     * @param loc the location to get the measurement data from
-     * @return the measurement data at the specified location
+     * @param loc The location to get the measurement data from.
+     * @return The measurement data at the specified location.
      */
     public double getData(Location loc) {
         JSNumericExpression expression = new JSNumericExpression(super.getMeasurement(loc));
         return expression.evaluate(JSContext.create(loc));
     }
 
+    /**
+     * @return The tool's main unit of measurement.
+     */
     public String getMainUnit() {
         return this.unit;
     }

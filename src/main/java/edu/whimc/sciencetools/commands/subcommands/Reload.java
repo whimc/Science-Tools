@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  * The command for reloading the plugin.
+ * Command: /sciencetools reload
  */
 public class Reload extends AbstractSubCommand {
 
@@ -17,11 +18,9 @@ public class Reload extends AbstractSubCommand {
     }
 
     /**
-     * Reloads the plugin, refreshing values on the server to match changes in the config.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return false
+     * Reloads the plugin, refreshing values on the server to match changes in the config.
      */
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {

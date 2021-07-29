@@ -26,7 +26,7 @@ public class ScienceToolManager {
     /**
      * Constructs a ScienceToolManager.
      *
-     * @param conversionManager the ConversionManager
+     * @param conversionManager The ConversionManager.
      */
     public ScienceToolManager(ConversionManager conversionManager) {
         this.tools = new HashMap<>();
@@ -36,7 +36,7 @@ public class ScienceToolManager {
     /**
      * Loads the valid ScienceTools from the config.
      *
-     * @param conversionManager the ConversionManager
+     * @param conversionManager The ConversionManager.
      */
     public void loadTools(@NotNull ConversionManager conversionManager) {
         FileConfiguration config = ScienceTools.getInstance().getConfig();
@@ -173,25 +173,25 @@ public class ScienceToolManager {
     /**
      * Gets the specified ScienceTool.
      *
-     * @param key the ScienceTool's name
-     * @return the ScienceTool
+     * @param key The ScienceTool's name.
+     * @return The ScienceTool.
      */
     public ScienceTool getTool(String key) {
         return this.tools.getOrDefault(key.toLowerCase(), null);
     }
 
     /**
-     * @return the Collection of ScienceTools
+     * @return The Collection of ScienceTools.
      */
     public Collection<ScienceTool> getTools() {
         return this.tools.values();
     }
 
     /**
-     * Handles auto-completing tool names when tab is pressed.
+     * Gets a list of tool names that match the given hint.
      *
-     * @param hint the starting characters to filter by
-     * @return the list of valid tool names
+     * @param hint The starting characters to filter by.
+     * @return The list of valid tool names.
      */
     public List<String> toolTabComplete(String hint) {
         return getTools().stream()
@@ -202,10 +202,10 @@ public class ScienceToolManager {
     }
 
     /**
-     * Handles auto-completing numeric tool names when tab is pressed.
+     * Gets a list of numeric tool names that match the given hint.
      *
-     * @param hint the starting characters to filter by
-     * @return the list of valid tool names
+     * @param hint The starting characters to filter by.
+     * @return The list of valid tool names.
      */
     public List<String> numericToolTabComplete(String hint) {
         return getTools().stream()

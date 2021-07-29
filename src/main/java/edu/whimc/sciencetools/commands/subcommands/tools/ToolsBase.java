@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  * The command to manage tools. This is not yet implemented.
+ * Command: /sciencetools tool
  */
 public class ToolsBase extends AbstractSubCommand {
 
@@ -19,9 +20,7 @@ public class ToolsBase extends AbstractSubCommand {
     /**
      * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return false
+     * Allows the user to manage all science tools.
      */
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {

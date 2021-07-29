@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * The command for validating a ScienceTool measurement.
+ * * Command: /sciencetools validate
  */
 public class Validate extends AbstractSubCommand implements Listener {
 
@@ -51,9 +52,9 @@ public class Validate extends AbstractSubCommand implements Listener {
         /**
          * Constructs a Validation task.
          *
-         * @param taskId the id of this task
-         * @param expected the expected Double value to receive
-         * @param tool the NumericScienceTool to be validated
+         * @param taskId The id of this task.
+         * @param expected The expected Double value to receive.
+         * @param tool The NumericScienceTool to be validated.
          */
         public Validation(int taskId, double expected, NumericScienceTool tool) {
             this.taskId = taskId;
@@ -62,21 +63,21 @@ public class Validate extends AbstractSubCommand implements Listener {
         }
 
         /**
-         * @return the task id
+         * @return The task id.
          */
         public int getTaskId() {
             return this.taskId;
         }
 
         /**
-         * @return the expected Double value
+         * @return The expected Double value.
          */
         public double getExpected() {
             return this.expected;
         }
 
         /**
-         * @return the NumericScienceTool
+         * @return The NumericScienceTool.
          */
         public NumericScienceTool getTool() {
             return this.tool;
@@ -84,11 +85,9 @@ public class Validate extends AbstractSubCommand implements Listener {
     }
 
     /**
-     * Validates the given tool's value.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return false
+     * Validates the given tool's value.
      */
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {
@@ -163,11 +162,9 @@ public class Validate extends AbstractSubCommand implements Listener {
     }
 
     /**
-     * Handles auto-completing the command.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return the list of auto-fillable argument options
+     * Handles auto-completing various arguments for the command.
      */
     @Override
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
@@ -206,7 +203,7 @@ public class Validate extends AbstractSubCommand implements Listener {
     /**
      * Validates the number that the player inputs into the chat.
      *
-     * @param event the AsyncPlayerChatEvent
+     * @param event The AsyncPlayerChatEvent.
      */
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
@@ -217,7 +214,7 @@ public class Validate extends AbstractSubCommand implements Listener {
             return;
         }
 
-        // cancel the tasks
+        // cancel the event to prevent their message being sent
         event.setCancelled(true);
 
         Validation validation = this.validationTasks.remove(player.getUniqueId());
@@ -254,10 +251,10 @@ public class Validate extends AbstractSubCommand implements Listener {
      * Queues up displaying the corresponding validation message and running the corresponding
      * command defined in the config.
      *
-     * @param player the current player
-     * @param path the path to the desired section of the validation config
-     * @param tool the NumericScienceTool
-     * @param value the tool's value
+     * @param player The current player.
+     * @param path The path to the desired section of the validation config.
+     * @param tool The NumericScienceTool.
+     * @param value The tool's value.
      */
     private void syncDoConfigTasks(Player player, String path, NumericScienceTool tool, Double value) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(ScienceTools.getInstance(), () -> doConfigTasks(player, path, tool, value));
@@ -267,10 +264,10 @@ public class Validate extends AbstractSubCommand implements Listener {
      * Displays the corresponding validation message and runs the corresponding command defined in
      * the config.
      *
-     * @param player the current player
-     * @param path the path to the desired section of the validation config
-     * @param tool the NumericScienceTool
-     * @param value the tool's value
+     * @param player The current player.
+     * @param path The path to the desired section of the validation config.
+     * @param tool The NumericScienceTool.
+     * @param value The tool's value.
      */
     private void doConfigTasks(Player player, String path, NumericScienceTool tool, @Nullable Double value) {
         String typeStr = tool.getDisplayName();
@@ -285,11 +282,11 @@ public class Validate extends AbstractSubCommand implements Listener {
      * Displays the corresponding validation message and runs the corresponding command defined in
      * the config.
      *
-     * @param player the current player
-     * @param path the path to the desired section of the validation config
-     * @param type the tool's name
-     * @param value the tool's value
-     * @param unit the tool's unit
+     * @param player The current player.
+     * @param path The path to the desired section of the validation config.
+     * @param type The tool's name.
+     * @param value The tool's value.
+     * @param unit The tool's unit.
      */
     private void doConfigTasks(Player player, String path, String type, String value, String unit) {
         FileConfiguration config = ScienceTools.getInstance().getConfig();

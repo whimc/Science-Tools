@@ -57,10 +57,10 @@ public class ConversionManager {
     /**
      * Creates and loads a new Conversion.
      *
-     * @param name the name of the Conversion
-     * @param unit the unit being converted to
-     * @param expr the Conversion equation
-     * @return the Conversion
+     * @param name The name of the Conversion.
+     * @param unit The unit being converted to.
+     * @param expr The Conversion equation.
+     * @return The Conversion.
      */
     private @NotNull Conversion loadConversion(String name, String unit, JSNumericExpression expr) {
         Conversion conversion = new Conversion(name, unit, expr);
@@ -71,10 +71,10 @@ public class ConversionManager {
     /**
      * Creates and saves a new Conversion to the config.
      *
-     * @param name the name of the Conversion
-     * @param unit the unit being converted to
-     * @param expr the Conversion equation
-     * @return the Conversion
+     * @param name The name of the Conversion.
+     * @param unit The unit being converted to.
+     * @param expr The Conversion equation.
+     * @return The Conversion.
      */
     public Conversion createConversion(String name, String unit, JSNumericExpression expr) {
         Conversion conversion = loadConversion(name, unit, expr);
@@ -85,7 +85,7 @@ public class ConversionManager {
     /**
      * Removes the specified Conversion.
      *
-     * @param conversion the Conversion to remove
+     * @param conversion The Conversion to remove.
      */
     public void removeConversion(@NotNull Conversion conversion) {
         String name = conversion.getName();
@@ -96,15 +96,15 @@ public class ConversionManager {
     /**
      * Gets the specified Conversion.
      *
-     * @param key the Conversion's name
-     * @return the specified Conversion
+     * @param key The Conversion's name.
+     * @return The specified Conversion.
      */
     public Conversion getConversion(String key) {
         return this.conversions.getOrDefault(key, null);
     }
 
     /**
-     * @return the Collection of Conversions
+     * @return The Collection of Conversions.
      */
     public Collection<Conversion> getConversions() {
         return conversions.values();
@@ -113,7 +113,7 @@ public class ConversionManager {
     /**
      * Saves the Conversion to the config.
      *
-     * @param conversion the conversion to save
+     * @param conversion The conversion to save.
      */
     public void saveToConfig(@NotNull Conversion conversion) {
         String name = conversion.getName();
@@ -124,8 +124,8 @@ public class ConversionManager {
     /**
      * Sets and saves a Conversion to the config.
      *
-     * @param key the Conversion's name
-     * @param value the Conversion
+     * @param key The Conversion's name.
+     * @param value The Conversion.
      */
     private void setConfig(String key, Object value) {
         ScienceTools.getInstance().getConfig().set("conversions." + key, value);

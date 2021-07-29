@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 /**
  * This class handles the interpretation of JavaScript expressions.
+ * Command: /sciencetools js
  */
 public class JSInterpreter extends AbstractSubCommand {
 
@@ -25,7 +26,7 @@ public class JSInterpreter extends AbstractSubCommand {
     /**
      * Shows user custom JS syntax when not enough arguments are provided.
      *
-     * @param sender the command's sender
+     * @param sender The command's sender.
      */
     @Override
     protected void notEnoughArgs(CommandSender sender) {
@@ -43,11 +44,9 @@ public class JSInterpreter extends AbstractSubCommand {
     }
 
     /**
-     * Runs interpreted JavaScript.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return true
+     * Runs interpreted JavaScript.
      */
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {

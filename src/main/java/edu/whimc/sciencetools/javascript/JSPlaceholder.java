@@ -33,9 +33,9 @@ public class JSPlaceholder {
     /**
      * Construct a JSPlaceholder.
      *
-     * @param key the String used in the config
-     * @param usage a description of how the placeholder is used
-     * @param replacement the value that the placeholder is replaced with
+     * @param key The String used in the config.
+     * @param usage A description of how the placeholder is used.
+     * @param replacement The value that the placeholder is replaced with.
      */
     private JSPlaceholder(String key, String usage, Function<JSContext, Double> replacement) {
         this.key = key;
@@ -51,15 +51,15 @@ public class JSPlaceholder {
     }
 
     /**
-     * @return the key and a description of how the placeholder is used
+     * @return The key and a description of how the placeholder is used.
      */
     public String getUsage() {
         return "&f\"&e&o" + this.key + "&f\" &7- " + this.usage;
     }
 
     /**
-     * @param ctx the JavaScript context
-     * @return the Double value that replaces the placeholder in the given context
+     * @param ctx The JavaScript context.
+     * @return The Double value that replaces the placeholder in the given context.
      */
     public Double getReplacement(JSContext ctx) {
         return this.replacement.apply(ctx);
@@ -68,7 +68,7 @@ public class JSPlaceholder {
     /**
      * Creates a placeholder for the passed NumericScienceTool.
      *
-     * @param tool the NumericScienceTool to add a placeholder for
+     * @param tool The NumericScienceTool to add a placeholder for.
      */
     public static void registerCustomPlaceholder(NumericScienceTool tool) {
         String key = "{" + tool.getToolKey() + "}";
@@ -86,7 +86,7 @@ public class JSPlaceholder {
     }
 
     /**
-     * @return the list of all placeholders
+     * @return The list of all placeholders.
      */
     public static List<JSPlaceholder> getPlaceholders() {
         List<JSPlaceholder> result = new ArrayList<>(DEFAULT_PLACEHOLDERS);
@@ -97,9 +97,9 @@ public class JSPlaceholder {
     /**
      * Swaps out the placeholders in the given expression with their replacement values in the given context.
      *
-     * @param ctx the JavaScript context
-     * @param expr the JavaScript expression
-     * @return the JavaScript expression with placeholders swapped out for their replacements
+     * @param ctx The JavaScript context.
+     * @param expr The JavaScript expression.
+     * @return The JavaScript expression with placeholders swapped out for their replacements.
      */
     public static String prepareExpression(JSContext ctx, String expr) {
         for (JSPlaceholder ph : getPlaceholders()) {

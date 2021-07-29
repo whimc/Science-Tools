@@ -27,16 +27,14 @@ public abstract class AbstractSubCommand {
         /**
          * Constructs a permission level with the specified name.
          *
-         * @param perm the name of the permission
+         * @param perm The name of the permission.
          */
         Permission(String perm) {
             this.perm = perm;
         }
 
         /**
-         * Converts the permission to a String in the form: "sciencetools.perm".
-         *
-         * @return the permission as a String
+         * @return The permission as a String in the form: "sciencetools.perm".
          */
         @Override
         public @NotNull String toString() {
@@ -58,11 +56,11 @@ public abstract class AbstractSubCommand {
     /**
      * Constructs a command with the given arguments.
      *
-     * @param command the name of the command
-     * @param args the arguments required
-     * @param optionalArgs any optional arguments
-     * @param description a description of what the command does
-     * @param permission the required permission level to use the command
+     * @param command The name of the command.
+     * @param args The arguments required.
+     * @param optionalArgs Any optional arguments.
+     * @param description A description of what the command does.
+     * @param permission The required permission level to use the command.
      */
     public AbstractSubCommand(String command, List<String> args, List<String> optionalArgs, String description, Permission permission) {
         this.command = command;
@@ -73,20 +71,21 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * Runs when command is run.
+     * Runs when the subcommand was properly executed (with correct permissions and arguments).
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return whether the command has been run or not
+     * @param sender The command's sender.
+     * @param args The arguments passed.
+     * @return Whether the command has been run or not.
      */
     protected abstract boolean commandRoutine(CommandSender sender, String[] args);
 
     /**
-     * Runs on tab press.
+     * Handles tab completion for a subcommand.
+     * Returns an empty list by default.
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return an empty List of Strings
+     * @param sender The command's sender.
+     * @param args The arguments passed.
+     * @return An empty List of Strings.
      */
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
         return Arrays.asList();
@@ -95,25 +94,21 @@ public abstract class AbstractSubCommand {
     /**
      * Runs when command is not passed enough arguments.
      *
-     * @param sender the command's sender
+     * @param sender The command's sender.
      */
     protected void notEnoughArgs(CommandSender sender) {
         return;
     }
 
     /**
-     * Gets the full description of the SubCommand.
-     *
-     * @return the full description fo the SubCommand
+     * @return The full description of the SubCommand.
      */
     public @NotNull String fullDescription() {
         return this + " &7- " + this.description;
     }
 
     /**
-     * Checks if SubCommand has any optional arguments.
-     *
-     * @return whether or not the SubCommand has optional arguments
+     * @return Whether or not the SubCommand has optional arguments.
      */
     public boolean hasOptionalArgs() {
         return this.optionalArgs.size() != 0;
@@ -122,8 +117,8 @@ public abstract class AbstractSubCommand {
     /**
      * Checks if the SubCommand has been passed enough arguments.
      *
-     * @param argsLen the number (as an integer) of passed in arguments
-     * @return whether or not the SubCommand has been passed enough arguments
+     * @param argsLen The number (as an integer) of passed in arguments.
+     * @return Whether or not the SubCommand has been passed enough arguments.
      */
     public boolean hasEnoughArguments(int argsLen) {
         if (argsLen == this.args.size()) {
@@ -135,8 +130,8 @@ public abstract class AbstractSubCommand {
     /**
      * Formats the argument.
      *
-     * @param ind the index of the argument
-     * @return the formatted argument
+     * @param ind The index of the argument.
+     * @return The formatted argument.
      */
     public @NotNull String formattedArg(int ind) {
         // ensure argument index is valid
@@ -150,8 +145,8 @@ public abstract class AbstractSubCommand {
     /**
      * Formats the optional argument.
      *
-     * @param ind the index of the optional argument
-     * @return the formatted optional argument
+     * @param ind The index of the optional argument.
+     * @return The formatted optional argument.
      */
     public @NotNull String formattedOptionalArg(int ind) {
         // ensure the optional argument index is valid
@@ -163,9 +158,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * Gets the command's usage.
-     *
-     * @return a String specifying how the command is used.
+     * @return The subcommand's usage excluding optional arguments.
      */
     public @NotNull String getUsage() {
         return "&e/sciencetools " + command + " " + String.join(" ", IntStream
@@ -175,9 +168,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * Gets the command's optional usage.
-     *
-     * @return a String specifying how the command is used.
+     * @return The subcommand's usage including optional arguments.
      */
     public @NotNull String getOptionalUsage() {
         return getUsage() + " " + String.join(" ", IntStream
@@ -187,9 +178,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * Converts the SubCommand into a String.
-     *
-     * @return the SubCommand as a String.
+     * @return The SubCommand as a String.
      */
     @Override
     public @NotNull String toString() {
@@ -197,29 +186,27 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * Gets the minimum amount of arguments required to run the command.
-     *
-     * @return the minimum number of arguments required to run the command
+     * @return The minimum number of arguments required to run the command.
      */
     public int getMinArgs() {
         return args.size();
     }
 
     /**
-     * Gets the maximum number of arguments that can be passed into the command.
-     *
-     * @return the maximum number of arguments that can be passed into the command
+     * @return The maximum number of arguments that can be passed into the command.
      */
     public int getMaxArgs() {
         return getMinArgs() + optionalArgs.size();
     }
 
     /**
-     * Checks if the command has been executed.
+     * Wrapper function to {@link #commandRoutine(CommandSender, String[])}.
+     * Checks permissions of the sender and for a valid number of arguments.
+     * If these checks fail, the command routine is not run.
      *
-     * @param sender the command's sender
-     * @param args the passed arguments
-     * @return whether the command has been executed
+     * @param sender The command's sender.
+     * @param args The passed arguments.
+     * @return Whether the command has been executed.
      */
     public boolean executeCommand(CommandSender sender, String[] args) {
         // check if the user has sufficient permissions to run command
@@ -258,11 +245,13 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * Runs on tab press.
+     * Wrapper for {@link #tabRoutine(CommandSender, String[])}.
+     * Returns an empty list if the sender does not have permission for the subcommand or if they
+     * have surpassed the max number of arguments.
      *
-     * @param sender the command's sender
-     * @param args the passed arguments
-     * @return an empty List of Strings
+     * @param sender The command's sender.
+     * @param args The passed arguments.
+     * @return An empty List of Strings.
      */
     public List<String> executeTab(CommandSender sender, String[] args) {
         // check if user has sufficient permissions or if there are too many arguments passed

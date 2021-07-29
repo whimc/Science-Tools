@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  * The command to manage unit conversions. This is not yet implemented.
+ * Command: /sciencetools conversion
  */
 public class ConversionsBase extends AbstractSubCommand {
 
@@ -19,9 +20,7 @@ public class ConversionsBase extends AbstractSubCommand {
     /**
      * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return false
+     * Allows the user to manage conversions.
      */
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {

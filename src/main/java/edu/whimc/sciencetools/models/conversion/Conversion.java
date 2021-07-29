@@ -24,9 +24,9 @@ public class Conversion {
     /**
      * Constructs a Conversion.
      *
-     * @param name the name of the Conversion
-     * @param unit the unit being converted to
-     * @param expression the Conversion equation
+     * @param name The name of the Conversion.
+     * @param unit The unit being converted to.
+     * @param expression The Conversion equation.
      */
     protected Conversion(String name, String unit, JSNumericExpression expression) {
         this.name = name;
@@ -37,29 +37,29 @@ public class Conversion {
     /**
      * Uses the Conversion's expression to calculate the passed Double into the new unit.
      *
-     * @param val the Double value to convert
-     * @return a Double in the new unit
+     * @param val The Double value to convert.
+     * @return A Double in the new unit.
      */
     public Double convert(double val) {
         return this.expression.evaluate(JSContext.create(val));
     }
 
     /**
-     * @return the Conversion's name
+     * @return The Conversion's name.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * @return the unit being converted to
+     * @return The unit being converted to.
      */
     public String getUnit() {
         return this.unit;
     }
 
     /**
-     * @return the Conversion equation
+     * @return The Conversion equation.
      */
     public JSExpression getExpression() {
         return this.expression;
@@ -68,8 +68,8 @@ public class Conversion {
     /**
      * Sets a new JavaScript expression and saves it to the config.
      *
-     * @param sender the command's sender
-     * @param expression the new Conversion equation
+     * @param sender The command's sender.
+     * @param expression The new Conversion equation.
      */
     public void setExpression(CommandSender sender, JSNumericExpression expression) {
         this.expression = expression;
@@ -79,7 +79,7 @@ public class Conversion {
     /**
      * Sets a new unit and saves it to the config.
      *
-     * @param unit the new unit
+     * @param unit The new unit.
      */
     public void setUnit(String unit) {
         this.unit = unit;
@@ -89,7 +89,7 @@ public class Conversion {
     /**
      * Sends the user information about the conversion (name, expression, unit).
      *
-     * @param sender the command's sender
+     * @param sender The command's sender.
      */
     public void sendInfo(CommandSender sender) {
         Utils.msg(sender,

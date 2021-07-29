@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * A JavaScript function's context.
+ * A JavaScript function's context. Holds information used during the execution of an expression.
  */
 public class JSContext {
 
@@ -18,8 +18,8 @@ public class JSContext {
     /**
      * Constructs a JSContext.
      *
-     * @param location the location in the Minecraft world
-     * @param toConvert the Double value to convert
+     * @param location The location to evaluate the expression.
+     * @param toConvert The Double value to convert.
      */
     private JSContext(Location location, double toConvert) {
         this.location = location;
@@ -29,7 +29,7 @@ public class JSContext {
     /**
      * Creates a default JSContext.
      *
-     * @return the new JSContext
+     * @return The new JSContext.
      */
     public static JSContext create() {
         return create(DEFAULT);
@@ -38,8 +38,8 @@ public class JSContext {
     /**
      * Creates a default JSContext at the executor's location.
      *
-     * @param executor the command's sender
-     * @return the new JSContext
+     * @param executor The command's sender.
+     * @return The new JSContext.
      */
     public static JSContext create(CommandSender executor) {
         return create(executor, DEFAULT);
@@ -47,10 +47,11 @@ public class JSContext {
 
     /**
      * Creates a JSContext at the executor's location if it is the player.
+     * If the sender is not a player, the first world's spawn point is used as the location.
      *
-     * @param executor the command's sender
-     * @param toConvert the Double value to convert
-     * @return the new JSContext
+     * @param executor The command's sender.
+     * @param toConvert The Double value to convert.
+     * @return The new JSContext.
      */
     public static JSContext create(CommandSender executor, double toConvert) {
         if (executor instanceof Player) {
@@ -63,8 +64,8 @@ public class JSContext {
     /**
      * Creates a default JSContext at a specified location.
      *
-     * @param location the location in the Minecraft world
-     * @return the new JSContext
+     * @param location The location to evaluate the expression.
+     * @return The new JSContext.
      */
     public static JSContext create(Location location) {
         return new JSContext(location, DEFAULT);
@@ -73,8 +74,8 @@ public class JSContext {
     /**
      * Creates a JSContext at the overworld's spawn location.
      *
-     * @param toConvert the Double value to convert
-     * @return the new JSContext
+     * @param toConvert The Double value to convert.
+     * @return The new JSContext.
      */
     public static JSContext create(double toConvert) {
         return create(Bukkit.getWorlds().get(0).getSpawnLocation(), toConvert);
@@ -83,23 +84,23 @@ public class JSContext {
     /**
      * Creates a new JSContext at the specified location.
      *
-     * @param location the location in the Minecraft world
-     * @param toConvert the Double value to convert
-     * @return the new JSContext
+     * @param location The location to evaluate the expression.
+     * @param toConvert The Double value to convert.
+     * @return The new JSContext.
      */
     public static JSContext create(Location location, double toConvert) {
         return new JSContext(location, toConvert);
     }
 
     /**
-     * @return the Double value to convert
+     * @return The Double value to convert.
      */
     public double getToConvert() {
         return this.toConvert;
     }
 
     /**
-     * @return the location in the Minecraft world
+     * @return The location to evaluate the expression.
      */
     public Location getLocation() {
         return this.location;

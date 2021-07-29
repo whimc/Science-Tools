@@ -16,8 +16,8 @@ public class Utils {
     /**
      * Parses a String and returns a Double.
      *
-     * @param str the String to parse
-     * @return the Double parsed from the String
+     * @param str The String to parse.
+     * @return The Double parsed from the String.
      */
     public static Double parseDouble(String str) {
         try {
@@ -30,9 +30,9 @@ public class Utils {
     /**
      * Parses a String and returns a Double. Throws a chat error if String is not a valid number.
      *
-     * @param sender the command's sender
-     * @param str the String to parse
-     * @return the Double parsed from the String
+     * @param sender The command's sender.
+     * @param str The String to parse.
+     * @return The Double parsed from the String.
      */
     public static Double parseDoubleWithError(CommandSender sender, String str) {
         Double res = parseDouble(str);
@@ -46,7 +46,7 @@ public class Utils {
     /**
      * Checks if the WorldGuard plugin is enabled.
      *
-     * @return whether WorldGuard is enabled
+     * @return Whether WorldGuard is enabled.
      */
     public static boolean worldGuardEnabled() {
         return Bukkit.getPluginManager().isPluginEnabled("WorldGuard");
@@ -55,9 +55,9 @@ public class Utils {
     /**
      * Trims decimal to desired level of precision.
      *
-     * @param val the value to be trimmed
-     * @param precision the desired level of precision
-     * @return a String decimal trimmed to the desired level of precision
+     * @param val The value to be trimmed.
+     * @param precision The desired level of precision.
+     * @return A String decimal trimmed to the desired level of precision.
      */
     public static String trimDecimals(double val, int precision) {
         return String.format("%,." + precision + "f", val);
@@ -74,7 +74,7 @@ public class Utils {
     /**
      * Logs the message.
      *
-     * @param message the message to log
+     * @param message The message to log.
      */
     public static void log(String message) {
         // Make tabs more consistent
@@ -86,10 +86,10 @@ public class Utils {
     }
 
     /**
-     * Sends a message to the command's sender.
+     * Sends colored messages to the sender.
      *
-     * @param sender the command's sender
-     * @param strs the Strings to be sent
+     * @param sender The command's sender.
+     * @param strs The Strings to be sent.
      */
     public static void msg(CommandSender sender, String... strs) {
         for (String str : strs) {
@@ -101,8 +101,8 @@ public class Utils {
      * Translates a string using '&' into a string that uses the internal ChatColor.COLOR_CODE color code character.
      * The alternate color code character will only be replaced if it is immediately followed by 0-9, A-F, a-f, K-O, k-o, R or r.
      *
-     * @param str the String to translate
-     * @return the translated String
+     * @param str The String to translate.
+     * @return The translated String.
      */
     public static String colored(String str) {
         return ChatColor.translateAlternateColorCodes('&', str);

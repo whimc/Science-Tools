@@ -10,7 +10,7 @@ public class JSExpression {
     /**
      * Constructs a JSExpression.
      *
-     * @param expr the JavaScript expression
+     * @param expr The JavaScript expression.
      */
     public JSExpression(String expr) {
         this.expr = expr;
@@ -21,7 +21,7 @@ public class JSExpression {
     }
 
     /**
-     * @return the JavaScript expression
+     * @return The JavaScript expression.
      */
     public String getExpression() {
         return this.expr;
@@ -30,7 +30,7 @@ public class JSExpression {
     /**
      * Checks if the JavaScript expression is valid.
      *
-     * @return whether or not the JavaScript expression is valid
+     * @return Whether or not the JavaScript expression is valid.
      */
     public boolean valid() {
         return run(JSContext.create(), false) != null;
@@ -39,9 +39,9 @@ public class JSExpression {
     /**
      * Runs the JavaScript engine.
      *
-     * @param ctx the JavaScript context
-     * @param throwCommandError whether or not to throw a command error
-     * @return the value returned from the execution of the script
+     * @param ctx The JavaScript context.
+     * @param throwCommandError Whether or not to throw a command error.
+     * @return The value returned from the execution of the script.
      */
     public Object run(JSContext ctx, boolean throwCommandError) {
         return JSEngine.run(getPreparedExpression(ctx), throwCommandError);
@@ -50,17 +50,15 @@ public class JSExpression {
     /**
      * Gets the JavaScript expression with placeholders swapped out for their replacements.
      *
-     * @param ctx the JavaScript context
-     * @return the JavaScript expression with placeholders swapped out for their replacements
+     * @param ctx The JavaScript context.
+     * @return The JavaScript expression with placeholders swapped out for their replacements.
      */
     protected String getPreparedExpression(JSContext ctx) {
         return JSPlaceholder.prepareExpression(ctx, this.expr);
     }
 
     /**
-     * Converts the JSExpression into a String.
-     *
-     * @return the JSExpression as a String
+     * @return The JSExpression as a String.
      */
     @Override
     public String toString() {

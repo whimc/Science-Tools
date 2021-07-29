@@ -16,9 +16,6 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
     private static ScienceTools instance;
 
-    /**
-     * Loads the plugin when it is enabled.
-     */
     @Override
     public void onEnable() {
         ScienceTools.instance = this;
@@ -38,7 +35,7 @@ public class ScienceTools extends JavaPlugin implements Listener {
     }
 
     /**
-     * Reloads the plugin.
+     * Load all conversions and science tools from the config.
      */
     public void reloadScienceTools() {
         reloadConfig();

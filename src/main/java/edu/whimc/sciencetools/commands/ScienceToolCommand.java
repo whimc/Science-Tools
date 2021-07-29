@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * The ScienceTools command.
+ * Main handler for the "/sciencetools" root command.
  */
 public class ScienceToolCommand implements CommandExecutor, TabCompleter {
 
@@ -32,13 +32,9 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Runs the provided subcommand if it is valid.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param command the command
-     * @param label the label
-     * @param args the arguments passed
-     * @return false
+     * Runs the provided subcommand if it is valid.
      */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -67,13 +63,9 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Handles auto-completing the command.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param command the command
-     * @param alias the command's alias
-     * @param args the command's arguments
-     * @return the list of auto-fillable arguments
+     * Handles auto-completion for the subcommand.
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String @NotNull [] args) {
@@ -97,7 +89,7 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
     /**
      * Displays the full usage of each sub command to the sender.
      *
-     * @param sender the command's sender
+     * @param sender The command's sender.
      */
     private void sendSubCommands(CommandSender sender) {
         for (AbstractSubCommand subCommand : subCommands.values()) {

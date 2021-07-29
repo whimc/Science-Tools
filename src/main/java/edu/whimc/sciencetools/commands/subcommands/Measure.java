@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * The command for measuring the value of each ScienceTool.
+ * Command: /sciencetools measure
  */
 public class Measure extends AbstractSubCommand {
 
@@ -24,11 +25,9 @@ public class Measure extends AbstractSubCommand {
     }
 
     /**
-     * Displays the measurement of the given tool in chat.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return whether or not the command has run
+     * Displays the measurement of the given tool to the sender.
      */
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
@@ -55,11 +54,9 @@ public class Measure extends AbstractSubCommand {
     }
 
     /**
-     * Auto-fills the list of valid tools.
+     * {@inheritDoc}
      *
-     * @param sender the command's sender
-     * @param args the arguments passed
-     * @return the list of tools that can be measured
+     * Auto-completes the list of science tools.
      */
     @Override
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
