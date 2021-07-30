@@ -10,23 +10,38 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The command for measuring the value of each ScienceTool.
+ * Command: /sciencetools measure
+ */
 public class Measure extends AbstractSubCommand {
 
+    /**
+     * Constructs the Measure command.
+     */
     public Measure() {
         super("measure", Arrays.asList("tool"), null,
                 "Measure a science tool", Permission.USER);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * Displays the measurement of the given tool to the sender.
+     */
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
+        // ensure command sender is a player
         if (!(sender instanceof Player)) {
             Utils.msg(sender, "&cYou must be a player to use this command!");
             return false;
         }
 
+        // set up tool
         ScienceToolManager manager = ScienceTools.getInstance().getToolManager();
         ScienceTool tool = manager.getTool(args[0]);
 
+        // ensure tool is valid
         if (tool == null) {
             Utils.msg(sender, "&cThe tool \"&4" + args[0] + "&c\" does not exist!");
             Utils.msg(sender, "&cAvailable tools: &7" +
@@ -38,6 +53,11 @@ public class Measure extends AbstractSubCommand {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * Auto-completes the list of science tools.
+     */
     @Override
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
         if (args.length == 1) {

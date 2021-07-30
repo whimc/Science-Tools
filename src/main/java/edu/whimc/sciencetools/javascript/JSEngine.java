@@ -5,6 +5,9 @@ import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.*;
 
+/**
+ * The JavaScript engine.
+ */
 public class JSEngine {
 
     private static final ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
@@ -26,6 +29,13 @@ public class JSEngine {
         }
     }
 
+    /**
+     * Runs the passed JavaScript code.
+     *
+     * @param code The JavaScript code to run.
+     * @param throwCommandError Whether or not to throw a CommandError.
+     * @return The value returned from the execution of the script.
+     */
     protected static Object run(String code, boolean throwCommandError) {
         try {
             return engine.eval(code);
@@ -37,6 +47,13 @@ public class JSEngine {
         }
     }
 
+    /**
+     * Evaluates the passed JavaScript expression.
+     *
+     * @param expression The JavaScript expression to evaluate.
+     * @param throwCommandError Whether or not to throw a CommandError.
+     * @return The resulting Double value.
+     */
     protected static Double evaluate(String expression, boolean throwCommandError) {
         Object res = run(expression, throwCommandError);
 

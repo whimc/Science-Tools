@@ -15,16 +15,29 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Manages the ScienceTools.
+ */
 public class ScienceToolManager {
 
     /* Tools are identified by their lowercase name */
     private final Map<String, ScienceTool> tools;
 
+    /**
+     * Constructs a ScienceToolManager.
+     *
+     * @param conversionManager The ConversionManager.
+     */
     public ScienceToolManager(ConversionManager conversionManager) {
         this.tools = new HashMap<>();
         loadTools(conversionManager);
     }
 
+    /**
+     * Loads the valid ScienceTools from the config.
+     *
+     * @param conversionManager The ConversionManager.
+     */
     public void loadTools(@NotNull ConversionManager conversionManager) {
         FileConfiguration config = ScienceTools.getInstance().getConfig();
 
@@ -157,14 +170,29 @@ public class ScienceToolManager {
         Utils.log("&eScience tools loaded!");
     }
 
+    /**
+     * Gets the specified ScienceTool.
+     *
+     * @param key The ScienceTool's name.
+     * @return The ScienceTool.
+     */
     public ScienceTool getTool(String key) {
         return this.tools.getOrDefault(key.toLowerCase(), null);
     }
 
+    /**
+     * @return The Collection of ScienceTools.
+     */
     public Collection<ScienceTool> getTools() {
         return this.tools.values();
     }
 
+    /**
+     * Gets a list of tool names that match the given hint.
+     *
+     * @param hint The starting characters to filter by.
+     * @return The list of valid tool names.
+     */
     public List<String> toolTabComplete(String hint) {
         return getTools().stream()
                 .map(ScienceTool::getToolKey)
@@ -173,6 +201,12 @@ public class ScienceToolManager {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Gets a list of numeric tool names that match the given hint.
+     *
+     * @param hint The starting characters to filter by.
+     * @return The list of valid tool names.
+     */
     public List<String> numericToolTabComplete(String hint) {
         return getTools().stream()
                 .filter(tool -> tool instanceof NumericScienceTool)

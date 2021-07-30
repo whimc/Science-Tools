@@ -6,6 +6,9 @@ import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * The main plugin class.
+ */
 public class ScienceTools extends JavaPlugin implements Listener {
 
     private ScienceToolManager toolManager;
@@ -31,6 +34,9 @@ public class ScienceTools extends JavaPlugin implements Listener {
         return this.conversionManager;
     }
 
+    /**
+     * Load all conversions and science tools from the config.
+     */
     public void reloadScienceTools() {
         reloadConfig();
         this.conversionManager = new ConversionManager();
