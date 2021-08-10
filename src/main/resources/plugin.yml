@@ -5,6 +5,7 @@ author: Jack Henhapl
 api-version: 1.13
 main: edu.whimc.sciencetools.ScienceTools
 softdepend: [WorldGuard]
+loadbefore: [Quests]
 load: POSTWORLD
 commands:
   sciencetools:
