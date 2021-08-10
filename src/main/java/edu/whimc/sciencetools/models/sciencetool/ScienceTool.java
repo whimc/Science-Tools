@@ -215,7 +215,11 @@ public class ScienceTool {
                 return false;
             }
 
-            ScienceTool.this.displayMeasurement((Player) sender);
+            Player player = (Player) sender;
+            ScienceTool.this.displayMeasurement(player);
+
+            ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(ScienceTool.this, player);
+            Bukkit.getPluginManager().callEvent(event);
             return true;
         }
 
