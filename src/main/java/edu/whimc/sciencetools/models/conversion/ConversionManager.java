@@ -28,7 +28,7 @@ public class ConversionManager {
     /**
      * Loads all conversions from the config.
      */
-    private void loadConversions() {
+    public void loadConversions() {
         FileConfiguration config = ScienceTools.getInstance().getConfig();
         Utils.log("&eLoading Conversions from config");
 

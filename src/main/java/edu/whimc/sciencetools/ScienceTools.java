@@ -23,7 +23,8 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
         getCommand("sciencetools").setExecutor(new ScienceToolCommand());
 
-        reloadScienceTools();
+        this.conversionManager = new ConversionManager();
+        this.toolManager = new ScienceToolManager(this.conversionManager);
     }
 
     public ScienceToolManager getToolManager() {
@@ -39,8 +40,8 @@ public class ScienceTools extends JavaPlugin implements Listener {
      */
     public void reloadScienceTools() {
         reloadConfig();
-        this.conversionManager = new ConversionManager();
-        this.toolManager = new ScienceToolManager(this.conversionManager);
+        this.conversionManager.loadConversions();
+        this.toolManager.loadTools(this.conversionManager);
     }
 
     public static ScienceTools getInstance() {
