@@ -43,8 +43,11 @@ public class ScienceToolManager {
 
         Utils.log("&eLoading Science Tools from config");
 
-        // Remove potentially pre-existing placeholders
+        // Remove potentially pre-existing placeholders and root commands
         JSPlaceholder.unregisterCustomPlaceholders();
+        this.tools.values().forEach(tool -> tool.command.unregister());
+
+        this.tools.clear();
 
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);

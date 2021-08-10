@@ -6,11 +6,19 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import edu.whimc.sciencetools.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,14 +35,16 @@ public class ScienceTool {
 
     /* Default measurement to be used when no region or world measurement is found. */
     protected String defaultMeasurement;
-
     /* World-specific global measurements. */
     protected Map<World, String> worldMeasurements;
     /* Region-specific measurements. Each world has separate regions. */
     protected Map<World, Map<String, String>> regionMeasurements;
+
     /* Worlds where you cannot measure the science tool. */
     protected Set<World> disabledWorlds;
 
+    /* The root command used to measure this tool */
+    protected MeasureCommand command;
     /**
      * Constructs a ScienceTool.
      *
@@ -57,6 +67,7 @@ public class ScienceTool {
         this.worldMeasurements = worldMeasurements;
         this.regionMeasurements = regionMeasurements;
         this.disabledWorlds = disabledWorlds;
+        this.command = new MeasureCommand();
     }
 
     /**
@@ -153,6 +164,66 @@ public class ScienceTool {
      */
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    public class MeasureCommand extends Command {
+
+        private MeasureCommand() {
+            super(ScienceTool.this.toolKey, "Measure the " + ScienceTool.this.displayName,
+                    "", Collections.emptyList());
+
+            if (!getCommandMap().register("WHIMC-ScienceTools", this)) {
+                Utils.log("&c\t- Error registering /" + ScienceTool.this.toolKey);
+            }
+        }
+
+        private CommandMap getCommandMap() {
+            try {
+                final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+
+                bukkitCommandMap.setAccessible(true);
+                return (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+            } catch(Exception exc) {
+                exc.printStackTrace();
+                return null;
+            }
+        }
+
+        private Map<String, Command> getKnownCommands() {
+            try {
+                final Field f = SimpleCommandMap.class.getDeclaredField("knownCommands");
+                f.setAccessible(true);
+                return (Map<String, Command>) f.get(getCommandMap());
+            } catch (Exception exc) {
+                exc.printStackTrace();
+                return null;
+            }
+        }
+
+        public void unregister() {
+            if (!super.unregister(getCommandMap())) {
+                Utils.log("&c\t- Error unregistering /" + ScienceTool.this.toolKey);
+            }
+
+            getKnownCommands().remove(super.getLabel());
+        }
+
+        @Override
+        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+            if (!(sender instanceof Player)) {
+                Utils.msg(sender, "&cYou must be a player to use this command!");
+                return false;
+            }
+
+            ScienceTool.this.displayMeasurement((Player) sender);
+            return true;
+        }
+
+        @NotNull
+        @Override
+        public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+            return Collections.emptyList();
+        }
     }
 
 }
