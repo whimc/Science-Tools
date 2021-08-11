@@ -62,7 +62,7 @@ tools:
     # (optional: defaults to the tool key) A formatted version of the tool
     display-name: "String Tool"
     # The default fallback measurement to be used
-    default-expression: "Value"
+    default-measurement: "Value"
     # (optional) World settings
     worlds:
       # Name of the world to configure
