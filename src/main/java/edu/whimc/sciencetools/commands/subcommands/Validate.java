@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
  */
 public class Validate extends AbstractSubCommand implements Listener {
 
+    private static final Pattern NUMBER_REGEX = Pattern.compile("-?(\\d+\\.?\\d*|\\.\\d+)");
+
     private final Map<UUID, Validation> validationTasks;
 
     /**
@@ -222,9 +224,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 
         // get the tool and ensure player input is numeric
         NumericScienceTool tool = validation.getTool();
-
-        Pattern pat = Pattern.compile("(-?\\d*(\\.\\d+)?)");
-        Matcher matcher = pat.matcher(event.getMessage().replace(",", ""));
+        Matcher matcher = NUMBER_REGEX.matcher(event.getMessage().replace(",", ""));
 
         // display no-number message (set in config) if input is not numeric
         if (!matcher.find() || matcher.group().isEmpty()) {
