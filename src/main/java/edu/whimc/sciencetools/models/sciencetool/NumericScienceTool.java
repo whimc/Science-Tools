@@ -29,6 +29,7 @@ public class NumericScienceTool extends ScienceTool {
      *
      * @param toolKey The key for this tool in the config.
      * @param displayName The name to be displayed in-game for this tool.
+     * @param aliases Alternate names for the tool.
      * @param defaultMeasurement The default measurement used when no region or world value is found.
      * @param worldMeasurements The world-specific global measurements.
      * @param regionMeasurements The region-specific measurements.
@@ -39,6 +40,7 @@ public class NumericScienceTool extends ScienceTool {
      */
     public NumericScienceTool(String toolKey,
                               String displayName,
+                              List<String> aliases,
                               String defaultMeasurement,
                               Map<World, String> worldMeasurements,
                               Map<World, Map<String, String>> regionMeasurements,
@@ -46,7 +48,7 @@ public class NumericScienceTool extends ScienceTool {
                               String unit,
                               int precision,
                               List<Conversion> conversions) {
-        super(toolKey, displayName, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
+        super(toolKey, displayName, aliases, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
         this.unit = unit;
         this.precision = precision;
         this.conversions = conversions;

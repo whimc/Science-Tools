@@ -32,6 +32,8 @@ public class ScienceTool {
     protected String toolKey;
     /* Displayed when referencing the tool in game. */
     protected String displayName;
+    /* Aliases for the command. */
+    protected List<String> aliases;
 
     /* Default measurement to be used when no region or world measurement is found. */
     protected String defaultMeasurement;
@@ -50,6 +52,7 @@ public class ScienceTool {
      *
      * @param toolKey The tool's key within the config.
      * @param displayName The tool's in-game name.
+     * @param aliases Alternate names for the tool.
      * @param defaultMeasurement The measurement used when no region- or world-specific measurements are found.
      * @param worldMeasurements All world-specific global measurements.
      * @param regionMeasurements All region-specific measurements.
@@ -57,12 +60,14 @@ public class ScienceTool {
      */
     public ScienceTool(String toolKey,
                        String displayName,
+                       List<String> aliases,
                        String defaultMeasurement,
                        Map<World, String> worldMeasurements,
                        Map<World, Map<String, String>> regionMeasurements,
                        Set<World> disabledWorlds) {
         this.toolKey = toolKey;
         this.displayName = displayName;
+        this.aliases = aliases;
         this.defaultMeasurement = defaultMeasurement;
         this.worldMeasurements = worldMeasurements;
         this.regionMeasurements = regionMeasurements;
@@ -170,8 +175,8 @@ public class ScienceTool {
 
         private MeasureCommand() {
             super(ScienceTool.this.toolKey, "Measure the " + ScienceTool.this.displayName,
-                    "", Collections.emptyList());
-
+                    "", ScienceTool.this.aliases);
+            
             if (!getCommandMap().register("WHIMC-ScienceTools", this)) {
                 Utils.log("&c\t- Error registering /" + ScienceTool.this.toolKey);
             }
