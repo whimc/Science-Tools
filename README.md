@@ -92,7 +92,7 @@ tools:
     # The unit of the tool
     unit: "m"
     # The number of decimals to show in the printout
-    precision: "4"
+    precision: 4
     # A list of conversions that will be showed with the tool's printout
     conversions:
       - conversion_name
