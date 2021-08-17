@@ -1,13 +1,13 @@
 package edu.whimc.sciencetools.utils.sql;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
+import edu.whimc.sciencetools.models.Measurement;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -35,16 +35,16 @@ public class Queryer {
         });
     }
 
-    private PreparedStatement getStatement(Connection connection, ScienceTool tool, String measurement) throws SQLException {
+    private PreparedStatement getStatement(Connection connection, Measurement measurement) throws SQLException {
         // TODO implement me
         return null;
     }
 
-    private void storeNewMeasurement(ScienceTool toolUsed, String measurement) {
+    public void storeNewMeasurement(Measurement measurement) {
         // TODO implement me
     }
 
-    public void getMeasurements(BiConsumer<ScienceTool, String> callback) {
+    public void getMeasurements(Consumer<Measurement> callback) {
         // TODO implement me
     }
 

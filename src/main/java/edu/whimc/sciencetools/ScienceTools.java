@@ -1,10 +1,15 @@
 package edu.whimc.sciencetools;
 
 import edu.whimc.sciencetools.commands.ScienceToolCommand;
+import edu.whimc.sciencetools.commands.subcommands.Measure;
+import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
+import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
 import edu.whimc.sciencetools.utils.Utils;
 import edu.whimc.sciencetools.utils.sql.Queryer;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,10 +20,6 @@ import java.util.function.Consumer;
  */
 public class ScienceTools extends JavaPlugin implements Listener {
 
-    private ScienceToolManager toolManager;
-    private ConversionManager conversionManager;
-    private Queryer queryer;
-
     private static ScienceTools instance;
     private static Consumer<Queryer> handleConnection = q -> {
         if (q == null) {
@@ -28,12 +29,17 @@ public class ScienceTools extends JavaPlugin implements Listener {
         }
     };
 
+    private ScienceToolManager toolManager;
+    private ConversionManager conversionManager;
+    private Queryer queryer;
+
     @Override
     public void onEnable() {
         ScienceTools.instance = this;
         saveDefaultConfig();
 
         getCommand("sciencetools").setExecutor(new ScienceToolCommand());
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
 
         this.conversionManager = new ConversionManager();
         this.toolManager = new ScienceToolManager(this.conversionManager);
@@ -60,6 +66,11 @@ public class ScienceTools extends JavaPlugin implements Listener {
         this.conversionManager.loadConversions();
         this.toolManager.loadTools(this.conversionManager);
         this.queryer = new Queryer(this, handleConnection);
+    }
+
+    @EventHandler
+    public void onMeasure(ScienceToolMeasureEvent event) {
+        this.queryer.storeNewMeasurement(event.getMeasurement());
     }
 
     public static ScienceTools getInstance() {
