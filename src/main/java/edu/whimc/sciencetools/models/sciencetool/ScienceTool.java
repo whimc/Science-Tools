@@ -227,8 +227,11 @@ public class ScienceTool {
             Player player = (Player) sender;
             String measurement = ScienceTool.this.displayMeasurement(player);
 
-            ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, ScienceTool.this, measurement);
-            Bukkit.getPluginManager().callEvent(event);
+            if (measurement != null) {
+                ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, ScienceTool.this, measurement);
+                Bukkit.getPluginManager().callEvent(event);
+            }
+
             return true;
         }
 

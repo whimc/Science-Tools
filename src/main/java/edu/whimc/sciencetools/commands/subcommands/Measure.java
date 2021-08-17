@@ -54,8 +54,11 @@ public class Measure extends AbstractSubCommand {
         Player player = (Player) sender;
         String measurement = tool.displayMeasurement(player);
 
-        ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, tool, measurement);
-        Bukkit.getPluginManager().callEvent(event);
+        if (measurement != null) {
+            ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, tool, measurement);
+            Bukkit.getPluginManager().callEvent(event);
+        }
+
         return true;
     }
 
