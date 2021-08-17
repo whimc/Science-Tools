@@ -2,15 +2,16 @@ package edu.whimc.sciencetools.utils.sql;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.models.Measurement;
-import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
+import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -20,10 +21,16 @@ import java.util.function.Consumer;
  */
 public class Queryer {
 
-    /**
-     * Query for grabbing all science tool measurements
-     */
-    private static final String QUERY_GET_MEASUREMENTS = ""; // TODO implement me
+    /* Query for grabbing all science tool measurements */
+    private static final String QUERY_GET_PLAYER_MEASUREMENTS =
+            "SELECT * " +
+                    "FROM whimc_sciencetools " +
+                    "WHERE uuid = ?";
+
+    private static final String QUERY_ADD_PLAYER_MEASUREMENT =
+            "INSERT INTO whimc_sciencetools " +
+                    "(time, uuid, username, world, x, y, z, tool, measurement) " +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final ScienceTools plugin;
     private final MySQLConnection sqlConnection;
@@ -39,20 +46,72 @@ public class Queryer {
     }
 
     private PreparedStatement getStatement(Connection connection, Measurement measurement) throws SQLException {
-        // TODO implement me
-        return null;
+        PreparedStatement statement = connection.prepareStatement(QUERY_ADD_PLAYER_MEASUREMENT);
+
+        statement.setLong(1, measurement.getTimestamp().getTime());
+        statement.setString(2, measurement.getPlayer().getUniqueId().toString());
+        statement.setString(3, measurement.getPlayer().getName());
+        statement.setString(4, measurement.getLocation().getWorld().getName());
+        statement.setDouble(5, measurement.getLocation().getX());
+        statement.setDouble(6, measurement.getLocation().getY());
+        statement.setDouble(7, measurement.getLocation().getZ());
+        statement.setString(8, measurement.getTool().getToolKey());
+        statement.setString(9, measurement.getMeasurement());
+
+        return statement;
+    }
+
+    private void getMeasurementsFromResultSet(ResultSet results, Consumer<List<Measurement>> callback) throws SQLException {
+        List<Measurement> measurements = new ArrayList<>();
+
+        while (results.next()) {
+            Timestamp timestamp = new Timestamp(results.getLong("time"));
+            Player player = Bukkit.getPlayer(UUID.fromString(results.getString("uuid")));
+            ScienceTool tool = ScienceTools.getInstance().getToolManager().getTool(results.getString("tool"));
+            String measurement = results.getString("measurement");
+            World world = Bukkit.getWorld(results.getString("world"));
+
+            if (player == null || world == null || tool == null) {
+                continue;
+            }
+
+            double x = results.getDouble("x");
+            double y = results.getDouble("y");
+            double z = results.getDouble("z");
+            sync(() -> {
+                Location location = new Location(world, x, y, z);
+                measurements.add(new Measurement(timestamp, player, location, tool, measurement));
+            });
+        }
+
+        sync(() -> callback.accept(measurements));
     }
 
     public void storeNewMeasurement(Measurement measurement) {
-        // TODO implement me
+        async(() -> {
+            try (Connection connection = this.sqlConnection.getConnection()) {
+                try (PreparedStatement statement = getStatement(connection, measurement)) {
+                    statement.executeUpdate();
+                }
+            } catch (SQLException exc) {
+                exc.printStackTrace();
+            }
+        });
     }
 
-    public void getMeasurements(OfflinePlayer player, Consumer<List<Measurement>> callback) {
-        // TODO implement me
-    }
-
-    private <T> void sync(Consumer<T> cons, T val) {
-        Bukkit.getScheduler().runTask(this.plugin, () -> cons.accept(val));
+    public void getMeasurements(Player player, Consumer<List<Measurement>> callback) {
+        async(() -> {
+            try (Connection connection = this.sqlConnection.getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(QUERY_GET_PLAYER_MEASUREMENTS)) {
+                    statement.setString(1, player.getUniqueId().toString());
+                    try (ResultSet results = statement.executeQuery()) {
+                        getMeasurementsFromResultSet(results, callback);
+                    }
+                }
+            } catch (SQLException exc) {
+                exc.printStackTrace();
+            }
+        });
     }
 
     private void sync(Runnable runnable) {

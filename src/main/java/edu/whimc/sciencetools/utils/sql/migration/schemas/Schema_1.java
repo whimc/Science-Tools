@@ -18,6 +18,7 @@ public class Schema_1 extends SchemaVersion {
                     "  `x`           DOUBLE                NOT NULL," +
                     "  `y`           DOUBLE                NOT NULL," +
                     "  `z`           DOUBLE                NOT NULL," +
+                    "  `tool`        VARCHAR(64)           NOT NULL," +
                     "  `measurement` TEXT                  NOT NULL," +
                     "  PRIMARY KEY      (`rowid`)," +
                     "  INDEX `time`     (`time`)," +
