@@ -19,9 +19,10 @@ public class Schema_1 extends SchemaVersion {
                     "  `y`           DOUBLE                NOT NULL," +
                     "  `z`           DOUBLE                NOT NULL," +
                     "  `measurement` TEXT                  NOT NULL," +
-                    "  PRIMARY KEY    (`rowid`)," +
-                    "  INDEX uuid     (`uuid`)," +
-                    "  INDEX username (`username`));";
+                    "  PRIMARY KEY      (`rowid`)," +
+                    "  INDEX `time`     (`time`)," +
+                    "  INDEX `uuid`     (`uuid`)," +
+                    "  INDEX `username` (`username`));";
 
     public Schema_1() {
         super(1, null);
@@ -33,6 +34,5 @@ public class Schema_1 extends SchemaVersion {
             statement.execute();
         }
     }
-
 
 }
