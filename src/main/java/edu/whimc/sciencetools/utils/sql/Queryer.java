@@ -27,6 +27,7 @@ public class Queryer {
                     "FROM whimc_sciencetools " +
                     "WHERE uuid = ?";
 
+    /* Query for adding a measurement */
     private static final String QUERY_ADD_PLAYER_MEASUREMENT =
             "INSERT INTO whimc_sciencetools " +
                     "(time, uuid, username, world, x, y, z, tool, measurement) " +
@@ -87,6 +88,10 @@ public class Queryer {
         sync(() -> callback.accept(measurements));
     }
 
+    /**
+     * Store a new measurement in the database.
+     * @param measurement The measurement.
+     */
     public void storeNewMeasurement(Measurement measurement) {
         async(() -> {
             try (Connection connection = this.sqlConnection.getConnection()) {
@@ -99,11 +104,16 @@ public class Queryer {
         });
     }
 
-    public void getMeasurements(Player player, Consumer<List<Measurement>> callback) {
+    /**
+     * Get all measurements for a target player.
+     * @param target The target player.
+     * @param callback Called with a list of measurements for the target player.
+     */
+    public void getMeasurements(Player target, Consumer<List<Measurement>> callback) {
         async(() -> {
             try (Connection connection = this.sqlConnection.getConnection()) {
                 try (PreparedStatement statement = connection.prepareStatement(QUERY_GET_PLAYER_MEASUREMENTS)) {
-                    statement.setString(1, player.getUniqueId().toString());
+                    statement.setString(1, target.getUniqueId().toString());
                     try (ResultSet results = statement.executeQuery()) {
                         getMeasurementsFromResultSet(results, callback);
                     }

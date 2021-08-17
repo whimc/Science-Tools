@@ -118,28 +118,28 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
 
+    /**
+     * Get a formatted version of a timestamp.
+     *
+     * @param timestamp The time to format.
+     * @return A formatted version of the given timestamp.
+     */
     public static String getDate(Timestamp timestamp) {
         return DATE_FORMAT.format(new Date(timestamp.getTime()));
     }
 
-    public static String getDateNow() {
-        return getDate(new Timestamp(System.currentTimeMillis()));
-    }
-
-    public static Timestamp parseDate(String str) {
-        try {
-            return new Timestamp(DATE_FORMAT.parse(str).getTime());
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
-    public static TextComponent createComponent(String text, String... hoverText) {
+    private static TextComponent createComponent(String text, String... hoverText) {
         TextComponent message = new TextComponent(colored(text));
         message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(colored(String.join("\n", hoverText))).create()));
         return message;
     }
 
+    /**
+     * Send a Spigot chat component to the player containing hover-text.
+     * @param player The player to receive the message.
+     * @param text The text of the message.
+     * @param hoverText The hover-text of the message.
+     */
     public static void sendComponent(Player player, String text, String... hoverText) {
         player.spigot().sendMessage(createComponent(text, hoverText));
     }
