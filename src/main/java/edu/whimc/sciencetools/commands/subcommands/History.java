@@ -15,22 +15,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * The command for seeing a user's measurements.
- * Command: /sciencetools measurements
+ * The command for seeing a user's measurement history.
+ * Command: /sciencetools history
  */
-public class Measurements extends AbstractSubCommand {
+public class History extends AbstractSubCommand {
 
     /**
-     * Constructs the Measurements command.
+     * Constructs the History command.
      */
-    public Measurements() {
-        super("measurements", null, Arrays.asList("player", "start_time", "end_time"), "View your own or another player's measurements", Permission.USER);
+    public History() {
+        super("history", null, Arrays.asList("player", "start time", "end time"), "View your measurement history or someone else's", Permission.USER);
     }
 
     /**
      * {@inheritDoc}
      *
-     * View the measurements of yourself or someone else.
+     * View the measurement history of yourself or someone else.
      */
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
