@@ -7,6 +7,7 @@ import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class NumericScienceTool extends ScienceTool {
      * @return The measurement
      */
     @Override
-    public String displayMeasurement(Player player) {
+    public @Nullable String displayMeasurement(Player player) {
         // check if player in disabled world
         if (super.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, "&cWe don't know how to measure that here!");
