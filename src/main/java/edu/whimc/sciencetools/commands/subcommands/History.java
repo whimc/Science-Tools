@@ -25,7 +25,7 @@ public class History extends AbstractSubCommand {
     public History() {
         // TODO Add start/end time arguments
         super("history", null, Arrays.asList("player"),
-                "View your measurement history or someone else's", Permission.USER);
+                "View your or someone else's measurement history", Permission.USER);
     }
 
     /**
@@ -50,9 +50,9 @@ public class History extends AbstractSubCommand {
             return false;
         }
 
-        Player player = Bukkit.getPlayer(args[1]);
+        Player player = Bukkit.getPlayer(args[0]);
         if (player == null) {
-            Utils.msg(sender, "&4" + args[1] + " &cis not a valid player!");
+            Utils.msg(sender, "&4" + args[0] + " &cis not a valid player!");
             return false;
         }
 
