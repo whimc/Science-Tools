@@ -36,7 +36,7 @@ public class History extends AbstractSubCommand {
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
         // TODO Display measurements in a GUI
-        Queryer queryer = ScienceTools.getInstance().getQueryer();
+
 
         // display sender's measurements
         if (args.length == 0 || !sender.hasPermission(Permission.ADMIN.toString())) {
@@ -45,22 +45,34 @@ public class History extends AbstractSubCommand {
                 return false;
             }
 
-            queryer.getMeasurements((Player) sender, measurements ->
-                    measurements.forEach(measurement -> measurement.displayToUser(sender)));
+            sendMeasurements(sender, (Player) sender);
             return false;
         }
 
-        Player player = Bukkit.getPlayer(args[0]);
-        if (player == null) {
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
             Utils.msg(sender, "&4" + args[0] + " &cis not a valid player!");
             return false;
         }
 
-        queryer.getMeasurements(player, measurements ->
-                measurements.forEach(measurement -> measurement.displayToUser(sender)));
+        sendMeasurements(sender, target);
 
         // TODO Add start/end times
         return false;
+    }
+
+    private void sendMeasurements(CommandSender sender, Player target) {
+        ScienceTools.getInstance().getQueryer().getMeasurements(target, measurements -> {
+            if (measurements.isEmpty()) {
+                Utils.msg(sender, "&7No measurements found!");
+                return;
+            }
+
+            measurements.forEach(measurement -> measurement.displayToUser(sender));
+            if (sender instanceof Player) {
+                Utils.msg(sender, "&7Hover over a measurement to see more information about it!");
+            }
+        });
     }
 
     @Override
