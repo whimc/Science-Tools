@@ -18,6 +18,25 @@ $ mvn install
 ## Configuration
 The config file can be found under `/plugins/WHIMC-ScienceTools/config.yml`. Use `/sciencetools reload` whenever you change the config.
 
+### MySQL
+| Key | Type | Description |
+|---|---|---|
+|`mysql.host`|`string`|The host of the database|
+|`mysql.port`|`integer`|The port of the database|
+|`mysql.database`|`string`|The name of the database to use|
+|`mysql.username`|`string`|Username for credentials|
+|`mysql.password`|`string`|Password for credentials|
+
+#### Example
+```yaml
+mysql:
+  host: localhost
+  port: 3306
+  database: minecraft
+  username: user
+  password: pass
+```
+
 ### Unit Conversions
 Unit conversions config will look like this:
 
