@@ -4,10 +4,13 @@ import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -44,7 +47,7 @@ public class Queryer {
         // TODO implement me
     }
 
-    public void getMeasurements(Consumer<Measurement> callback) {
+    public void getMeasurements(OfflinePlayer player, Consumer<List<Measurement>> callback) {
         // TODO implement me
     }
 

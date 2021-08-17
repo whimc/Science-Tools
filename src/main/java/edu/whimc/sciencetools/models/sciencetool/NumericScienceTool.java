@@ -80,7 +80,7 @@ public class NumericScienceTool extends ScienceTool {
         }
 
         Utils.msg(player, message.toString());
-        return Double.toString(data);
+        return message.toString();
     }
 
     /**

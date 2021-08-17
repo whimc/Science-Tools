@@ -6,11 +6,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * All of the utility functions.
  */
 public class Utils {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM d yyyy, h:mm a z");
     private static CommandSender debugReceiver = null;
 
     /**
@@ -106,5 +112,21 @@ public class Utils {
      */
     public static String colored(String str) {
         return ChatColor.translateAlternateColorCodes('&', str);
+    }
+
+    public static String getDate(Timestamp timestamp) {
+        return DATE_FORMAT.format(new Date(timestamp.getTime()));
+    }
+
+    public static String getDateNow() {
+        return getDate(new Timestamp(System.currentTimeMillis()));
+    }
+
+    public static Timestamp parseDate(String str) {
+        try {
+            return new Timestamp(DATE_FORMAT.parse(str).getTime());
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }
