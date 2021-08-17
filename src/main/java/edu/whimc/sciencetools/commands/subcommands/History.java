@@ -1,7 +1,6 @@
 package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.commands.ScienceToolCommand;
 import edu.whimc.sciencetools.utils.Utils;
 import edu.whimc.sciencetools.utils.sql.Queryer;
 import org.bukkit.Bukkit;
@@ -9,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -24,17 +23,19 @@ public class History extends AbstractSubCommand {
      * Constructs the History command.
      */
     public History() {
-        super("history", null, Arrays.asList("player", "start time", "end time"), "View your measurement history or someone else's", Permission.USER);
+        // TODO Add start/end time arguments
+        super("history", null, Arrays.asList("player"),
+                "View your measurement history or someone else's", Permission.USER);
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * View the measurement history of yourself or someone else.
      */
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
-        // TODO display measurements in a better way
+        // TODO Display measurements in a GUI
         Queryer queryer = ScienceTools.getInstance().getQueryer();
 
         // display sender's measurements
@@ -44,12 +45,21 @@ public class History extends AbstractSubCommand {
                 return false;
             }
 
-            queryer.getMeasurements((Player) sender, measurements -> {
-
-            });
+            queryer.getMeasurements((Player) sender, measurements ->
+                    measurements.forEach(measurement -> measurement.displayToUser(sender)));
             return false;
         }
 
+        Player player = Bukkit.getPlayer(args[1]);
+        if (player == null) {
+            Utils.msg(sender, "&4" + args[1] + " &cis not a valid player!");
+            return false;
+        }
+
+        queryer.getMeasurements(player, measurements ->
+                measurements.forEach(measurement -> measurement.displayToUser(sender)));
+
+        // TODO Add start/end times
         return false;
     }
 
@@ -65,10 +75,12 @@ public class History extends AbstractSubCommand {
                     .collect(Collectors.toList());
         }
 
+
+        // TODO add start/end time tab completion
         // <start time> <end time>
-        if (args.length == 2 || args.length == 3) {
-            return Collections.singletonList("\"" + Utils.getDateNow() + "\"");
-        }
+//        if (args.length == 2 || args.length == 3) {
+//            return Collections.singletonList("\"" + Utils.getDateNow() + "\"");
+//        }
 
         return Collections.emptyList();
     }
