@@ -80,7 +80,7 @@ public class NumericScienceTool extends ScienceTool {
         }
 
         Utils.msg(player, message.toString());
-        return message.toString();
+        return Utils.trimDecimals(data, this.precision) + this.unit;
     }
 
     /**
