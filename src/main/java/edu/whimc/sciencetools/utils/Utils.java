@@ -1,10 +1,14 @@
 package edu.whimc.sciencetools.utils;
 
 import edu.whimc.sciencetools.ScienceTools;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -37,7 +41,7 @@ public class Utils {
      * Parses a String and returns a Double. Throws a chat error if String is not a valid number.
      *
      * @param sender The command's sender.
-     * @param str The String to parse.
+     * @param str    The String to parse.
      * @return The Double parsed from the String.
      */
     public static Double parseDoubleWithError(CommandSender sender, String str) {
@@ -61,7 +65,7 @@ public class Utils {
     /**
      * Trims decimal to desired level of precision.
      *
-     * @param val The value to be trimmed.
+     * @param val       The value to be trimmed.
      * @param precision The desired level of precision.
      * @return A String decimal trimmed to the desired level of precision.
      */
@@ -95,7 +99,7 @@ public class Utils {
      * Sends colored messages to the sender.
      *
      * @param sender The command's sender.
-     * @param strs The Strings to be sent.
+     * @param strs   The Strings to be sent.
      */
     public static void msg(CommandSender sender, String... strs) {
         for (String str : strs) {
@@ -128,5 +132,15 @@ public class Utils {
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    public static TextComponent createComponent(String text, String... hoverText) {
+        TextComponent message = new TextComponent(colored(text));
+        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(colored(String.join("\n", hoverText))).create()));
+        return message;
+    }
+
+    public static void sendComponent(Player player, String text, String... hoverText) {
+        player.spigot().sendMessage(createComponent(text, hoverText));
     }
 }
