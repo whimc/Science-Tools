@@ -49,7 +49,7 @@ public class MySQLConnection {
             }
 
             this.connection = DriverManager.getConnection(this.url, this.username, this.password);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException unused) {
             return null;
         }
 
