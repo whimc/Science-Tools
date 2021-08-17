@@ -52,15 +52,15 @@ public class Measurement {
 
         // Send special chat component if displaying to Player
         if (sender instanceof Player) {
-            Utils.sendComponent((Player) sender, "&8&l+ &f&l" + this.tool.getToolKey() + " &a" + this.measurement,
-                    "Time: " + date,
-                    "Location: " + x + ", " + y + ", " + z,
-                    "Measurement: " + this.measurement,
-                    "Tool: " + this.tool.getToolKey());
+            Utils.sendComponent((Player) sender, "&8&l+ &f&l" + this.tool.getToolKey() + " &e" + this.measurement,
+                    "&7Time: &e" + date,
+                    "&7Location: &e" + this.location.getWorld().getName() + "&7, &e" + x + "&7, &e" + y + "&7, &e" + z,
+                    "&7Measurement: &e" + this.measurement,
+                    "&7Tool: &e" + this.tool.getToolKey());
             return;
         }
 
         Utils.msg(sender, "&7[" + this.location.getWorld().getName() + " | " + x + ", " + y + ", " + z + "] " +
-                "&f" + this.tool.getToolKey() + ": &a" + this.measurement);
+                "&f" + this.tool.getToolKey() + ": &e" + this.measurement);
     }
 }
