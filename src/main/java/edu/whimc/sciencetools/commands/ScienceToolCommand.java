@@ -34,7 +34,7 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Runs the provided subcommand if it is valid.
      */
     @Override
@@ -65,7 +65,7 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Handles auto-completion for the subcommand.
      */
     @Override

@@ -36,8 +36,8 @@ public enum JSFunction {
     /**
      * Constructs a JSFunction.
      *
-     * @param key The String used in the config to call the function.
-     * @param usage A description of how the function is used.
+     * @param key        The String used in the config to call the function.
+     * @param usage      A description of how the function is used.
      * @param definition The JavaScript definition of the function.
      */
     JSFunction(String key, String usage, String definition) {

@@ -24,8 +24,8 @@ public class Conversion {
     /**
      * Constructs a Conversion.
      *
-     * @param name The name of the Conversion.
-     * @param unit The unit being converted to.
+     * @param name       The name of the Conversion.
+     * @param unit       The unit being converted to.
      * @param expression The Conversion equation.
      */
     protected Conversion(String name, String unit, JSNumericExpression expression) {
@@ -68,7 +68,7 @@ public class Conversion {
     /**
      * Sets a new JavaScript expression and saves it to the config.
      *
-     * @param sender The command's sender.
+     * @param sender     The command's sender.
      * @param expression The new Conversion equation.
      */
     public void setExpression(CommandSender sender, JSNumericExpression expression) {

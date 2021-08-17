@@ -1,7 +1,6 @@
 package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.ScienceTools;
-import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
@@ -29,7 +28,7 @@ public class Measure extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Displays the measurement of the given tool to the sender.
      */
     @Override
@@ -62,7 +61,7 @@ public class Measure extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Auto-completes the list of science tools.
      */
     @Override

@@ -2,7 +2,6 @@ package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.utils.Utils;
-import edu.whimc.sciencetools.utils.sql.Queryer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;

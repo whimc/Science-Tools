@@ -54,9 +54,9 @@ public class Validate extends AbstractSubCommand implements Listener {
         /**
          * Constructs a Validation task.
          *
-         * @param taskId The id of this task.
+         * @param taskId   The id of this task.
          * @param expected The expected Double value to receive.
-         * @param tool The NumericScienceTool to be validated.
+         * @param tool     The NumericScienceTool to be validated.
          */
         public Validation(int taskId, double expected, NumericScienceTool tool) {
             this.taskId = taskId;
@@ -88,7 +88,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Validates the given tool's value.
      */
     @Override
@@ -165,7 +165,7 @@ public class Validate extends AbstractSubCommand implements Listener {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Handles auto-completing various arguments for the command.
      */
     @Override
@@ -252,9 +252,9 @@ public class Validate extends AbstractSubCommand implements Listener {
      * command defined in the config.
      *
      * @param player The current player.
-     * @param path The path to the desired section of the validation config.
-     * @param tool The NumericScienceTool.
-     * @param value The tool's value.
+     * @param path   The path to the desired section of the validation config.
+     * @param tool   The NumericScienceTool.
+     * @param value  The tool's value.
      */
     private void syncDoConfigTasks(Player player, String path, NumericScienceTool tool, Double value) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(ScienceTools.getInstance(), () -> doConfigTasks(player, path, tool, value));
@@ -265,9 +265,9 @@ public class Validate extends AbstractSubCommand implements Listener {
      * the config.
      *
      * @param player The current player.
-     * @param path The path to the desired section of the validation config.
-     * @param tool The NumericScienceTool.
-     * @param value The tool's value.
+     * @param path   The path to the desired section of the validation config.
+     * @param tool   The NumericScienceTool.
+     * @param value  The tool's value.
      */
     private void doConfigTasks(Player player, String path, NumericScienceTool tool, @Nullable Double value) {
         String typeStr = tool.getDisplayName();
@@ -283,10 +283,10 @@ public class Validate extends AbstractSubCommand implements Listener {
      * the config.
      *
      * @param player The current player.
-     * @param path The path to the desired section of the validation config.
-     * @param type The tool's name.
-     * @param value The tool's value.
-     * @param unit The tool's unit.
+     * @param path   The path to the desired section of the validation config.
+     * @param type   The tool's name.
+     * @param value  The tool's value.
+     * @param unit   The tool's unit.
      */
     private void doConfigTasks(Player player, String path, String type, String value, String unit) {
         FileConfiguration config = ScienceTools.getInstance().getConfig();

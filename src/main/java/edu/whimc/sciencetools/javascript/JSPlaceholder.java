@@ -33,8 +33,8 @@ public class JSPlaceholder {
     /**
      * Construct a JSPlaceholder.
      *
-     * @param key The String used in the config.
-     * @param usage A description of how the placeholder is used.
+     * @param key         The String used in the config.
+     * @param usage       A description of how the placeholder is used.
      * @param replacement The value that the placeholder is replaced with.
      */
     private JSPlaceholder(String key, String usage, Function<JSContext, Double> replacement) {
@@ -97,7 +97,7 @@ public class JSPlaceholder {
     /**
      * Swaps out the placeholders in the given expression with their replacement values in the given context.
      *
-     * @param ctx The JavaScript context.
+     * @param ctx  The JavaScript context.
      * @param expr The JavaScript expression.
      * @return The JavaScript expression with placeholders swapped out for their replacements.
      */

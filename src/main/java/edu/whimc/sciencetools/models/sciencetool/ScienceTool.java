@@ -47,16 +47,17 @@ public class ScienceTool {
 
     /* The root command used to measure this tool */
     protected MeasureCommand command;
+
     /**
      * Constructs a ScienceTool.
      *
-     * @param toolKey The tool's key within the config.
-     * @param displayName The tool's in-game name.
-     * @param aliases Alternate names for the tool.
+     * @param toolKey            The tool's key within the config.
+     * @param displayName        The tool's in-game name.
+     * @param aliases            Alternate names for the tool.
      * @param defaultMeasurement The measurement used when no region- or world-specific measurements are found.
-     * @param worldMeasurements All world-specific global measurements.
+     * @param worldMeasurements  All world-specific global measurements.
      * @param regionMeasurements All region-specific measurements.
-     * @param disabledWorlds All worlds where the tool cannot be measured.
+     * @param disabledWorlds     All worlds where the tool cannot be measured.
      */
     public ScienceTool(String toolKey,
                        String displayName,
@@ -179,7 +180,7 @@ public class ScienceTool {
         private MeasureCommand() {
             super(ScienceTool.this.toolKey, "Measure the " + ScienceTool.this.displayName,
                     "", ScienceTool.this.aliases);
-            
+
             if (!getCommandMap().register("WHIMC-ScienceTools", this)) {
                 Utils.log("&c\t- Error registering /" + ScienceTool.this.toolKey);
             }
@@ -191,7 +192,7 @@ public class ScienceTool {
 
                 bukkitCommandMap.setAccessible(true);
                 return (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-            } catch(Exception exc) {
+            } catch (Exception exc) {
                 exc.printStackTrace();
                 return null;
             }

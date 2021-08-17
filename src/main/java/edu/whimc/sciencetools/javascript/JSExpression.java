@@ -39,7 +39,7 @@ public class JSExpression {
     /**
      * Runs the JavaScript engine.
      *
-     * @param ctx The JavaScript context.
+     * @param ctx               The JavaScript context.
      * @param throwCommandError Whether or not to throw a command error.
      * @return The value returned from the execution of the script.
      */

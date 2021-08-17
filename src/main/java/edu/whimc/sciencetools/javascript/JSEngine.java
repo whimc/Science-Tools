@@ -3,7 +3,10 @@ package edu.whimc.sciencetools.javascript;
 import edu.whimc.sciencetools.commands.CommandError;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
-import javax.script.*;
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 /**
  * The JavaScript engine.
@@ -32,7 +35,7 @@ public class JSEngine {
     /**
      * Runs the passed JavaScript code.
      *
-     * @param code The JavaScript code to run.
+     * @param code              The JavaScript code to run.
      * @param throwCommandError Whether or not to throw a CommandError.
      * @return The value returned from the execution of the script.
      */
@@ -50,7 +53,7 @@ public class JSEngine {
     /**
      * Evaluates the passed JavaScript expression.
      *
-     * @param expression The JavaScript expression to evaluate.
+     * @param expression        The JavaScript expression to evaluate.
      * @param throwCommandError Whether or not to throw a CommandError.
      * @return The resulting Double value.
      */

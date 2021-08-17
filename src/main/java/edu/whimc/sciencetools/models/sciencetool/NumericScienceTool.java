@@ -27,16 +27,16 @@ public class NumericScienceTool extends ScienceTool {
     /**
      * Constructs a NumericScienceTool.
      *
-     * @param toolKey The key for this tool in the config.
-     * @param displayName The name to be displayed in-game for this tool.
-     * @param aliases Alternate names for the tool.
+     * @param toolKey            The key for this tool in the config.
+     * @param displayName        The name to be displayed in-game for this tool.
+     * @param aliases            Alternate names for the tool.
      * @param defaultMeasurement The default measurement used when no region or world value is found.
-     * @param worldMeasurements The world-specific global measurements.
+     * @param worldMeasurements  The world-specific global measurements.
      * @param regionMeasurements The region-specific measurements.
-     * @param disabledWorlds The worlds where the tool cannot be measured.
-     * @param unit The unit of measurement.
-     * @param precision The decimal precision.
-     * @param conversions The accepted unit conversions.
+     * @param disabledWorlds     The worlds where the tool cannot be measured.
+     * @param unit               The unit of measurement.
+     * @param precision          The decimal precision.
+     * @param conversions        The accepted unit conversions.
      */
     public NumericScienceTool(String toolKey,
                               String displayName,

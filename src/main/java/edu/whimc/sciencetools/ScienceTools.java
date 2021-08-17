@@ -1,8 +1,6 @@
 package edu.whimc.sciencetools;
 
 import edu.whimc.sciencetools.commands.ScienceToolCommand;
-import edu.whimc.sciencetools.commands.subcommands.Measure;
-import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
@@ -21,7 +19,7 @@ import java.util.function.Consumer;
 public class ScienceTools extends JavaPlugin implements Listener {
 
     private static ScienceTools instance;
-    private static Consumer<Queryer> handleConnection = q -> {
+    private static final Consumer<Queryer> handleConnection = q -> {
         if (q == null) {
             Utils.log("&cCould not establish MySQL connection! Some features are disabled.");
         } else {
