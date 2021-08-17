@@ -1,6 +1,6 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
-import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.utils.Utils;
 import me.blackvein.quests.CustomObjective;
 import me.blackvein.quests.Quest;
@@ -14,7 +14,7 @@ public class QuestsScienceToolObjective extends CustomObjective {
 
     private static final String KEY = "Science Tool";
 
-    private Quests quests;
+    private final Quests quests;
 
     public QuestsScienceToolObjective() {
         super.setName("Science Tool Objective");
@@ -34,20 +34,22 @@ public class QuestsScienceToolObjective extends CustomObjective {
             return;
         }
 
+        Measurement measurement = event.getMeasurement();
+
         // Increment the count for this objective on all quests for the player
-        for (Quest quest : this.quests.getQuester(event.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
-            Map<String, Object> data = getDataForPlayer(event.getPlayer(), this, quest);
+        for (Quest quest : this.quests.getQuester(measurement.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
+            Map<String, Object> data = getDataForPlayer(measurement.getPlayer(), this, quest);
             String toolName = (String) data.get(KEY);
 
             Utils.log("objective tool is " + toolName);
-            Utils.log("event tool is " + event.getScienceTool().getToolKey());
+            Utils.log("event tool is " + measurement.getTool().getToolKey());
 
             // Make sure the measured tool was the one tracked by this objective
-            if (!event.getScienceTool().getToolKey().equalsIgnoreCase(toolName)) {
+            if (!measurement.getTool().getToolKey().equalsIgnoreCase(toolName)) {
                 continue;
             }
 
-            super.incrementObjective(event.getPlayer(), this, 1, quest);
+            super.incrementObjective(measurement.getPlayer(), this, 1, quest);
         }
     }
 }

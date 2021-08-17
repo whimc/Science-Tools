@@ -1,8 +1,11 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
+import edu.whimc.sciencetools.models.Measurement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import java.sql.Timestamp;
 
 /**
  * A custom event to be fired whenever a player measures a science tool.
@@ -10,20 +13,14 @@ import org.bukkit.event.HandlerList;
 public class ScienceToolMeasureEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private final ScienceTool scienceTool;
-    private final Player player;
+    private final Measurement measurement;
 
-    public ScienceToolMeasureEvent(ScienceTool scienceTool, Player player) {
-        this.scienceTool = scienceTool;
-        this.player = player;
+    public ScienceToolMeasureEvent(Player player, ScienceTool scienceTool, String measurement) {
+        this.measurement = new Measurement(new Timestamp(System.currentTimeMillis()), player, player.getLocation(), scienceTool, measurement);
     }
 
-    public ScienceTool getScienceTool() {
-        return this.scienceTool;
-    }
-
-    public Player getPlayer() {
-        return player;
+    public Measurement getMeasurement() {
+        return this.measurement;
     }
 
     @Override
@@ -34,4 +31,5 @@ public class ScienceToolMeasureEvent extends Event {
     public static HandlerList getHandlerList() {
         return handlers;
     }
+
 }

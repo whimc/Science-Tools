@@ -28,7 +28,7 @@ public class Measure extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Displays the measurement of the given tool to the sender.
      */
     @Override
@@ -52,16 +52,19 @@ public class Measure extends AbstractSubCommand {
         }
 
         Player player = (Player) sender;
-        tool.displayMeasurement(player);
+        String measurement = tool.displayMeasurement(player);
 
-        ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(tool, player);
-        Bukkit.getPluginManager().callEvent(event);
+        if (measurement != null) {
+            ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, tool, measurement);
+            Bukkit.getPluginManager().callEvent(event);
+        }
+
         return true;
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Auto-completes the list of science tools.
      */
     @Override

@@ -56,11 +56,11 @@ public abstract class AbstractSubCommand {
     /**
      * Constructs a command with the given arguments.
      *
-     * @param command The name of the command.
-     * @param args The arguments required.
+     * @param command      The name of the command.
+     * @param args         The arguments required.
      * @param optionalArgs Any optional arguments.
-     * @param description A description of what the command does.
-     * @param permission The required permission level to use the command.
+     * @param description  A description of what the command does.
+     * @param permission   The required permission level to use the command.
      */
     public AbstractSubCommand(String command, List<String> args, List<String> optionalArgs, String description, Permission permission) {
         this.command = command;
@@ -74,7 +74,7 @@ public abstract class AbstractSubCommand {
      * Runs when the subcommand was properly executed (with correct permissions and arguments).
      *
      * @param sender The command's sender.
-     * @param args The arguments passed.
+     * @param args   The arguments passed.
      * @return Whether the command has been run or not.
      */
     protected abstract boolean commandRoutine(CommandSender sender, String[] args);
@@ -84,7 +84,7 @@ public abstract class AbstractSubCommand {
      * Returns an empty list by default.
      *
      * @param sender The command's sender.
-     * @param args The arguments passed.
+     * @param args   The arguments passed.
      * @return An empty List of Strings.
      */
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
@@ -205,7 +205,7 @@ public abstract class AbstractSubCommand {
      * If these checks fail, the command routine is not run.
      *
      * @param sender The command's sender.
-     * @param args The passed arguments.
+     * @param args   The passed arguments.
      * @return Whether the command has been executed.
      */
     public boolean executeCommand(CommandSender sender, String[] args) {
@@ -250,7 +250,7 @@ public abstract class AbstractSubCommand {
      * have surpassed the max number of arguments.
      *
      * @param sender The command's sender.
-     * @param args The passed arguments.
+     * @param args   The passed arguments.
      * @return An empty List of Strings.
      */
     public List<String> executeTab(CommandSender sender, String[] args) {

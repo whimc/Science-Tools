@@ -18,7 +18,7 @@ public class JSContext {
     /**
      * Constructs a JSContext.
      *
-     * @param location The location to evaluate the expression.
+     * @param location  The location to evaluate the expression.
      * @param toConvert The Double value to convert.
      */
     private JSContext(Location location, double toConvert) {
@@ -49,7 +49,7 @@ public class JSContext {
      * Creates a JSContext at the executor's location if it is the player.
      * If the sender is not a player, the first world's spawn point is used as the location.
      *
-     * @param executor The command's sender.
+     * @param executor  The command's sender.
      * @param toConvert The Double value to convert.
      * @return The new JSContext.
      */
@@ -84,7 +84,7 @@ public class JSContext {
     /**
      * Creates a new JSContext at the specified location.
      *
-     * @param location The location to evaluate the expression.
+     * @param location  The location to evaluate the expression.
      * @param toConvert The Double value to convert.
      * @return The new JSContext.
      */

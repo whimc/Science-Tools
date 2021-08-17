@@ -7,6 +7,7 @@ import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -27,16 +28,16 @@ public class NumericScienceTool extends ScienceTool {
     /**
      * Constructs a NumericScienceTool.
      *
-     * @param toolKey The key for this tool in the config.
-     * @param displayName The name to be displayed in-game for this tool.
-     * @param aliases Alternate names for the tool.
+     * @param toolKey            The key for this tool in the config.
+     * @param displayName        The name to be displayed in-game for this tool.
+     * @param aliases            Alternate names for the tool.
      * @param defaultMeasurement The default measurement used when no region or world value is found.
-     * @param worldMeasurements The world-specific global measurements.
+     * @param worldMeasurements  The world-specific global measurements.
      * @param regionMeasurements The region-specific measurements.
-     * @param disabledWorlds The worlds where the tool cannot be measured.
-     * @param unit The unit of measurement.
-     * @param precision The decimal precision.
-     * @param conversions The accepted unit conversions.
+     * @param disabledWorlds     The worlds where the tool cannot be measured.
+     * @param unit               The unit of measurement.
+     * @param precision          The decimal precision.
+     * @param conversions        The accepted unit conversions.
      */
     public NumericScienceTool(String toolKey,
                               String displayName,
@@ -58,13 +59,14 @@ public class NumericScienceTool extends ScienceTool {
      * Display the measured number to the player based off their current location.
      *
      * @param player The target player.
+     * @return The measurement
      */
     @Override
-    public void displayMeasurement(Player player) {
+    public @Nullable String displayMeasurement(Player player) {
         // check if player in disabled world
         if (super.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, "&cWe don't know how to measure that here!");
-            return;
+            return null;
         }
 
         double data = getData(player.getLocation());
@@ -79,6 +81,7 @@ public class NumericScienceTool extends ScienceTool {
         }
 
         Utils.msg(player, message.toString());
+        return Utils.trimDecimals(data, this.precision) + this.unit;
     }
 
     /**

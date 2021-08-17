@@ -1,4 +1,10 @@
 # -- WHIMC Science Tools --
+mysql:
+  host: localhost
+  port: 3306
+  database: minecraft
+  username: user
+  password: pass
 conversions:
   feet:
     expression: "{VAL} * 3.28084"

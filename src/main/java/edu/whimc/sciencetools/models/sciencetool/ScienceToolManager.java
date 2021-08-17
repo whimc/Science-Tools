@@ -69,15 +69,15 @@ public class ScienceToolManager {
             Utils.log("&b\t- Aliases:");
             List<String> aliases = new ArrayList<String>();
             for (String alias : section.getStringList("aliases")) {
-            	// Ensure aliases do not contain spaces
-            	if (alias.contains(" ")) {
-            		Utils.log("&c* Alias cannot contain whitespace! Skipping.");
+                // Ensure aliases do not contain spaces
+                if (alias.contains(" ")) {
+                    Utils.log("&c* Alias cannot contain whitespace! Skipping.");
                     continue;
-            	}
-            	aliases.add(alias);
-            	Utils.log("&b\t\t- \"&f" + alias + "&b\"");
+                }
+                aliases.add(alias);
+                Utils.log("&b\t\t- \"&f" + alias + "&b\"");
             }
-            
+
             // Ensure there is a default measurement
             String defaultMeasurement = section.getString("default-measurement");
             if (defaultMeasurement == null) {

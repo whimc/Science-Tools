@@ -19,7 +19,7 @@ public class Reload extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Reloads the plugin, refreshing values on the server to match changes in the config.
      */
     @Override

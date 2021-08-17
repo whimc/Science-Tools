@@ -124,7 +124,7 @@ public class ConversionManager {
     /**
      * Sets and saves a Conversion to the config.
      *
-     * @param key The Conversion's name.
+     * @param key   The Conversion's name.
      * @param value The Conversion.
      */
     private void setConfig(String key, Object value) {

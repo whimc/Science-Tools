@@ -11,7 +11,7 @@ public class CommandError extends RuntimeException {
     /**
      * Constructs the CommandError.
      *
-     * @param message The message for the error to display in-game.
+     * @param message   The message for the error to display in-game.
      * @param sendUsage Whether or not to send the command usage.
      */
     public CommandError(String message, boolean sendUsage) {
