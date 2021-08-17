@@ -1,6 +1,7 @@
 package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
@@ -52,9 +53,9 @@ public class Measure extends AbstractSubCommand {
         }
 
         Player player = (Player) sender;
-        tool.displayMeasurement(player);
+        String measurement = tool.displayMeasurement(player);
 
-        ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(tool, player);
+        ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, tool, measurement);
         Bukkit.getPluginManager().callEvent(event);
         return true;
     }

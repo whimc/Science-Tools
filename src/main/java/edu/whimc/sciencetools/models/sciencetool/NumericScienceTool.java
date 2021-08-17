@@ -58,13 +58,14 @@ public class NumericScienceTool extends ScienceTool {
      * Display the measured number to the player based off their current location.
      *
      * @param player The target player.
+     * @return The measurement
      */
     @Override
-    public void displayMeasurement(Player player) {
+    public String displayMeasurement(Player player) {
         // check if player in disabled world
         if (super.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, "&cWe don't know how to measure that here!");
-            return;
+            return null;
         }
 
         double data = getData(player.getLocation());
@@ -79,6 +80,7 @@ public class NumericScienceTool extends ScienceTool {
         }
 
         Utils.msg(player, message.toString());
+        return Double.toString(data);
     }
 
     /**

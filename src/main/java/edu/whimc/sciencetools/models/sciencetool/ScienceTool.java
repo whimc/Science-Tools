@@ -147,14 +147,17 @@ public class ScienceTool {
      * Display the measurement string to the player based off their current location.
      *
      * @param player The target player.
+     * @return The measurement
      */
-    public void displayMeasurement(Player player) {
+    public @Nullable String displayMeasurement(Player player) {
         if (this.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, "&cWe don't know how to measure " + this.displayName + " here!");
-            return;
+            return null;
         }
 
-        Utils.msg(player, getMeasurement(player.getLocation()));
+        String measurement = getMeasurement(player.getLocation());
+        Utils.msg(player, measurement);
+        return measurement;
     }
 
     /**
@@ -221,9 +224,9 @@ public class ScienceTool {
             }
 
             Player player = (Player) sender;
-            ScienceTool.this.displayMeasurement(player);
+            String measurement = ScienceTool.this.displayMeasurement(player);
 
-            ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(ScienceTool.this, player);
+            ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, ScienceTool.this, measurement);
             Bukkit.getPluginManager().callEvent(event);
             return true;
         }
