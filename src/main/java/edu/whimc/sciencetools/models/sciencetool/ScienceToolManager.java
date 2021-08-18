@@ -65,6 +65,17 @@ public class ScienceToolManager {
 
             ConfigurationSection section = config.getConfigurationSection("tools." + toolKey);
 
+            // Ensure there is a default measurement
+            String defaultMeasurement = section.getString("default-measurement");
+            if (defaultMeasurement == null) {
+                Utils.log("&c * `" + section.getCurrentPath() + ".default-measurement` does not exist! Skipping.");
+                continue;
+            }
+            Utils.log("&b\t- Default measurement: \"&f" + defaultMeasurement + "&b\"");
+
+            String displayName = section.getString("display-name", toolKey);
+            Utils.log("&b\t- Display name: \"&f" + displayName + "&b\"");
+
             // Load aliases
             Utils.log("&b\t- Aliases:");
             List<String> aliases = new ArrayList<String>();
@@ -77,17 +88,6 @@ public class ScienceToolManager {
                 aliases.add(alias);
                 Utils.log("&b\t\t- \"&f" + alias + "&b\"");
             }
-
-            // Ensure there is a default measurement
-            String defaultMeasurement = section.getString("default-measurement");
-            if (defaultMeasurement == null) {
-                Utils.log("&c * `" + section.getCurrentPath() + ".default-measurement` does not exist! Skipping.");
-                continue;
-            }
-            Utils.log("&b\t- Default measurement: \"&f" + defaultMeasurement + "&b\"");
-
-            String displayName = section.getString("display-name", toolKey);
-            Utils.log("&b\t- Display name: \"&f" + displayName + "&b\"");
 
             // Load disabled worlds
             Set<World> disabledWorlds = new HashSet<>();
