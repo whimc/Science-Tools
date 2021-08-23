@@ -126,6 +126,8 @@ Region names are defined using [WorldGuard](https://worldguard.enginehub.org/en/
 |`{X}`              | The player's current X position                      |
 |`{Y}`              | The player's current Y position                      |
 |`{Z}`              | The player's current Z position                      |
+|`{TIME_TICKS}`     | The time of the world in ticks                       |
+|`{WEATHER_CLEAR}`  | `1.0` if the weather is clear, `0.0` otherwise       |
 |`rand(min, max)`   | A random decimal between `min` and `max` (inclusive) |
 |`randInt(min, max)`| A random integer between `min` and `max` (inclusive) |
 |`min(a, b)`        | The minimum between `a` and `b`                      |

@@ -1,6 +1,7 @@
 package edu.whimc.sciencetools.javascript;
 
 import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
+import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,12 @@ public class JSPlaceholder {
             new JSPlaceholder("{VAL}", "Value to convert", JSContext::getToConvert),
             new JSPlaceholder("{X}", "Current X value", ctx -> ctx.getLocation().getX()),
             new JSPlaceholder("{Y}", "Current Y value", ctx -> ctx.getLocation().getY()),
-            new JSPlaceholder("{Z}", "Current Z value", ctx -> ctx.getLocation().getZ())
+            new JSPlaceholder("{Z}", "Current Z value", ctx -> ctx.getLocation().getZ()),
+            new JSPlaceholder("{TIME_TICKS}", "The time of the world in ticks", ctx -> (double) ctx.getLocation().getWorld().getTime()),
+            new JSPlaceholder("{WEATHER_CLEAR}", "1.0 if the weather is clear, 0.0 otherwise", ctx -> {
+                World world = ctx.getLocation().getWorld();
+                return world.hasStorm() || world.isThundering() ? 0.0 : 1.0;
+            })
     ));
 
     private static final List<JSPlaceholder> placeholders = new ArrayList<>();
