@@ -21,9 +21,13 @@ public class JSPlaceholder {
             new JSPlaceholder("{Y}", "Current Y value", ctx -> ctx.getLocation().getY()),
             new JSPlaceholder("{Z}", "Current Z value", ctx -> ctx.getLocation().getZ()),
             new JSPlaceholder("{TIME_TICKS}", "The time of the world in ticks", ctx -> (double) ctx.getLocation().getWorld().getTime()),
-            new JSPlaceholder("{WEATHER_CLEAR}", "1.0 if the weather is clear, 0.0 otherwise", ctx -> {
+            new JSPlaceholder("{NIGHT}","0 if day time, 1 if night time", ctx -> {
                 World world = ctx.getLocation().getWorld();
-                return world.hasStorm() || world.isThundering() ? 0.0 : 1.0;
+                return world.getTime() >= 13000 ? 1.0 : 0.0;
+            }),
+            new JSPlaceholder("{WEATHER}", "0 if the weather is clear, 1 otherwise", ctx -> {
+                World world = ctx.getLocation().getWorld();
+                return world.hasStorm() || world.isThundering() ? 1.0 : 0.0;
             })
     ));
 
