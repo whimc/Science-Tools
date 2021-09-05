@@ -34,7 +34,10 @@ public class ScienceTool {
     protected String displayName;
     /* Aliases for the command. */
     protected List<String> aliases;
-
+    /* Messages for the command. */
+    protected Map<String,Message> messages;
+    /* Global Messages. */
+    protected Map<String,Message> globalMessages;
     /* Default measurement to be used when no region or world measurement is found. */
     protected String defaultMeasurement;
     /* World-specific global measurements. */
@@ -62,6 +65,8 @@ public class ScienceTool {
     public ScienceTool(String toolKey,
                        String displayName,
                        List<String> aliases,
+                       Map<String,Message>messages,
+                       Map<String,Message>globalMessages,
                        String defaultMeasurement,
                        Map<World, String> worldMeasurements,
                        Map<World, Map<String, String>> regionMeasurements,
@@ -69,6 +74,8 @@ public class ScienceTool {
         this.toolKey = toolKey;
         this.displayName = displayName;
         this.aliases = aliases;
+        this.messages = messages;
+        this.globalMessages = globalMessages;
         this.defaultMeasurement = defaultMeasurement;
         this.worldMeasurements = worldMeasurements;
         this.regionMeasurements = regionMeasurements;

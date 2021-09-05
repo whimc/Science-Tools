@@ -41,14 +41,23 @@ public class ScienceToolManager {
     public void loadTools(@NotNull ConversionManager conversionManager) {
         FileConfiguration config = ScienceTools.getInstance().getConfig();
 
-        Utils.log("&eLoading Science Tools from config");
+
 
         // Remove potentially pre-existing placeholders and root commands
         JSPlaceholder.unregisterCustomPlaceholders();
         this.tools.values().forEach(tool -> tool.command.unregister());
 
         this.tools.clear();
-
+        ConfigurationSection globalMessageSection = config.getConfigurationSection("messages");
+        Map<String,Message> globalMessages = new HashMap<>();
+        Utils.log("&b- Global Messages:");
+        for (String messageKey : globalMessageSection.getKeys(false)) {
+            //Load Messages
+                String message = globalMessageSection.getString( messageKey);
+                Utils.log("&b\t- &f" + messageKey + "&b: \"&f" + message + "&b\"");
+                globalMessages.put(messageKey, new Message(message));
+            }
+        Utils.log("&eLoading Science Tools from config");
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);
 
@@ -87,6 +96,16 @@ public class ScienceToolManager {
                 }
                 aliases.add(alias);
                 Utils.log("&b\t\t- \"&f" + alias + "&b\"");
+            }
+
+            //Load Messages
+            Utils.log("&b\t- Messages:");
+            Map<String,Message> messages = new HashMap<>();
+            ConfigurationSection messageSection = section.getConfigurationSection("messages");
+            for (String messageType : messageSection.getKeys(false)){
+                String message = messageSection.getString(messageType);
+                Utils.log("&b\t\t- &f" + messageType + "&b: \"&f" + message + "&b\"");
+                messages.put(messageType, new Message(message));
             }
 
             // Load disabled worlds
@@ -145,7 +164,7 @@ public class ScienceToolManager {
             // If the default measurement is not a valid numeric expression, parse as a string-based science tool
             JSNumericExpression defaultExpression = new JSNumericExpression(defaultMeasurement);
             if (!defaultExpression.valid()) {
-                ScienceTool tool = new ScienceTool(toolKey, displayName, aliases, defaultMeasurement, worldMeasurements,
+                ScienceTool tool = new ScienceTool(toolKey, displayName, aliases, messages,globalMessages, defaultMeasurement,worldMeasurements,
                         worldRegionMeasurements, disabledWorlds);
                 this.tools.put(toolKey.toLowerCase(), tool);
                 continue;
@@ -177,7 +196,7 @@ public class ScienceToolManager {
                 }
             }
 
-            NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, aliases, defaultMeasurement,
+            NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, aliases, messages, globalMessages,defaultMeasurement,
                     worldMeasurements, worldRegionMeasurements, disabledWorlds, unit, precision, conversions);
             this.tools.put(toolKey.toLowerCase(), tool);
             JSPlaceholder.registerCustomPlaceholder(tool);

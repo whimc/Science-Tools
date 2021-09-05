@@ -42,6 +42,8 @@ public class NumericScienceTool extends ScienceTool {
     public NumericScienceTool(String toolKey,
                               String displayName,
                               List<String> aliases,
+                              Map<String,Message>messages,
+                              Map<String,Message>globalMessages,
                               String defaultMeasurement,
                               Map<World, String> worldMeasurements,
                               Map<World, Map<String, String>> regionMeasurements,
@@ -49,7 +51,7 @@ public class NumericScienceTool extends ScienceTool {
                               String unit,
                               int precision,
                               List<Conversion> conversions) {
-        super(toolKey, displayName, aliases, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
+        super(toolKey, displayName, aliases, messages,globalMessages, defaultMeasurement,worldMeasurements, regionMeasurements, disabledWorlds);
         this.unit = unit;
         this.precision = precision;
         this.conversions = conversions;
@@ -64,23 +66,31 @@ public class NumericScienceTool extends ScienceTool {
     @Override
     public @Nullable String displayMeasurement(Player player) {
         // check if player in disabled world
+
         if (super.disabledWorlds.contains(player.getWorld())) {
-            Utils.msg(player, "&cWe don't know how to measure that here!");
+            if(messages.containsKey("disabled-in-world"))
+                Utils.msg(player, messages.get("disabled-in-world").displayString(displayName,null,unit));
+            else
+                Utils.msg(player, globalMessages.get("disabled-in-world").displayString(displayName,null,unit));
             return null;
         }
 
         double data = getData(player.getLocation());
+        String message;
+        if(messages.containsKey("numeric-measure-format"))
+            message = messages.get("numeric-measure-format").displayString(displayName,Utils.trimDecimals(data, precision),unit);
+        else {
 
-        StringBuilder message = new StringBuilder("&aThe measured " + this.displayName
-                + " is &f" + Utils.trimDecimals(data, this.precision) + this.unit + "&7");
-
+            message = globalMessages.get("numeric-measure-format").displayString(displayName, Utils.trimDecimals(data, precision), unit);
+        }
         // display converted values
-        for (Conversion conversion : this.conversions) {
-            String converted = Utils.trimDecimals(conversion.convert(data), this.precision);
-            message.append(" (").append(converted).append(conversion.getUnit()).append(")");
+        for (Conversion conversion : conversions) {
+            String converted = Utils.trimDecimals(conversion.convert(data), precision);
+            message+=" ("+converted+conversion.getUnit()+")";
         }
 
-        Utils.msg(player, message.toString());
+        Utils.msg(player, message);
+
         return Utils.trimDecimals(data, this.precision) + this.unit;
     }
 
