@@ -43,7 +43,6 @@ public class NumericScienceTool extends ScienceTool {
                               String displayName,
                               List<String> aliases,
                               Map<String,Message>messages,
-                              Map<String,Message>globalMessages,
                               String defaultMeasurement,
                               Map<World, String> worldMeasurements,
                               Map<World, Map<String, String>> regionMeasurements,
@@ -51,7 +50,7 @@ public class NumericScienceTool extends ScienceTool {
                               String unit,
                               int precision,
                               List<Conversion> conversions) {
-        super(toolKey, displayName, aliases, messages,globalMessages, defaultMeasurement,worldMeasurements, regionMeasurements, disabledWorlds);
+        super(toolKey, displayName, aliases, messages, defaultMeasurement,worldMeasurements, regionMeasurements, disabledWorlds);
         this.unit = unit;
         this.precision = precision;
         this.conversions = conversions;
@@ -69,9 +68,9 @@ public class NumericScienceTool extends ScienceTool {
 
         if (super.disabledWorlds.contains(player.getWorld())) {
             if(messages.containsKey("disabled-in-world"))
-                Utils.msg(player, messages.get("disabled-in-world").displayString(displayName,null,unit));
+                Utils.msg(player, messages.get("disabled-in-world").toString());
             else
-                Utils.msg(player, globalMessages.get("disabled-in-world").displayString(displayName,null,unit));
+                Utils.msg(player, ScienceToolManager.getGlobalMassages().get("disabled-in-world").toString());
             return null;
         }
 
@@ -81,7 +80,7 @@ public class NumericScienceTool extends ScienceTool {
             message = messages.get("numeric-measure-format").displayString(displayName,Utils.trimDecimals(data, precision),unit);
         else {
 
-            message = globalMessages.get("numeric-measure-format").displayString(displayName, Utils.trimDecimals(data, precision), unit);
+            message = ScienceToolManager.getGlobalMassages().get("numeric-measure-format").displayString(displayName, Utils.trimDecimals(data, precision), unit);
         }
         // display converted values
         for (Conversion conversion : conversions) {

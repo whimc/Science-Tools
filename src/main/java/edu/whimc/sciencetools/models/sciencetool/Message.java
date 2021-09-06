@@ -1,26 +1,43 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
-import edu.whimc.sciencetools.utils.Utils;
-
+/**
+ * Class to represent messages for science tools
+ */
 public class Message {
+
     private String message;
     private final String NAME_PLACEHOLDER = "{TOOL}";
     private final String MEASURE_PLACEHOLDER = "{MEASUREMENT}";
     private final String UNIT_PLACEHOLDER = "{UNIT}";
-    Message(String m)
-    {
+
+    /**
+     * Constructs a message
+     * @param m the message to send to the player
+     */
+    Message(String m) {
         message = m;
     }
-    public String displayString(String displayName,String measurement, String unit)
-    {
+
+    /**
+     * Returns formatted string with placeholders removed if has any
+     * @param displayName name of the tool
+     * @param measurement measurement of the tool
+     * @param unit unit of the tool
+     * @return message to send to the player for the tool
+     */
+    public String displayString(String displayName,String measurement, String unit) {
         String msg = message;
-        if(message.indexOf(NAME_PLACEHOLDER)!=-1)
-            msg = msg.replace(NAME_PLACEHOLDER,displayName);
-        if(message.indexOf(MEASURE_PLACEHOLDER)!=-1) {
-            msg = msg.replace(MEASURE_PLACEHOLDER, measurement);
-        }
-        if(message.indexOf(UNIT_PLACEHOLDER)!=-1)
-            msg = msg.replace(UNIT_PLACEHOLDER,unit);
+        msg = msg.replace(NAME_PLACEHOLDER, displayName);
+        msg = msg.replace(MEASURE_PLACEHOLDER, measurement);
+        msg = msg.replace(UNIT_PLACEHOLDER, unit);
         return msg;
+    }
+
+    /**
+     * Returns message
+     * @return message to send to the player for the tool
+     */
+    public String toString() {
+        return message;
     }
 }
