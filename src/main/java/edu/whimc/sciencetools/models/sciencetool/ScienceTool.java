@@ -34,8 +34,6 @@ public class ScienceTool {
     protected String displayName;
     /* Aliases for the command. */
     protected List<String> aliases;
-    /* Messages for the command. */
-    protected Map<String, Message> messages;
     /* Default measurement to be used when no region or world measurement is found. */
     protected String defaultMeasurement;
     /* World-specific global measurements. */
@@ -55,7 +53,6 @@ public class ScienceTool {
      * @param toolKey            The tool's key within the config.
      * @param displayName        The tool's in-game name.
      * @param aliases            Alternate names for the tool.
-     * @param messages           Messages for the tool.
      * @param defaultMeasurement The measurement used when no region- or world-specific measurements are found.
      * @param worldMeasurements  All world-specific global measurements.
      * @param regionMeasurements All region-specific measurements.
@@ -64,7 +61,6 @@ public class ScienceTool {
     public ScienceTool(String toolKey,
                        String displayName,
                        List<String> aliases,
-                       Map<String, Message> messages,
                        String defaultMeasurement,
                        Map<World, String> worldMeasurements,
                        Map<World, Map<String, String>> regionMeasurements,
@@ -72,7 +68,6 @@ public class ScienceTool {
         this.toolKey = toolKey;
         this.displayName = displayName;
         this.aliases = aliases;
-        this.messages = messages;
         this.defaultMeasurement = defaultMeasurement;
         this.worldMeasurements = worldMeasurements;
         this.regionMeasurements = regionMeasurements;
@@ -156,11 +151,9 @@ public class ScienceTool {
      */
     public @Nullable String displayMeasurement(Player player) {
         if (this.disabledWorlds.contains(player.getWorld())) {
-            Utils.msg(player, "&cWe don't know how to measure " + this.displayName + " here!");
-            return null;
+            Utils.msg(player, Message.DISABLED_IN_WORLD.format(this,player));
         }
-
-        String measurement = getMeasurement(player.getLocation());
+        String measurement = Message.NUMERIC_MEASURE.format(this,player);
         Utils.msg(player, measurement);
         return measurement;
     }

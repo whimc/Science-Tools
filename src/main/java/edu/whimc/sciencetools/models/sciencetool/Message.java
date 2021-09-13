@@ -1,43 +1,61 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
+import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.utils.Utils;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
 /**
  * Class to represent messages for science tools
  */
-public class Message {
 
-    private String message;
-    private final String NAME_PLACEHOLDER = "{TOOL}";
-    private final String MEASURE_PLACEHOLDER = "{MEASUREMENT}";
+public enum Message {
+
+    MEASURE("measure-format"),
+
+    NUMERIC_MEASURE("numeric-measure-format"),
+
+    DISABLED_IN_WORLD("disabled-in-world"),
+    ;
+
+    private final String TOOL_PLACEHOLDER = "{TOOL}";
+    private final String MEASUREMENT_PLACEHOLDER = "{MEASUREMENT}";
     private final String UNIT_PLACEHOLDER = "{UNIT}";
 
-    /**
-     * Constructs a message
-     * @param m the message to send to the player
-     */
-    Message(String m) {
-        message = m;
+    private String configPath;
+
+    private Message(String configPath) {
+        this.configPath = configPath;
     }
 
-    /**
-     * Returns formatted string with placeholders removed if has any
-     * @param displayName name of the tool
-     * @param measurement measurement of the tool
-     * @param unit unit of the tool
-     * @return message to send to the player for the tool
-     */
-    public String displayString(String displayName,String measurement, String unit) {
-        String msg = message;
-        msg = msg.replace(NAME_PLACEHOLDER, displayName);
-        msg = msg.replace(MEASURE_PLACEHOLDER, measurement);
-        msg = msg.replace(UNIT_PLACEHOLDER, unit);
-        return msg;
-    }
-
-    /**
-     * Returns message
-     * @return message to send to the player for the tool
-     */
-    public String toString() {
+    public String format(ScienceTool tool, Player player) {
+        FileConfiguration config = ScienceTools.getInstance().getConfig();
+        String fallback = (String) config.get("messages." + this.configPath);
+        ConfigurationSection section = config.getConfigurationSection("tools." + tool.getToolKey());
+        String local = (String) section.get("messages." + this.configPath);
+        // do all the tool checks here to see if the message is overridden
+        // and to conditionally fill in information depending if 'tool' is a NumericScienceTool or not
+        String message = "";
+        if(local != null)
+            message = local;
+        else
+            message = fallback;
+        message = message.replace(TOOL_PLACEHOLDER,tool.displayName);
+        if(tool instanceof NumericScienceTool) {
+            NumericScienceTool nTool = (NumericScienceTool) tool;
+            double data = nTool.getData(player.getLocation());
+            message = message.replace(MEASUREMENT_PLACEHOLDER, Utils.trimDecimals(data, nTool.getPrecision()));
+        }
+        else {
+            String measurement = tool.getMeasurement(player.getLocation());
+            message = message.replace(MEASUREMENT_PLACEHOLDER, measurement);
+        }
+        if(tool instanceof NumericScienceTool) {
+            NumericScienceTool nTool = (NumericScienceTool) tool;
+            message = message.replace(UNIT_PLACEHOLDER, nTool.getMainUnit());
+        }
         return message;
     }
 }
+

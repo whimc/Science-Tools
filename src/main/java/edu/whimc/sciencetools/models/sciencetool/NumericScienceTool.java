@@ -42,7 +42,6 @@ public class NumericScienceTool extends ScienceTool {
     public NumericScienceTool(String toolKey,
                               String displayName,
                               List<String> aliases,
-                              Map<String,Message>messages,
                               String defaultMeasurement,
                               Map<World, String> worldMeasurements,
                               Map<World, Map<String, String>> regionMeasurements,
@@ -50,7 +49,7 @@ public class NumericScienceTool extends ScienceTool {
                               String unit,
                               int precision,
                               List<Conversion> conversions) {
-        super(toolKey, displayName, aliases, messages, defaultMeasurement,worldMeasurements, regionMeasurements, disabledWorlds);
+        super(toolKey, displayName, aliases, defaultMeasurement,worldMeasurements, regionMeasurements, disabledWorlds);
         this.unit = unit;
         this.precision = precision;
         this.conversions = conversions;
@@ -67,21 +66,12 @@ public class NumericScienceTool extends ScienceTool {
         // check if player in disabled world
 
         if (super.disabledWorlds.contains(player.getWorld())) {
-            if(messages.containsKey("disabled-in-world"))
-                Utils.msg(player, messages.get("disabled-in-world").toString());
-            else
-                Utils.msg(player, ScienceToolManager.getGlobalMassages().get("disabled-in-world").toString());
+            Utils.msg(player,Message.DISABLED_IN_WORLD.format(this,player));
             return null;
         }
-
+        String message = Message.NUMERIC_MEASURE.format(this,player);
         double data = getData(player.getLocation());
-        String message;
-        if(messages.containsKey("numeric-measure-format"))
-            message = messages.get("numeric-measure-format").displayString(displayName,Utils.trimDecimals(data, precision),unit);
-        else {
 
-            message = ScienceToolManager.getGlobalMassages().get("numeric-measure-format").displayString(displayName, Utils.trimDecimals(data, precision), unit);
-        }
         // display converted values
         for (Conversion conversion : conversions) {
             String converted = Utils.trimDecimals(conversion.convert(data), precision);
@@ -109,6 +99,13 @@ public class NumericScienceTool extends ScienceTool {
      */
     public String getMainUnit() {
         return this.unit;
+    }
+
+    /**
+     * @return The tool's precision of measurement.
+     */
+    public int getPrecision() {
+        return this.precision;
     }
 
 }

@@ -22,8 +22,7 @@ public class ScienceToolManager {
 
     /* Tools are identified by their lowercase name */
     private final Map<String, ScienceTool> tools;
-    /* Global messages for science tools */
-    private static Map<String, Message> globalMessages;
+
     /**
      * Constructs a ScienceToolManager.
      *
@@ -31,7 +30,6 @@ public class ScienceToolManager {
      */
     public ScienceToolManager(ConversionManager conversionManager) {
         this.tools = new HashMap<>();
-        this.globalMessages = new HashMap<>();
         loadTools(conversionManager);
     }
 
@@ -50,15 +48,7 @@ public class ScienceToolManager {
         this.tools.values().forEach(tool -> tool.command.unregister());
 
         this.tools.clear();
-        ConfigurationSection globalMessageSection = config.getConfigurationSection("messages");
 
-        Utils.log("&b- Global Messages:");
-        for (String messageKey : globalMessageSection.getKeys(false)) {
-            //Load Messages
-            String message = globalMessageSection.getString(messageKey);
-            Utils.log("&b\t- &f" + messageKey + "&b: \"&f" + message + "&b\"");
-            globalMessages.put(messageKey, new Message(message));
-        }
 
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);
@@ -98,16 +88,6 @@ public class ScienceToolManager {
                 }
                 aliases.add(alias);
                 Utils.log("&b\t\t- \"&f" + alias + "&b\"");
-            }
-
-            //Load Messages
-            Utils.log("&b\t- Messages:");
-            Map<String,Message> messages = new HashMap<>();
-            ConfigurationSection messageSection = section.getConfigurationSection("messages");
-            for (String messageType : messageSection.getKeys(false)){
-                String message = messageSection.getString(messageType);
-                Utils.log("&b\t\t- &f" + messageType + "&b: \"&f" + message + "&b\"");
-                messages.put(messageType, new Message(message));
             }
 
             // Load disabled worlds
@@ -166,7 +146,7 @@ public class ScienceToolManager {
             // If the default measurement is not a valid numeric expression, parse as a string-based science tool
             JSNumericExpression defaultExpression = new JSNumericExpression(defaultMeasurement);
             if (!defaultExpression.valid()) {
-                ScienceTool tool = new ScienceTool(toolKey, displayName, aliases, messages, defaultMeasurement,worldMeasurements,
+                ScienceTool tool = new ScienceTool(toolKey, displayName, aliases, defaultMeasurement,worldMeasurements,
                         worldRegionMeasurements, disabledWorlds);
                 this.tools.put(toolKey.toLowerCase(), tool);
                 continue;
@@ -198,7 +178,7 @@ public class ScienceToolManager {
                 }
             }
 
-            NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, aliases, messages, defaultMeasurement,
+            NumericScienceTool tool = new NumericScienceTool(toolKey, displayName, aliases, defaultMeasurement,
                     worldMeasurements, worldRegionMeasurements, disabledWorlds, unit, precision, conversions);
             this.tools.put(toolKey.toLowerCase(), tool);
             JSPlaceholder.registerCustomPlaceholder(tool);
@@ -253,11 +233,5 @@ public class ScienceToolManager {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Returns mapping of global messages
-     * @return the map of global messages
-     */
-    public static Map<String, Message> getGlobalMassages(){
-        return globalMessages;
-    }
+
 }
