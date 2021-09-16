@@ -151,9 +151,9 @@ public class ScienceTool {
      */
     public @Nullable String displayMeasurement(Player player) {
         if (this.disabledWorlds.contains(player.getWorld())) {
-            Utils.msg(player, Message.DISABLED_IN_WORLD.format(this,player));
+            Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
         }
-        String measurement = Message.NUMERIC_MEASURE.format(this,player);
+        String measurement = Message.NUMERIC_MEASURE.format(this, player);
         Utils.msg(player, measurement);
         return measurement;
     }
@@ -238,5 +238,4 @@ public class ScienceTool {
             return Collections.emptyList();
         }
     }
-
 }

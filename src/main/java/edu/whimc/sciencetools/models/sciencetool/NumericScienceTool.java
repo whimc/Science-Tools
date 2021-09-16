@@ -49,7 +49,7 @@ public class NumericScienceTool extends ScienceTool {
                               String unit,
                               int precision,
                               List<Conversion> conversions) {
-        super(toolKey, displayName, aliases, defaultMeasurement,worldMeasurements, regionMeasurements, disabledWorlds);
+        super(toolKey, displayName, aliases, defaultMeasurement, worldMeasurements, regionMeasurements, disabledWorlds);
         this.unit = unit;
         this.precision = precision;
         this.conversions = conversions;
@@ -66,10 +66,10 @@ public class NumericScienceTool extends ScienceTool {
         // check if player in disabled world
 
         if (super.disabledWorlds.contains(player.getWorld())) {
-            Utils.msg(player,Message.DISABLED_IN_WORLD.format(this,player));
+            Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
             return null;
         }
-        String message = Message.NUMERIC_MEASURE.format(this,player);
+        String message = Message.NUMERIC_MEASURE.format(this, player);
         double data = getData(player.getLocation());
 
         // display converted values
@@ -107,5 +107,4 @@ public class NumericScienceTool extends ScienceTool {
     public int getPrecision() {
         return this.precision;
     }
-
 }

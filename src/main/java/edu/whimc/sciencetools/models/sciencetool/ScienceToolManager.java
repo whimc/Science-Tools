@@ -146,7 +146,7 @@ public class ScienceToolManager {
             // If the default measurement is not a valid numeric expression, parse as a string-based science tool
             JSNumericExpression defaultExpression = new JSNumericExpression(defaultMeasurement);
             if (!defaultExpression.valid()) {
-                ScienceTool tool = new ScienceTool(toolKey, displayName, aliases, defaultMeasurement,worldMeasurements,
+                ScienceTool tool = new ScienceTool(toolKey, displayName, aliases, defaultMeasurement, worldMeasurements,
                         worldRegionMeasurements, disabledWorlds);
                 this.tools.put(toolKey.toLowerCase(), tool);
                 continue;
@@ -232,6 +232,4 @@ public class ScienceToolManager {
                 .filter(key -> key.startsWith(hint.toLowerCase()))
                 .collect(Collectors.toList());
     }
-
-
 }

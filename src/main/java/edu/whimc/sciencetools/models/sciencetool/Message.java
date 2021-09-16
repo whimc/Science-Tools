@@ -31,29 +31,26 @@ public enum Message {
 
     public String format(ScienceTool tool, Player player) {
         FileConfiguration config = ScienceTools.getInstance().getConfig();
-        String fallback = (String) config.get("messages." + this.configPath);
+        String fallback = config.getString("messages." + this.configPath);
         ConfigurationSection section = config.getConfigurationSection("tools." + tool.getToolKey());
-        String local = (String) section.get("messages." + this.configPath);
+        String local = section.getString("messages." + this.configPath);
         // do all the tool checks here to see if the message is overridden
         // and to conditionally fill in information depending if 'tool' is a NumericScienceTool or not
         String message = "";
-        if(local != null)
+        if (local != null) {
             message = local;
-        else
+        } else {
             message = fallback;
-        message = message.replace(TOOL_PLACEHOLDER,tool.displayName);
-        if(tool instanceof NumericScienceTool) {
+        }
+        message = message.replace(TOOL_PLACEHOLDER, tool.displayName);
+        if (tool instanceof NumericScienceTool) {
             NumericScienceTool nTool = (NumericScienceTool) tool;
             double data = nTool.getData(player.getLocation());
             message = message.replace(MEASUREMENT_PLACEHOLDER, Utils.trimDecimals(data, nTool.getPrecision()));
-        }
-        else {
+            message = message.replace(UNIT_PLACEHOLDER, nTool.getMainUnit());
+        } else {
             String measurement = tool.getMeasurement(player.getLocation());
             message = message.replace(MEASUREMENT_PLACEHOLDER, measurement);
-        }
-        if(tool instanceof NumericScienceTool) {
-            NumericScienceTool nTool = (NumericScienceTool) tool;
-            message = message.replace(UNIT_PLACEHOLDER, nTool.getMainUnit());
         }
         return message;
     }
