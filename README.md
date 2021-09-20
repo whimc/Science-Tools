@@ -51,12 +51,21 @@ messages:
   disabled-in-world: 
 ```
 
-Example:
+Example for global config messages:
 ```yaml
 messages:
   measure-format: '{MEASUREMENT}'
   numeric-measure-format: 'The measured {TOOL} is {MEASUREMENT}{UNIT}'
   disabled-in-world: "We don't know how to measure that here"
+```
+
+Example for tool-specific config messages:
+```yaml
+tools:
+  ALTITUDE:
+    display-name: "altitude"
+    messages:
+      disabled-in-world: "{TOOL} cannot be measured here"
 ```
 
 #### Placeholders
