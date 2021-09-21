@@ -36,6 +36,45 @@ mysql:
   username: user
   password: pass
 ```
+### Messages
+Messages can have either global or tool-specific scope. The global config messages should define all message types. Tool-specific config messages do not need to define all message types, and will default to the global messages config if an undefined message type is needed to display to the player.
+
+Messages config will look like this:
+
+```yaml
+messages:
+  # The measure message to display
+  measure-format: 
+  # The numerical measure message to display
+  numeric-measure-format: 
+  # The disabled world message to display 
+  disabled-in-world: 
+```
+
+Example for global config messages:
+```yaml
+messages:
+  measure-format: '{MEASUREMENT}'
+  numeric-measure-format: 'The measured {TOOL} is {MEASUREMENT}{UNIT}'
+  disabled-in-world: "We don't know how to measure that here"
+```
+
+Example for tool-specific config messages:
+```yaml
+tools:
+  ALTITUDE:
+    display-name: "altitude"
+    messages:
+      disabled-in-world: "{TOOL} cannot be measured here"
+```
+
+#### Placeholders
+
+| Placeholder    | Description                                          |
+|----------------|------------------------------------------------------|
+|`{MEASUREMENT}` | The measurement of the tool at the player's position |
+|`{TOOL}`        | The display name of the tool                         |
+|`{UNIT}`        | The unit of the tool measurement                     |
 
 ### Unit Conversions
 Unit conversions config will look like this:

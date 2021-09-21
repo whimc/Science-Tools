@@ -1,6 +1,6 @@
 package edu.whimc.sciencetools;
 
-import edu.whimc.sciencetools.commands.ScienceToolCommand;
+import edu.whimc.sciencetools.commands.*;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;

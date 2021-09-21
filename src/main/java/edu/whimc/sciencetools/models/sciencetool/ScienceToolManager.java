@@ -49,6 +49,7 @@ public class ScienceToolManager {
 
         this.tools.clear();
 
+
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);
 

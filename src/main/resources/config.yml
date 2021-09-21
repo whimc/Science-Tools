@@ -12,6 +12,10 @@ conversions:
   fahrenheit:
     expression: "({VAL} * 9.0 / 5.0) + 32.0"
     unit: "°F"
+messages:
+  measure-format: '{MEASUREMENT}'
+  numeric-measure-format: 'The measured {TOOL} is {MEASUREMENT}{UNIT}'
+  disabled-in-world: "We don't know how to measure that here"
 tools:
   ALTITUDE:
     display-name: "altitude"
@@ -20,6 +24,8 @@ tools:
     precision: "4"
     conversions:
       - feet
+    messages:
+      numeric-measure-format: '{MEASUREMENT}'
     worlds:
       world:
         global-measurement: "{Y}"
@@ -31,6 +37,8 @@ tools:
     display-name: "oxygen level"
     default-measurement: "30 + rand(-0.5, 0.5)"
     unit: "%"
+    messages:
+      disabled-in-world: "Oxygen doesn't exist here"
     worlds:
       world:
         regions:
@@ -41,6 +49,8 @@ tools:
         regions:
           cage: "10"
           castle: "5"
+    disabled-worlds:
+      - world_the_end
 validation:
   tolerance: 1.0
   timeout: 30

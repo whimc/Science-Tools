@@ -64,23 +64,22 @@ public class NumericScienceTool extends ScienceTool {
     @Override
     public @Nullable String displayMeasurement(Player player) {
         // check if player in disabled world
+
         if (super.disabledWorlds.contains(player.getWorld())) {
-            Utils.msg(player, "&cWe don't know how to measure that here!");
+            Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
             return null;
         }
-
+        String message = Message.NUMERIC_MEASURE.format(this, player);
         double data = getData(player.getLocation());
 
-        StringBuilder message = new StringBuilder("&aThe measured " + this.displayName
-                + " is &f" + Utils.trimDecimals(data, this.precision) + this.unit + "&7");
-
         // display converted values
-        for (Conversion conversion : this.conversions) {
-            String converted = Utils.trimDecimals(conversion.convert(data), this.precision);
-            message.append(" (").append(converted).append(conversion.getUnit()).append(")");
+        for (Conversion conversion : conversions) {
+            String converted = Utils.trimDecimals(conversion.convert(data), precision);
+            message+=" ("+converted+conversion.getUnit()+")";
         }
 
-        Utils.msg(player, message.toString());
+        Utils.msg(player, message);
+
         return Utils.trimDecimals(data, this.precision) + this.unit;
     }
 
@@ -102,4 +101,10 @@ public class NumericScienceTool extends ScienceTool {
         return this.unit;
     }
 
+    /**
+     * @return The tool's precision of measurement.
+     */
+    public int getPrecision() {
+        return this.precision;
+    }
 }

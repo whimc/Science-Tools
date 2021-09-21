@@ -34,7 +34,6 @@ public class ScienceTool {
     protected String displayName;
     /* Aliases for the command. */
     protected List<String> aliases;
-
     /* Default measurement to be used when no region or world measurement is found. */
     protected String defaultMeasurement;
     /* World-specific global measurements. */
@@ -152,11 +151,9 @@ public class ScienceTool {
      */
     public @Nullable String displayMeasurement(Player player) {
         if (this.disabledWorlds.contains(player.getWorld())) {
-            Utils.msg(player, "&cWe don't know how to measure " + this.displayName + " here!");
-            return null;
+            Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
         }
-
-        String measurement = getMeasurement(player.getLocation());
+        String measurement = Message.NUMERIC_MEASURE.format(this, player);
         Utils.msg(player, measurement);
         return measurement;
     }
@@ -241,5 +238,4 @@ public class ScienceTool {
             return Collections.emptyList();
         }
     }
-
 }
