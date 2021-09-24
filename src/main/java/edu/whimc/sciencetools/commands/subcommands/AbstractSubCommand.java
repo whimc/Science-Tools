@@ -1,46 +1,18 @@
 package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.utils.Utils;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is a template for all SubCommands.
  */
 public abstract class AbstractSubCommand {
-
-    /**
-     * Permission levels that players can have.
-     */
-    public enum Permission {
-        ADMIN("admin"),
-        USER("user");
-
-        private final String perm;
-
-        /**
-         * Constructs a permission level with the specified name.
-         *
-         * @param perm The name of the permission.
-         */
-        Permission(String perm) {
-            this.perm = perm;
-        }
-
-        /**
-         * @return The permission as a String in the form: "sciencetools.perm".
-         */
-        @Override
-        public @NotNull String toString() {
-            return "sciencetools." + perm;
-        }
-    }
 
     /* The command's name. */
     private final String command;
@@ -52,7 +24,6 @@ public abstract class AbstractSubCommand {
     private final String description;
     /* The permission level required to use the command. */
     private final Permission permission;
-
     /**
      * Constructs a command with the given arguments.
      *
@@ -260,6 +231,33 @@ public abstract class AbstractSubCommand {
         }
 
         return tabRoutine(sender, args);
+    }
+
+    /**
+     * Permission levels that players can have.
+     */
+    public enum Permission {
+        ADMIN("admin"),
+        USER("user");
+
+        private final String perm;
+
+        /**
+         * Constructs a permission level with the specified name.
+         *
+         * @param perm The name of the permission.
+         */
+        Permission(String perm) {
+            this.perm = perm;
+        }
+
+        /**
+         * @return The permission as a String in the form: "sciencetools.perm".
+         */
+        @Override
+        public @NotNull String toString() {
+            return "sciencetools." + perm;
+        }
     }
 
 }
