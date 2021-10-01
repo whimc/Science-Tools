@@ -2,7 +2,6 @@ package edu.whimc.sciencetools.utils.sql;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.utils.sql.migration.SchemaManager;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

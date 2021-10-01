@@ -2,7 +2,6 @@ package edu.whimc.sciencetools.javascript;
 
 import edu.whimc.sciencetools.commands.CommandError;
 import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
-
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;

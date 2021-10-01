@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +74,7 @@ public class NumericScienceTool extends ScienceTool {
         // display converted values
         for (Conversion conversion : conversions) {
             String converted = Utils.trimDecimals(conversion.convert(data), precision);
-            message+=" ("+converted+conversion.getUnit()+")";
+            message += " (" + converted + conversion.getUnit() + ")";
         }
 
         Utils.msg(player, message);

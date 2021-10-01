@@ -19,10 +19,10 @@
 			<id>sk89q-repo</id>
 			<url>https://maven.enginehub.org/repo/</url>
 		</repository>
-		<!-- Elmakers repo for Quests -->
+		<!-- Maven repo for Quests -->
 		<repository>
-			<id>elmakers-repo</id>
-			<url>https://maven.elmakers.com/repository/</url>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 
@@ -55,10 +55,9 @@
 		</dependency>
 		<!-- Add Quests to the build -->
 		<dependency>
-			<groupId>me.blackvein.quests</groupId>
-			<artifactId>quests</artifactId>
-			<version>3.6.2</version>
-			<scope>provided</scope>
+			<groupId>com.github.PikaMug.Quests</groupId>
+			<artifactId>quests-main</artifactId>
+			<version>4.0.8</version>
 		</dependency>
     </dependencies>
 

@@ -45,7 +45,7 @@ public class JSInterpreter extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * Runs interpreted JavaScript.
      */
     @Override

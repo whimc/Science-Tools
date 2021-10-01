@@ -2,7 +2,6 @@ package edu.whimc.sciencetools.javascript;
 
 import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
 import org.bukkit.World;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

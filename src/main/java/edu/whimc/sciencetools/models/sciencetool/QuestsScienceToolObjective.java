@@ -5,9 +5,9 @@ import edu.whimc.sciencetools.utils.Utils;
 import me.blackvein.quests.CustomObjective;
 import me.blackvein.quests.Quest;
 import me.blackvein.quests.Quests;
+import me.blackvein.quests.CustomObjective;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-
 import java.util.Map;
 
 public class QuestsScienceToolObjective extends CustomObjective {

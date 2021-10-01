@@ -5,7 +5,6 @@ import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

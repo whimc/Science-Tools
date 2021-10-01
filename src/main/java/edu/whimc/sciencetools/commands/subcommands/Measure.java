@@ -8,7 +8,6 @@ import edu.whimc.sciencetools.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class Measure extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * Displays the measurement of the given tool to the sender.
      */
     @Override
@@ -46,7 +45,8 @@ public class Measure extends AbstractSubCommand {
         // ensure tool is valid
         if (tool == null) {
             Utils.msg(sender, "&cThe tool \"&4" + args[0] + "&c\" does not exist!");
-            Utils.msg(sender, "&cAvailable tools: &7" +
+            Utils.msg(sender, "&cAvailable tools: &7"
+                    +
                     String.join(", ", manager.toolTabComplete("")));
             return false;
         }
@@ -64,7 +64,7 @@ public class Measure extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * Auto-completes the list of science tools.
      */
     @Override

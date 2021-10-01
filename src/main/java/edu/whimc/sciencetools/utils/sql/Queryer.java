@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +22,18 @@ public class Queryer {
 
     /* Query for grabbing all science tool measurements */
     private static final String QUERY_GET_PLAYER_MEASUREMENTS =
-            "SELECT * " +
-                    "FROM whimc_sciencetools " +
+            "SELECT * "
+                    +
+                    "FROM whimc_sciencetools "
+                    +
                     "WHERE uuid = ?";
 
     /* Query for adding a measurement */
     private static final String QUERY_ADD_PLAYER_MEASUREMENT =
-            "INSERT INTO whimc_sciencetools " +
-                    "(time, uuid, username, world, x, y, z, tool, measurement) " +
+            "INSERT INTO whimc_sciencetools "
+                    +
+                    "(time, uuid, username, world, x, y, z, tool, measurement) "
+                    +
                     "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final ScienceTools plugin;
@@ -90,6 +93,7 @@ public class Queryer {
 
     /**
      * Store a new measurement in the database.
+     *
      * @param measurement The measurement.
      */
     public void storeNewMeasurement(Measurement measurement) {
@@ -106,7 +110,9 @@ public class Queryer {
 
     /**
      * Get all measurements for a target player.
+     *
      * @param target The target player.
+     *
      * @param callback Called with a list of measurements for the target player.
      */
     public void getMeasurements(Player target, Consumer<List<Measurement>> callback) {

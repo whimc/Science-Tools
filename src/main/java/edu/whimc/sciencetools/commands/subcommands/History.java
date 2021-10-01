@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +28,7 @@ public class History extends AbstractSubCommand {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * View the measurement history of yourself or someone else.
      */
     @Override
