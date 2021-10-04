@@ -5,9 +5,8 @@ import edu.whimc.sciencetools.javascript.JSExpression;
 import edu.whimc.sciencetools.javascript.JSFunction;
 import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.utils.Utils;
-import org.bukkit.command.CommandSender;
-
 import java.util.Arrays;
+import org.bukkit.command.CommandSender;
 
 /**
  * This class handles the interpretation of JavaScript expressions.
@@ -46,7 +45,7 @@ public class JSInterpreter extends AbstractSubCommand {
     /**
      * {@inheritDoc}
      *
-     * Runs interpreted JavaScript.
+     * <p>Runs interpreted JavaScript.
      */
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {

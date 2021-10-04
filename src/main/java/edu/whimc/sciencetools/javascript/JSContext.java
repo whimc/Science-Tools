@@ -93,14 +93,14 @@ public class JSContext {
     }
 
     /**
-     * @return The Double value to convert.
+     * The Double value to convert.
      */
     public double getToConvert() {
         return this.toConvert;
     }
 
     /**
-     * @return The location to evaluate the expression.
+     * The location to evaluate the expression.
      */
     public Location getLocation() {
         return this.location;

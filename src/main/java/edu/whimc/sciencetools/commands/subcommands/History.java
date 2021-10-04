@@ -2,14 +2,14 @@ package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 
 /**
  * The command for seeing a user's measurement history.
@@ -29,12 +29,11 @@ public class History extends AbstractSubCommand {
     /**
      * {@inheritDoc}
      *
-     * View the measurement history of yourself or someone else.
+     * <p>View the measurement history of yourself or someone else.
      */
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
         // TODO Display measurements in a GUI
-
 
         // display sender's measurements
         if (args.length == 0 || !sender.hasPermission(Permission.ADMIN.toString())) {
@@ -53,9 +52,8 @@ public class History extends AbstractSubCommand {
             return false;
         }
 
-        sendMeasurements(sender, target);
-
         // TODO Add start/end times
+        sendMeasurements(sender, target);
         return false;
     }
 
@@ -85,12 +83,7 @@ public class History extends AbstractSubCommand {
                     .collect(Collectors.toList());
         }
 
-
         // TODO add start/end time tab completion
-        // <start time> <end time>
-//        if (args.length == 2 || args.length == 3) {
-//            return Collections.singletonList("\"" + Utils.getDateNow() + "\"");
-//        }
 
         return Collections.emptyList();
     }

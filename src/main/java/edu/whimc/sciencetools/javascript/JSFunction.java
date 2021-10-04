@@ -48,28 +48,28 @@ public enum JSFunction {
     }
 
     /**
-     * @return The String used in the config to call the function.
+     * The String used in the config to call the function.
      */
     public String getKey() {
         return this.key;
     }
 
     /**
-     * @return A description of how the function is used.
+     * A description of how the function is used.
      */
     public String getUsage() {
         return this.usage;
     }
 
     /**
-     * @return The JavaScript definition of the function.
+     * The JavaScript definition of the function.
      */
     public String getDefinition() {
         return this.definition == null ? "" : this.definition;
     }
 
     /**
-     * @return The function's key and description of how it is used.
+     * The function's key and description of how it is used.
      */
     public String fullUsage() {
         return "&f\"&e&o" + this.key + "&f\" &7- " + this.usage;

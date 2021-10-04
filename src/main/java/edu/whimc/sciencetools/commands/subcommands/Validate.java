@@ -5,6 +5,15 @@ import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.utils.Utils;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -15,11 +24,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * The command for validating a ScienceTool measurement.
@@ -43,53 +47,9 @@ public class Validate extends AbstractSubCommand implements Listener {
     }
 
     /**
-     * Holds validation information.
-     */
-    private static class Validation {
-
-        private final int taskId;
-        private final double expected;
-        private final NumericScienceTool tool;
-
-        /**
-         * Constructs a Validation task.
-         *
-         * @param taskId   The id of this task.
-         * @param expected The expected Double value to receive.
-         * @param tool     The NumericScienceTool to be validated.
-         */
-        public Validation(int taskId, double expected, NumericScienceTool tool) {
-            this.taskId = taskId;
-            this.expected = expected;
-            this.tool = tool;
-        }
-
-        /**
-         * @return The task id.
-         */
-        public int getTaskId() {
-            return this.taskId;
-        }
-
-        /**
-         * @return The expected Double value.
-         */
-        public double getExpected() {
-            return this.expected;
-        }
-
-        /**
-         * @return The NumericScienceTool.
-         */
-        public NumericScienceTool getTool() {
-            return this.tool;
-        }
-    }
-
-    /**
      * {@inheritDoc}
-     * <p>
-     * Validates the given tool's value.
+     *
+     * <p>Validates the given tool's value.
      */
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {
@@ -99,8 +59,8 @@ public class Validate extends AbstractSubCommand implements Listener {
         // ensure the tool is a valid tool
         if (baseTool == null) {
             Utils.msg(sender, "&cThe tool \"&4" + args[0] + "&c\" does not exist!");
-            Utils.msg(sender, "&cAvailable tools: &7" +
-                    String.join(", ", manager.numericToolTabComplete("")));
+            Utils.msg(sender, "&cAvailable tools: &7"
+                    + String.join(", ", manager.numericToolTabComplete("")));
             return false;
         }
 
@@ -132,11 +92,17 @@ public class Validate extends AbstractSubCommand implements Listener {
 
             // handle passed coordinates
             Double x = Utils.parseDoubleWithError(sender, args[3]);
-            if (x == null) return false;
+            if (x == null) {
+                return false;
+            }
             Double y = Utils.parseDoubleWithError(sender, args[4]);
-            if (y == null) return false;
+            if (y == null) {
+                return false;
+            }
             Double z = Utils.parseDoubleWithError(sender, args[5]);
-            if (z == null) return false;
+            if (z == null) {
+                return false;
+            }
 
             expected = tool.getData(new Location(world, x, y, z));
         } else {
@@ -165,8 +131,8 @@ public class Validate extends AbstractSubCommand implements Listener {
 
     /**
      * {@inheritDoc}
-     * <p>
-     * Handles auto-completing various arguments for the command.
+     *
+     * <p>Handles auto-completing various arguments for the command.
      */
     @Override
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
@@ -239,7 +205,8 @@ public class Validate extends AbstractSubCommand implements Listener {
         double number = Double.parseDouble(match);
 
         // ensure that the provided number is within the tool's tolerance level
-        if (Math.abs(number - validation.getExpected()) < ScienceTools.getInstance().getConfig().getDouble("validation.tolerance")) {
+        if (Math.abs(number - validation.getExpected())
+                < ScienceTools.getInstance().getConfig().getDouble("validation.tolerance")) {
             syncDoConfigTasks(player, "success", tool, number);
         } else {
             syncDoConfigTasks(player, "failure", tool, number);
@@ -257,7 +224,8 @@ public class Validate extends AbstractSubCommand implements Listener {
      * @param value  The tool's value.
      */
     private void syncDoConfigTasks(Player player, String path, NumericScienceTool tool, Double value) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ScienceTools.getInstance(), () -> doConfigTasks(player, path, tool, value));
+        Bukkit.getScheduler()
+                .scheduleSyncDelayedTask(ScienceTools.getInstance(), () -> doConfigTasks(player, path, tool, value));
     }
 
     /**
@@ -296,7 +264,52 @@ public class Validate extends AbstractSubCommand implements Listener {
 
         for (String cmd : config.getStringList("validation.commands." + path)) {
             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(),
-                    cmd.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit).replace("{PLAYER}", player.getName()));
+                    cmd.replace("{TOOL}", type).replace("{VAL}", value).replace("{UNIT}", unit)
+                            .replace("{PLAYER}", player.getName()));
+        }
+    }
+
+    /**
+     * Holds validation information.
+     */
+    private static class Validation {
+
+        private final int taskId;
+        private final double expected;
+        private final NumericScienceTool tool;
+
+        /**
+         * Constructs a Validation task.
+         *
+         * @param taskId   The id of this task.
+         * @param expected The expected Double value to receive.
+         * @param tool     The NumericScienceTool to be validated.
+         */
+        public Validation(int taskId, double expected, NumericScienceTool tool) {
+            this.taskId = taskId;
+            this.expected = expected;
+            this.tool = tool;
+        }
+
+        /**
+         * The task id.
+         */
+        public int getTaskId() {
+            return this.taskId;
+        }
+
+        /**
+         * The expected Double value.
+         */
+        public double getExpected() {
+            return this.expected;
+        }
+
+        /**
+         * The NumericScienceTool.
+         */
+        public NumericScienceTool getTool() {
+            return this.tool;
         }
     }
 

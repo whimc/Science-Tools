@@ -24,6 +24,7 @@ public abstract class AbstractSubCommand {
     private final String description;
     /* The permission level required to use the command. */
     private final Permission permission;
+
     /**
      * Constructs a command with the given arguments.
      *
@@ -33,7 +34,8 @@ public abstract class AbstractSubCommand {
      * @param description  A description of what the command does.
      * @param permission   The required permission level to use the command.
      */
-    public AbstractSubCommand(String command, List<String> args, List<String> optionalArgs, String description, Permission permission) {
+    public AbstractSubCommand(String command, List<String> args, List<String> optionalArgs, String description,
+                              Permission permission) {
         this.command = command;
         this.args = args == null ? Arrays.asList() : args;
         this.optionalArgs = optionalArgs == null ? Arrays.asList() : optionalArgs;
@@ -72,14 +74,14 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The full description of the SubCommand.
+     * The full description of the SubCommand.
      */
     public @NotNull String fullDescription() {
         return this + " &7- " + this.description;
     }
 
     /**
-     * @return Whether or not the SubCommand has optional arguments.
+     * Whether the SubCommand has optional arguments.
      */
     public boolean hasOptionalArgs() {
         return this.optionalArgs.size() != 0;
@@ -129,7 +131,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The subcommand's usage excluding optional arguments.
+     * The subcommand's usage excluding optional arguments.
      */
     public @NotNull String getUsage() {
         return "&e/sciencetools " + command + " " + String.join(" ", IntStream
@@ -139,7 +141,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The subcommand's usage including optional arguments.
+     * The subcommand's usage including optional arguments.
      */
     public @NotNull String getOptionalUsage() {
         return getUsage() + " " + String.join(" ", IntStream
@@ -149,7 +151,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The SubCommand as a String.
+     * The SubCommand as a String.
      */
     @Override
     public @NotNull String toString() {
@@ -157,14 +159,14 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The minimum number of arguments required to run the command.
+     * The minimum number of arguments required to run the command.
      */
     public int getMinArgs() {
         return args.size();
     }
 
     /**
-     * @return The maximum number of arguments that can be passed into the command.
+     * The maximum number of arguments that can be passed into the command.
      */
     public int getMaxArgs() {
         return getMinArgs() + optionalArgs.size();
@@ -252,7 +254,7 @@ public abstract class AbstractSubCommand {
         }
 
         /**
-         * @return The permission as a String in the form: "sciencetools.perm".
+         * The permission as a String in the form: "sciencetools.perm".
          */
         @Override
         public @NotNull String toString() {

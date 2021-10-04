@@ -20,14 +20,14 @@ public class CommandError extends RuntimeException {
     }
 
     /**
-     * @return The error message.
+     * The error message.
      */
     public String getMessage() {
         return this.message;
     }
 
     /**
-     * @return Whether or not the command usage should be sent.
+     * Whether the command usage should be sent.
      */
     public boolean isSendUsage() {
         return this.sendUsage;

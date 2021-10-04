@@ -45,21 +45,31 @@ public class Conversion {
     }
 
     /**
-     * @return The Conversion's name.
+     * The Conversion's name.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * @return The unit being converted to.
+     * The unit being converted to.
      */
     public String getUnit() {
         return this.unit;
     }
 
     /**
-     * @return The Conversion equation.
+     * Sets a new unit and saves it to the config.
+     *
+     * @param unit The new unit.
+     */
+    public void setUnit(String unit) {
+        this.unit = unit;
+        this.manager.saveToConfig(this);
+    }
+
+    /**
+     * The Conversion equation.
      */
     public JSExpression getExpression() {
         return this.expression;
@@ -73,16 +83,6 @@ public class Conversion {
      */
     public void setExpression(CommandSender sender, JSNumericExpression expression) {
         this.expression = expression;
-        this.manager.saveToConfig(this);
-    }
-
-    /**
-     * Sets a new unit and saves it to the config.
-     *
-     * @param unit The new unit.
-     */
-    public void setUnit(String unit) {
-        this.unit = unit;
         this.manager.saveToConfig(this);
     }
 

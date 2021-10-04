@@ -1,11 +1,11 @@
 package edu.whimc.sciencetools.javascript;
 
 import edu.whimc.sciencetools.commands.CommandError;
-import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
  * The JavaScript engine.
@@ -28,6 +28,7 @@ public class JSEngine {
                 engine.eval(func.getDefinition());
             }
         } catch (ScriptException ignored) {
+            // This should never happen
         }
     }
 
@@ -72,7 +73,8 @@ public class JSEngine {
             type = res.getClass().getSimpleName();
         }
 
-        throw new CommandError("&eThe JavaScript expression must resolve to a number (Found type \"" + type + "\")", false);
+        throw new CommandError("&eThe JavaScript expression must resolve to a number (Found type \"" + type + "\")",
+                false);
     }
 
 }

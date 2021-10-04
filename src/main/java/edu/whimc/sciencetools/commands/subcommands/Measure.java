@@ -5,11 +5,11 @@ import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
 import edu.whimc.sciencetools.utils.Utils;
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The command for measuring the value of each ScienceTool.
@@ -28,7 +28,7 @@ public class Measure extends AbstractSubCommand {
     /**
      * {@inheritDoc}
      *
-     * Displays the measurement of the given tool to the sender.
+     * <p>Displays the measurement of the given tool to the sender.
      */
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
@@ -65,7 +65,7 @@ public class Measure extends AbstractSubCommand {
     /**
      * {@inheritDoc}
      *
-     * Auto-completes the list of science tools.
+     * <p>Auto-completes the list of science tools.
      */
     @Override
     protected List<String> tabRoutine(CommandSender sender, String[] args) {
