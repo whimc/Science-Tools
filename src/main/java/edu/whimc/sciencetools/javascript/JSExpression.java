@@ -16,9 +16,6 @@ public class JSExpression {
         this.expr = expr;
     }
 
-    /**
-     * The JavaScript expression.
-     */
     public String getExpression() {
         return this.expr;
     }
@@ -57,9 +54,6 @@ public class JSExpression {
         return JSPlaceholder.prepareExpression(ctx, this.expr);
     }
 
-    /**
-     * The JSExpression as a String.
-     */
     @Override
     public String toString() {
         return this.expr;

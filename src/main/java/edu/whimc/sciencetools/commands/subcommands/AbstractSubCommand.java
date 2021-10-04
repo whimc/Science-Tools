@@ -151,23 +151,17 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * The SubCommand as a String.
+     * The SubCommand with colors prefixed with the plugin base-command.
      */
     @Override
     public @NotNull String toString() {
         return "&e&o/sciencetools " + command;
     }
 
-    /**
-     * The minimum number of arguments required to run the command.
-     */
     public int getMinArgs() {
         return args.size();
     }
 
-    /**
-     * The maximum number of arguments that can be passed into the command.
-     */
     public int getMaxArgs() {
         return getMinArgs() + optionalArgs.size();
     }

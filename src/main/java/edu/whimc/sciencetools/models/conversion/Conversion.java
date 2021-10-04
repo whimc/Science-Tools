@@ -44,16 +44,10 @@ public class Conversion {
         return this.expression.evaluate(JSContext.create(val));
     }
 
-    /**
-     * The Conversion's name.
-     */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * The unit being converted to.
-     */
     public String getUnit() {
         return this.unit;
     }
@@ -68,9 +62,6 @@ public class Conversion {
         this.manager.saveToConfig(this);
     }
 
-    /**
-     * The Conversion equation.
-     */
     public JSExpression getExpression() {
         return this.expression;
     }

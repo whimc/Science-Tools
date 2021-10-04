@@ -46,8 +46,7 @@ public class Measure extends AbstractSubCommand {
         if (tool == null) {
             Utils.msg(sender, "&cThe tool \"&4" + args[0] + "&c\" does not exist!");
             Utils.msg(sender, "&cAvailable tools: &7"
-                    +
-                    String.join(", ", manager.toolTabComplete("")));
+                    + String.join(", ", manager.toolTabComplete("")));
             return false;
         }
 

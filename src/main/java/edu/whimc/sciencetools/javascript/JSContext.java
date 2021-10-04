@@ -92,16 +92,10 @@ public class JSContext {
         return new JSContext(location, toConvert);
     }
 
-    /**
-     * The Double value to convert.
-     */
     public double getToConvert() {
         return this.toConvert;
     }
 
-    /**
-     * The location to evaluate the expression.
-     */
     public Location getLocation() {
         return this.location;
     }

@@ -93,16 +93,10 @@ public class NumericScienceTool extends ScienceTool {
         return expression.evaluate(JSContext.create(loc));
     }
 
-    /**
-     * The tool's main unit of measurement.
-     */
     public String getMainUnit() {
         return this.unit;
     }
 
-    /**
-     * The tool's precision of measurement.
-     */
     public int getPrecision() {
         return this.precision;
     }

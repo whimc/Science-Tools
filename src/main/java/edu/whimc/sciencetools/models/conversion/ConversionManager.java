@@ -103,13 +103,6 @@ public class ConversionManager {
     }
 
     /**
-     * The Collection of Conversions.
-     */
-    public Collection<Conversion> getConversions() {
-        return conversions.values();
-    }
-
-    /**
      * Saves the Conversion to the config.
      *
      * @param conversion The conversion to save.

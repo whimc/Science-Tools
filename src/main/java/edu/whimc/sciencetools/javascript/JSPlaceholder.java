@@ -66,15 +66,12 @@ public class JSPlaceholder {
         JSPlaceholder.placeholders.add(new JSPlaceholder(key, usage, replacement));
     }
 
-    /**
-     * Clears all of the custom placeholders.
-     */
     public static void unregisterCustomPlaceholders() {
         JSPlaceholder.placeholders.clear();
     }
 
     /**
-     * The list of all placeholders.
+     * The list of all placeholders (default + custom).
      */
     public static List<JSPlaceholder> getPlaceholders() {
         List<JSPlaceholder> result = new ArrayList<>(DEFAULT_PLACEHOLDERS);
@@ -99,7 +96,7 @@ public class JSPlaceholder {
     }
 
     /**
-     * the String used in the config.
+     * The String used in the config.
      */
     public String getKey() {
         return this.key;

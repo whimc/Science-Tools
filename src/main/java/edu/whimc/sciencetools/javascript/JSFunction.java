@@ -44,28 +44,13 @@ public enum JSFunction {
         this.key = key;
         this.usage = usage;
         this.definition = definition;
-
-    }
-
-    /**
-     * The String used in the config to call the function.
-     */
-    public String getKey() {
-        return this.key;
-    }
-
-    /**
-     * A description of how the function is used.
-     */
-    public String getUsage() {
-        return this.usage;
     }
 
     /**
      * The JavaScript definition of the function.
      */
     public String getDefinition() {
-        return this.definition == null ? "" : this.definition;
+        return this.definition;
     }
 
     /**

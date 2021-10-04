@@ -157,16 +157,10 @@ public class ScienceTool {
         return measurement;
     }
 
-    /**
-     * The tool's key.
-     */
     public String getToolKey() {
         return this.toolKey;
     }
 
-    /**
-     * The tool's display name.
-     */
     public String getDisplayName() {
         return this.displayName;
     }
