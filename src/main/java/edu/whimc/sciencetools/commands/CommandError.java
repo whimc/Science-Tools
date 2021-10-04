@@ -19,16 +19,10 @@ public class CommandError extends RuntimeException {
         this.sendUsage = sendUsage;
     }
 
-    /**
-     * @return The error message.
-     */
     public String getMessage() {
         return this.message;
     }
 
-    /**
-     * @return Whether or not the command usage should be sent.
-     */
     public boolean isSendUsage() {
         return this.sendUsage;
     }

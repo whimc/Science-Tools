@@ -3,12 +3,11 @@ package edu.whimc.sciencetools.models.conversion;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.utils.Utils;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles operations regarding Conversions (adding, removing, saving, loading).
@@ -101,13 +100,6 @@ public class ConversionManager {
      */
     public Conversion getConversion(String key) {
         return this.conversions.getOrDefault(key, null);
-    }
-
-    /**
-     * @return The Collection of Conversions.
-     */
-    public Collection<Conversion> getConversions() {
-        return conversions.values();
     }
 
     /**

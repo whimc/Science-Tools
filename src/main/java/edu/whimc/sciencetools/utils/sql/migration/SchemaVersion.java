@@ -1,11 +1,14 @@
 package edu.whimc.sciencetools.utils.sql.migration;
 
 import com.google.common.io.Files;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Represents a schema change. The first schema should create the necessary database layout while subsequent
+ * SchemaVersions should make changes to the existing database.
+ */
 public abstract class SchemaVersion {
 
     private final int version;
@@ -26,6 +29,12 @@ public abstract class SchemaVersion {
 
     protected abstract void migrateRoutine(Connection connection) throws SQLException;
 
+    /**
+     * Run this schema's migration on the database.
+     *
+     * @param manager The schema manager.
+     * @return Whether the migration was successful.
+     */
     public final boolean migrate(SchemaManager manager) {
         // Migrate the database
         try {

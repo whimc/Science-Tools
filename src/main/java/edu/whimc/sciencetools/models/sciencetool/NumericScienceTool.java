@@ -4,14 +4,13 @@ import edu.whimc.sciencetools.javascript.JSContext;
 import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.utils.Utils;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * A ScienceTool that only uses numeric values. Measurements from this type of tool can be validated.
@@ -75,7 +74,7 @@ public class NumericScienceTool extends ScienceTool {
         // display converted values
         for (Conversion conversion : conversions) {
             String converted = Utils.trimDecimals(conversion.convert(data), precision);
-            message+=" ("+converted+conversion.getUnit()+")";
+            message += " (" + converted + conversion.getUnit() + ")";
         }
 
         Utils.msg(player, message);
@@ -94,16 +93,10 @@ public class NumericScienceTool extends ScienceTool {
         return expression.evaluate(JSContext.create(loc));
     }
 
-    /**
-     * @return The tool's main unit of measurement.
-     */
     public String getMainUnit() {
         return this.unit;
     }
 
-    /**
-     * @return The tool's precision of measurement.
-     */
     public int getPrecision() {
         return this.precision;
     }

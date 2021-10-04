@@ -2,12 +2,17 @@ package edu.whimc.sciencetools.utils.sql.migration;
 
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.utils.sql.migration.schemas.Schema_1;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Connection;
 
+/**
+ * Manages a linked list of MySQL schema changes that are sequentially executed on the configured database.
+ * The current schema version is saved as an int inside VERSION_FILE_NAME. The manager reads this file then goes through
+ * each numbered schema. If the schema version is greater than that what's saved, its migration is ran and the current
+ * version is updated.
+ */
 public class SchemaManager {
 
     public static final String VERSION_FILE_NAME = ".schema_version";
@@ -38,7 +43,12 @@ public class SchemaManager {
         }
     }
 
-    public boolean initialize() {
+    /**
+     * Run the migration process.
+     *
+     * @return Whether any changes were successful (if ran).
+     */
+    public boolean migrate() {
         int curVersion = getCurrentVersion();
 
         SchemaVersion schema = BASE_SCHEMA;

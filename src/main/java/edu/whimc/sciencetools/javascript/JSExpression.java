@@ -16,15 +16,12 @@ public class JSExpression {
         this.expr = expr;
     }
 
-    public void setExpression(String newExpr) {
-        this.expr = newExpr;
-    }
-
-    /**
-     * @return The JavaScript expression.
-     */
     public String getExpression() {
         return this.expr;
+    }
+
+    public void setExpression(String newExpr) {
+        this.expr = newExpr;
     }
 
     /**
@@ -57,9 +54,6 @@ public class JSExpression {
         return JSPlaceholder.prepareExpression(ctx, this.expr);
     }
 
-    /**
-     * @return The JSExpression as a String.
-     */
     @Override
     public String toString() {
         return this.expr;
