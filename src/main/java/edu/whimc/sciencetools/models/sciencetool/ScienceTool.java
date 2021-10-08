@@ -153,7 +153,7 @@ public class ScienceTool {
         if (this.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
         }
-        String measurement = Message.NUMERIC_MEASURE.format(this, player);
+        String measurement = Message.MEASURE.format(this, player);
         Utils.msg(player, measurement);
         return measurement;
     }
