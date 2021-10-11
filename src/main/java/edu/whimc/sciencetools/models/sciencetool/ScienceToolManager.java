@@ -45,13 +45,13 @@ public class ScienceToolManager {
      */
     public void loadTools(@NotNull ConversionManager conversionManager) {
         Utils.log("&eLoading Science Tools from config");
-        FileConfiguration config = ScienceTools.getInstance().getConfig();
 
         // Remove potentially pre-existing placeholders and root commands
         JSPlaceholder.unregisterCustomPlaceholders();
         this.tools.values().forEach(tool -> tool.command.unregister());
         this.tools.clear();
 
+        FileConfiguration config = ScienceTools.getInstance().getConfig();
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);
 
