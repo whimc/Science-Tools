@@ -6,14 +6,19 @@ import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
 import edu.whimc.sciencetools.utils.Utils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Manages the ScienceTools.
@@ -48,7 +53,6 @@ public class ScienceToolManager {
         this.tools.values().forEach(tool -> tool.command.unregister());
 
         this.tools.clear();
-
 
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);

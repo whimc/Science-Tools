@@ -3,19 +3,22 @@ package edu.whimc.sciencetools.utils.sql;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Consumer;
-
 /**
- * Handles storing position data
+ * Handles storing position data.
  *
  * @author Jack Henhapl
  */
@@ -23,19 +26,30 @@ public class Queryer {
 
     /* Query for grabbing all science tool measurements */
     private static final String QUERY_GET_PLAYER_MEASUREMENTS =
-            "SELECT * " +
-                    "FROM whimc_sciencetools " +
+            "SELECT * "
+                    +
+                    "FROM whimc_sciencetools "
+                    +
                     "WHERE uuid = ?";
 
     /* Query for adding a measurement */
     private static final String QUERY_ADD_PLAYER_MEASUREMENT =
-            "INSERT INTO whimc_sciencetools " +
-                    "(time, uuid, username, world, x, y, z, tool, measurement) " +
+            "INSERT INTO whimc_sciencetools "
+                    +
+                    "(time, uuid, username, world, x, y, z, tool, measurement) "
+                    +
                     "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final ScienceTools plugin;
     private final MySQLConnection sqlConnection;
 
+    /**
+     * Create a Queryer. The callback is useful for determining if the database could be successfully initialized.
+     * if the value of the Queryer in the callback is null, this means the plugin could not connect to the database.
+     *
+     * @param plugin The main plugin instance.
+     * @param callback A callback containing an instance of this Queryer if successful and null if not.
+     */
     public Queryer(ScienceTools plugin, Consumer<Queryer> callback) {
         this.plugin = plugin;
         this.sqlConnection = new MySQLConnection(plugin);
@@ -62,7 +76,8 @@ public class Queryer {
         return statement;
     }
 
-    private void getMeasurementsFromResultSet(ResultSet results, Consumer<List<Measurement>> callback) throws SQLException {
+    private void getMeasurementsFromResultSet(ResultSet results, Consumer<List<Measurement>> callback)
+            throws SQLException {
         List<Measurement> measurements = new ArrayList<>();
 
         while (results.next()) {
@@ -90,6 +105,7 @@ public class Queryer {
 
     /**
      * Store a new measurement in the database.
+     *
      * @param measurement The measurement.
      */
     public void storeNewMeasurement(Measurement measurement) {
@@ -106,7 +122,8 @@ public class Queryer {
 
     /**
      * Get all measurements for a target player.
-     * @param target The target player.
+     *
+     * @param target   The target player.
      * @param callback Called with a list of measurements for the target player.
      */
     public void getMeasurements(Player target, Consumer<List<Measurement>> callback) {

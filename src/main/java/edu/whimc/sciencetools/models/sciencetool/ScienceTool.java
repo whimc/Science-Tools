@@ -6,6 +6,11 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import edu.whimc.sciencetools.utils.Utils;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,12 +21,6 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Super class to represent a ScienceTool. The measurement is just a string that is not evaluated.
@@ -158,20 +157,17 @@ public class ScienceTool {
         return measurement;
     }
 
-    /**
-     * @return The tool's key.
-     */
     public String getToolKey() {
         return this.toolKey;
     }
 
-    /**
-     * @return The tool's display name.
-     */
     public String getDisplayName() {
         return this.displayName;
     }
 
+    /**
+     * Subclass used to register/unregister of the root command for this tool.
+     */
     public class MeasureCommand extends Command {
 
         private MeasureCommand() {
@@ -206,6 +202,9 @@ public class ScienceTool {
             }
         }
 
+        /**
+         * Unregister this command from the command map.
+         */
         public void unregister() {
             if (!super.unregister(getCommandMap())) {
                 Utils.log("&c\t- Error unregistering /" + ScienceTool.this.toolKey);
@@ -234,7 +233,8 @@ public class ScienceTool {
 
         @NotNull
         @Override
-        public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+        public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args)
+                throws IllegalArgumentException {
             return Collections.emptyList();
         }
     }

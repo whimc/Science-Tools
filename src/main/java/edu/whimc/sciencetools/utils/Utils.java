@@ -1,6 +1,9 @@
 package edu.whimc.sciencetools.utils;
 
 import edu.whimc.sciencetools.ScienceTools;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -9,11 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * All of the utility functions.
@@ -73,6 +71,12 @@ public class Utils {
         return String.format("%,." + precision + "f", val);
     }
 
+    /**
+     * Set a user to receive debug messages.
+     * This is a pretty weird way of doing this and somewhat unstable but that's ok.
+     *
+     * @param sender The user to receive debug messages.
+     */
     public static void setDebugReceiver(CommandSender sender) {
         // Avoid duplicate debug messages in console
         if (sender instanceof ConsoleCommandSender) {
@@ -109,7 +113,8 @@ public class Utils {
 
     /**
      * Translates a string using '&' into a string that uses the internal ChatColor.COLOR_CODE color code character.
-     * The alternate color code character will only be replaced if it is immediately followed by 0-9, A-F, a-f, K-O, k-o, R or r.
+     * The alternate color code character will only be replaced if it is immediately followed by 0-9, A-F, a-f, K-O,
+     * k-o, R or r.
      *
      * @param str The String to translate.
      * @return The translated String.
@@ -130,14 +135,16 @@ public class Utils {
 
     private static TextComponent createComponent(String text, String... hoverText) {
         TextComponent message = new TextComponent(colored(text));
-        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(colored(String.join("\n", hoverText))).create()));
+        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(colored(String.join("\n", hoverText))).create()));
         return message;
     }
 
     /**
      * Send a Spigot chat component to the player containing hover-text.
-     * @param player The player to receive the message.
-     * @param text The text of the message.
+     *
+     * @param player    The player to receive the message.
+     * @param text      The text of the message.
      * @param hoverText The hover-text of the message.
      */
     public static void sendComponent(Player player, String text, String... hoverText) {

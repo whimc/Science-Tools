@@ -2,12 +2,14 @@ package edu.whimc.sciencetools.models;
 
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.utils.Utils;
+import java.sql.Timestamp;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.Timestamp;
-
+/**
+ * Stores information relevant to the event of a player making a measurement.
+ */
 public class Measurement {
 
     private final Timestamp timestamp;
@@ -16,6 +18,15 @@ public class Measurement {
     private final ScienceTool tool;
     private final String measurement;
 
+    /**
+     * Construct a measurement.
+     *
+     * @param timestamp The time the measurement was taken.
+     * @param player The player that took the measurement.
+     * @param location The location of the measurement.
+     * @param tool The tool used.
+     * @param measurement The measurement displayed to the player.
+     */
     public Measurement(Timestamp timestamp, Player player, Location location, ScienceTool tool, String measurement) {
         this.timestamp = timestamp;
         this.player = player;
@@ -44,6 +55,11 @@ public class Measurement {
         return this.measurement;
     }
 
+    /**
+     * Display the measurement to a user.
+     *
+     * @param sender The user to send the measurement to.
+     */
     public void displayToUser(CommandSender sender) {
         String date = Utils.getDate(this.timestamp);
         String x = Utils.trimDecimals(this.location.getX(), 1);
@@ -60,7 +76,7 @@ public class Measurement {
             return;
         }
 
-        Utils.msg(sender, "&7[" + this.location.getWorld().getName() + " | " + x + ", " + y + ", " + z + "] " +
-                "&f" + this.tool.getToolKey() + ": &e" + this.measurement);
+        Utils.msg(sender, "&7[" + this.location.getWorld().getName() + " | " + x + ", " + y + ", " + z + "] "
+                + "&f" + this.tool.getToolKey() + ": &e" + this.measurement);
     }
 }

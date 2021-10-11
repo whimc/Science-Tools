@@ -1,13 +1,12 @@
 package edu.whimc.sciencetools.javascript;
 
 import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
-import org.bukkit.World;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import org.bukkit.World;
 
 /**
  * The JavaScript placeholders that can be used in the config.
@@ -20,8 +19,9 @@ public class JSPlaceholder {
             new JSPlaceholder("{X}", "Current X value", ctx -> ctx.getLocation().getX()),
             new JSPlaceholder("{Y}", "Current Y value", ctx -> ctx.getLocation().getY()),
             new JSPlaceholder("{Z}", "Current Z value", ctx -> ctx.getLocation().getZ()),
-            new JSPlaceholder("{TIME_TICKS}", "The time of the world in ticks", ctx -> (double) ctx.getLocation().getWorld().getTime()),
-            new JSPlaceholder("{NIGHT}","0 if day time, 1 if night time", ctx -> {
+            new JSPlaceholder("{TIME_TICKS}", "The time of the world in ticks",
+                    ctx -> (double) ctx.getLocation().getWorld().getTime()),
+            new JSPlaceholder("{NIGHT}", "0 if day time, 1 if night time", ctx -> {
                 World world = ctx.getLocation().getWorld();
                 return world.getTime() >= 13000 ? 1.0 : 0.0;
             }),
@@ -54,28 +54,6 @@ public class JSPlaceholder {
     }
 
     /**
-     * @return the String used in the config.
-     */
-    public String getKey() {
-        return this.key;
-    }
-
-    /**
-     * @return The key and a description of how the placeholder is used.
-     */
-    public String getUsage() {
-        return "&f\"&e&o" + this.key + "&f\" &7- " + this.usage;
-    }
-
-    /**
-     * @param ctx The JavaScript context.
-     * @return The Double value that replaces the placeholder in the given context.
-     */
-    public Double getReplacement(JSContext ctx) {
-        return this.replacement.apply(ctx);
-    }
-
-    /**
      * Creates a placeholder for the passed NumericScienceTool.
      *
      * @param tool The NumericScienceTool to add a placeholder for.
@@ -88,15 +66,12 @@ public class JSPlaceholder {
         JSPlaceholder.placeholders.add(new JSPlaceholder(key, usage, replacement));
     }
 
-    /**
-     * Clears all of the custom placeholders.
-     */
     public static void unregisterCustomPlaceholders() {
         JSPlaceholder.placeholders.clear();
     }
 
     /**
-     * @return The list of all placeholders.
+     * The list of all placeholders (default + custom).
      */
     public static List<JSPlaceholder> getPlaceholders() {
         List<JSPlaceholder> result = new ArrayList<>(DEFAULT_PLACEHOLDERS);
@@ -118,6 +93,30 @@ public class JSPlaceholder {
             }
         }
         return expr;
+    }
+
+    /**
+     * The String used in the config.
+     */
+    public String getKey() {
+        return this.key;
+    }
+
+    /**
+     * The key and a description of how the placeholder is used.
+     */
+    public String getUsage() {
+        return "&f\"&e&o" + this.key + "&f\" &7- " + this.usage;
+    }
+
+    /**
+     * Compute the replacement with the given context.
+     *
+     * @param ctx The JavaScript context.
+     * @return The Double value that replaces the placeholder in the given context.
+     */
+    public Double getReplacement(JSContext ctx) {
+        return this.replacement.apply(ctx);
     }
 
 }

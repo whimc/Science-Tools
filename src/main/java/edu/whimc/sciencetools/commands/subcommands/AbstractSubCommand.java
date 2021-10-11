@@ -1,46 +1,18 @@
 package edu.whimc.sciencetools.commands.subcommands;
 
 import edu.whimc.sciencetools.utils.Utils;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class is a template for all SubCommands.
  */
 public abstract class AbstractSubCommand {
-
-    /**
-     * Permission levels that players can have.
-     */
-    public enum Permission {
-        ADMIN("admin"),
-        USER("user");
-
-        private final String perm;
-
-        /**
-         * Constructs a permission level with the specified name.
-         *
-         * @param perm The name of the permission.
-         */
-        Permission(String perm) {
-            this.perm = perm;
-        }
-
-        /**
-         * @return The permission as a String in the form: "sciencetools.perm".
-         */
-        @Override
-        public @NotNull String toString() {
-            return "sciencetools." + perm;
-        }
-    }
 
     /* The command's name. */
     private final String command;
@@ -62,7 +34,8 @@ public abstract class AbstractSubCommand {
      * @param description  A description of what the command does.
      * @param permission   The required permission level to use the command.
      */
-    public AbstractSubCommand(String command, List<String> args, List<String> optionalArgs, String description, Permission permission) {
+    public AbstractSubCommand(String command, List<String> args, List<String> optionalArgs, String description,
+                              Permission permission) {
         this.command = command;
         this.args = args == null ? Arrays.asList() : args;
         this.optionalArgs = optionalArgs == null ? Arrays.asList() : optionalArgs;
@@ -101,14 +74,14 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The full description of the SubCommand.
+     * The full description of the SubCommand.
      */
     public @NotNull String fullDescription() {
         return this + " &7- " + this.description;
     }
 
     /**
-     * @return Whether or not the SubCommand has optional arguments.
+     * Whether the SubCommand has optional arguments.
      */
     public boolean hasOptionalArgs() {
         return this.optionalArgs.size() != 0;
@@ -158,7 +131,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The subcommand's usage excluding optional arguments.
+     * The subcommand's usage excluding optional arguments.
      */
     public @NotNull String getUsage() {
         return "&e/sciencetools " + command + " " + String.join(" ", IntStream
@@ -168,7 +141,7 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The subcommand's usage including optional arguments.
+     * The subcommand's usage including optional arguments.
      */
     public @NotNull String getOptionalUsage() {
         return getUsage() + " " + String.join(" ", IntStream
@@ -178,23 +151,17 @@ public abstract class AbstractSubCommand {
     }
 
     /**
-     * @return The SubCommand as a String.
+     * The SubCommand with colors prefixed with the plugin base-command.
      */
     @Override
     public @NotNull String toString() {
         return "&e&o/sciencetools " + command;
     }
 
-    /**
-     * @return The minimum number of arguments required to run the command.
-     */
     public int getMinArgs() {
         return args.size();
     }
 
-    /**
-     * @return The maximum number of arguments that can be passed into the command.
-     */
     public int getMaxArgs() {
         return getMinArgs() + optionalArgs.size();
     }
@@ -260,6 +227,33 @@ public abstract class AbstractSubCommand {
         }
 
         return tabRoutine(sender, args);
+    }
+
+    /**
+     * Permission levels that players can have.
+     */
+    public enum Permission {
+        ADMIN("admin"),
+        USER("user");
+
+        private final String perm;
+
+        /**
+         * Constructs a permission level with the specified name.
+         *
+         * @param perm The name of the permission.
+         */
+        Permission(String perm) {
+            this.perm = perm;
+        }
+
+        /**
+         * The permission as a String in the form: "sciencetools.perm".
+         */
+        @Override
+        public @NotNull String toString() {
+            return "sciencetools." + perm;
+        }
     }
 
 }

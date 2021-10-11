@@ -6,12 +6,11 @@ import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
 import edu.whimc.sciencetools.utils.Utils;
 import edu.whimc.sciencetools.utils.sql.Queryer;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.function.Consumer;
 
 /**
  * The main plugin class.
@@ -30,6 +29,10 @@ public class ScienceTools extends JavaPlugin implements Listener {
     private ScienceToolManager toolManager;
     private ConversionManager conversionManager;
     private Queryer queryer;
+
+    public static ScienceTools getInstance() {
+        return ScienceTools.instance;
+    }
 
     @Override
     public void onEnable() {
@@ -69,10 +72,6 @@ public class ScienceTools extends JavaPlugin implements Listener {
     @EventHandler
     public void onMeasure(ScienceToolMeasureEvent event) {
         this.queryer.storeNewMeasurement(event.getMeasurement());
-    }
-
-    public static ScienceTools getInstance() {
-        return ScienceTools.instance;
     }
 
 }

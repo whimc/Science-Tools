@@ -19,6 +19,12 @@ messages:
   disabled-in-world: "We don't know how to measure that here"
   measure-format: "{MEASUREMENT}"
   numeric-measure-format: "The measured {TOOL} is {MEASUREMENT}{UNIT}"
+=======
+    unit: "°F"
+messages:
+  measure-format: '{MEASUREMENT}'
+  numeric-measure-format: 'The measured {TOOL} is {MEASUREMENT}{UNIT}'
+  disabled-in-world: "We don't know how to measure that here"
 tools:
   ALTITUDE: 
     aliases: 
