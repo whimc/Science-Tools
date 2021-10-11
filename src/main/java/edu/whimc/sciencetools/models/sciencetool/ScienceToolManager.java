@@ -44,14 +44,14 @@ public class ScienceToolManager {
      * @param conversionManager The ConversionManager.
      */
     public void loadTools(@NotNull ConversionManager conversionManager) {
+        Utils.log("&eLoading Science Tools from config");
+
         // Remove potentially pre-existing placeholders and root commands
         JSPlaceholder.unregisterCustomPlaceholders();
         this.tools.values().forEach(tool -> tool.command.unregister());
         this.tools.clear();
 
-        Utils.log("&eLoading Science Tools from config");
         FileConfiguration config = ScienceTools.getInstance().getConfig();
-
         for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
             Utils.log("&b - &f" + toolKey);
 
@@ -200,7 +200,9 @@ public class ScienceToolManager {
     }
 
     /**
-     * The Collection of ScienceTools.
+     * Returns values for science tools collection.
+     *
+     * @return The Collection of ScienceTools.
      */
     public Collection<ScienceTool> getTools() {
         return this.tools.values();

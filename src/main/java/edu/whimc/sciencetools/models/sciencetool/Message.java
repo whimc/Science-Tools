@@ -55,7 +55,6 @@ public enum Message {
             String measurement = tool.getMeasurement(player.getLocation());
             message = message.replace(MEASUREMENT_PLACEHOLDER, measurement);
         }
-
         return message;
     }
 }
