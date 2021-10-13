@@ -97,10 +97,8 @@ public class NumericScienceTool extends ScienceTool {
         return this.unit;
     }
 
-    /** Pulls the tool's precision in terms of numbers following the decimal point from config file.
-     *
-     *
-     * @return The tool's precision of measurement.
+    /**
+     * The number of decimals the numeric measurement will have.
      */
     public int getPrecision() {
         return this.precision;
