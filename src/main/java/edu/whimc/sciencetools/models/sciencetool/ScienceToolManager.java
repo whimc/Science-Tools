@@ -199,11 +199,6 @@ public class ScienceToolManager {
         return this.tools.getOrDefault(key.toLowerCase(), null);
     }
 
-    /**
-     * Returns values for science tools collection.
-     *
-     * @return The Collection of ScienceTools.
-     */
     public Collection<ScienceTool> getTools() {
         return this.tools.values();
     }
