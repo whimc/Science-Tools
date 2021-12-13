@@ -46,16 +46,18 @@ public class QuestsScienceToolObjective extends CustomObjective {
         // Increment the count for this objective on all quests for the player
         for (Quest quest : this.quests.getQuester(measurement.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
             Map<String, Object> data = getDataForPlayer(measurement.getPlayer(), this, quest);
-            if (data != null) {
-                String toolName = (String) data.get(KEY);
-
-                // Make sure the measured tool was the one tracked by this objective
-                if (!measurement.getTool().getToolKey().equalsIgnoreCase(toolName)) {
+            if (data == null) {
                 continue;
-                }
-
-                super.incrementObjective(measurement.getPlayer(), this, 1, quest);
             }
+
+            String toolName = (String) data.get(KEY);
+
+            // Make sure the measured tool was the one tracked by this objective
+            if (!measurement.getTool().getToolKey().equalsIgnoreCase(toolName)) {
+                continue;
+            }
+
+            super.incrementObjective(measurement.getPlayer(), this, 1, quest);
         }
     }
 }
