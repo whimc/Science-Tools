@@ -46,6 +46,10 @@ public class QuestsScienceToolObjective extends CustomObjective {
         // Increment the count for this objective on all quests for the player
         for (Quest quest : this.quests.getQuester(measurement.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
             Map<String, Object> data = getDataForPlayer(measurement.getPlayer(), this, quest);
+            if (data == null) {
+                continue;
+            }
+
             String toolName = (String) data.get(KEY);
 
             // Make sure the measured tool was the one tracked by this objective
