@@ -62,12 +62,12 @@ public class NumericScienceTool extends ScienceTool {
      */
     @Override
     public @Nullable String displayMeasurement(Player player) {
-        // check if player in disabled world
-
+        // Check if the player is in a disabled world
         if (super.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
             return null;
         }
+
         String message = Message.NUMERIC_MEASURE.format(this, player);
         double data = getData(player.getLocation());
 
