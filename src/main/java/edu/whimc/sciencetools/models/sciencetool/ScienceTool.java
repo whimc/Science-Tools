@@ -149,9 +149,12 @@ public class ScienceTool {
      * @return The measurement
      */
     public @Nullable String displayMeasurement(Player player) {
+        // Check if the player is in a disabled world
         if (this.disabledWorlds.contains(player.getWorld())) {
             Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
+            return null;
         }
+
         String measurement = Message.MEASURE.format(this, player);
         Utils.msg(player, measurement);
         return measurement;
