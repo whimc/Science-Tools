@@ -56,13 +56,13 @@
         <dependency>
             <groupId>me.blackvein.quests</groupId>
             <artifactId>quests-api</artifactId>
-            <version>4.5.3</version>
+            <version>4.6.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.blackvein.quests</groupId>
             <artifactId>quests-core</artifactId>
-            <version>4.5.3</version>
+            <version>4.6.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
