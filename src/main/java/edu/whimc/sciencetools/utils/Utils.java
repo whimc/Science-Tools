@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 public class Utils {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMM d yyyy, h:mm a z");
+    private static final String prefix = '[' + ScienceTools.getInstance().getDescription().getName() + "] ";
     private static CommandSender debugReceiver = null;
 
     /**
@@ -96,7 +97,7 @@ public class Utils {
         if (debugReceiver != null) {
             Utils.msg(debugReceiver, message);
         }
-        ScienceTools.getInstance().getLogger().info(colored(message));
+        Bukkit.getConsoleSender().sendMessage(prefix + colored(message));
     }
 
     /**
