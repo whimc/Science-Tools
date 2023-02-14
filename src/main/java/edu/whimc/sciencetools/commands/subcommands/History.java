@@ -34,6 +34,10 @@ public class History extends AbstractSubCommand {
     @Override
     protected boolean commandRoutine(CommandSender sender, String[] args) {
         // TODO Display measurements in a GUI
+        if (ScienceTools.getInstance().getQueryer() == null) {
+            Utils.msg(sender, "&c&oThis command is disabled!");
+            return false;
+        }
 
         // display sender's measurements
         if (args.length == 0 || !sender.hasPermission(Permission.ADMIN.toString())) {

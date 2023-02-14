@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Handles storing position data.
@@ -43,6 +44,11 @@ public class Queryer {
     private final ScienceTools plugin;
     private final MySQLConnection sqlConnection;
 
+    private Queryer(ScienceTools plugin) {
+        this.plugin = plugin;
+        this.sqlConnection = new MySQLConnection(plugin);
+    }
+
     /**
      * Create a Queryer. The callback is useful for determining if the database could be successfully initialized.
      * if the value of the Queryer in the callback is null, this means the plugin could not connect to the database.
@@ -50,14 +56,16 @@ public class Queryer {
      * @param plugin The main plugin instance.
      * @param callback A callback containing an instance of this Queryer if successful and null if not.
      */
-    public Queryer(ScienceTools plugin, Consumer<Queryer> callback) {
-        this.plugin = plugin;
-        this.sqlConnection = new MySQLConnection(plugin);
-
-        async(() -> {
-            final boolean success = sqlConnection.initialize();
-            sync(() -> callback.accept(success ? this : null));
-        });
+    public static void create(ScienceTools plugin, Consumer<@Nullable Queryer> callback) {
+        Queryer queryer = new Queryer(plugin);
+        if (plugin.getConfig().getBoolean("mysql.enabled")) {
+            queryer.async(() -> {
+                final boolean success = queryer.sqlConnection.initialize();
+                queryer.sync(() -> callback.accept(success ? queryer : null));
+            });
+        } else {
+            callback.accept(null);
+        }
     }
 
     private PreparedStatement getStatement(Connection connection, Measurement measurement) throws SQLException {
