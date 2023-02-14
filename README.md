@@ -19,8 +19,11 @@ $ mvn install
 The config file can be found under `/plugins/WHIMC-ScienceTools/config.yml`. Use `/sciencetools reload` whenever you change the config.
 
 ### MySQL
+In order to track the history of science tool usage, you have to connect to a SQL database.
+
 | Key | Type | Description |
 |---|---|---|
+|`mysql.enabled`|`boolean`|Whether to use a SQL database|
 |`mysql.host`|`string`|The host of the database|
 |`mysql.port`|`integer`|The port of the database|
 |`mysql.database`|`string`|The name of the database to use|
@@ -30,6 +33,7 @@ The config file can be found under `/plugins/WHIMC-ScienceTools/config.yml`. Use
 #### Example
 ```yaml
 mysql:
+  enabled: true
   host: localhost
   port: 3306
   database: minecraft
@@ -172,7 +176,7 @@ Region names are defined using [WorldGuard](https://worldguard.enginehub.org/en/
 |`randInt(min, max)`| A random integer between `min` and `max` (inclusive) |
 |`min(a, b)`        | The minimum between `a` and `b`                      |
 |`max(a, b)`        | The maximum between `a` and `b`                      |
-| `{<tool key>}`    | The value from the given _numeric_ tool 
+| `{<tool key>}`    | The value from the given _numeric_ tool              |
 
 ### Validation
 Validation config will look like this:
@@ -314,6 +318,7 @@ validation:
 | `/sciencetools reload`                                      | Reload the plugin's config                                         |
 | `/sciencetools js`                                          | Run interpreted JavaScript                                         |
 | `/sciencetools measure <tool>`                              | Measure the given science tool                                     |
+| `/sciencetools history <player>`                            | View the science tool usage history of a player                    |
 
 &nbsp;
 

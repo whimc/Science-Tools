@@ -1,5 +1,6 @@
 # -- WHIMC Science Tools --
 mysql:
+  enabled: true
   host: localhost
   port: 3306
   database: minecraft

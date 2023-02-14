@@ -7,6 +7,7 @@ import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
 import edu.whimc.sciencetools.utils.Utils;
 import edu.whimc.sciencetools.utils.sql.Queryer;
 import java.util.function.Consumer;
+import javax.annotation.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,17 +19,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ScienceTools extends JavaPlugin implements Listener {
 
     private static ScienceTools instance;
-    private static final Consumer<Queryer> handleConnection = q -> {
+
+    private ScienceToolManager toolManager;
+    private ConversionManager conversionManager;
+    private @Nullable Queryer queryer;
+    private final Consumer<Queryer> handleCreateQueryer = q -> {
         if (q == null) {
             Utils.log("&cCould not establish MySQL connection! Some features are disabled.");
         } else {
             Utils.log("&aMySQL connection established!");
         }
+        this.queryer = q;
     };
-
-    private ScienceToolManager toolManager;
-    private ConversionManager conversionManager;
-    private Queryer queryer;
 
     public static ScienceTools getInstance() {
         return ScienceTools.instance;
@@ -44,7 +46,7 @@ public class ScienceTools extends JavaPlugin implements Listener {
 
         this.conversionManager = new ConversionManager();
         this.toolManager = new ScienceToolManager(this.conversionManager);
-        this.queryer = new Queryer(this, handleConnection);
+        Queryer.create(this, this.handleCreateQueryer);
     }
 
     public ScienceToolManager getToolManager() {
@@ -55,7 +57,7 @@ public class ScienceTools extends JavaPlugin implements Listener {
         return this.conversionManager;
     }
 
-    public Queryer getQueryer() {
+    public @Nullable Queryer getQueryer() {
         return this.queryer;
     }
 
@@ -66,12 +68,14 @@ public class ScienceTools extends JavaPlugin implements Listener {
         reloadConfig();
         this.conversionManager.loadConversions();
         this.toolManager.loadTools(this.conversionManager);
-        this.queryer = new Queryer(this, handleConnection);
+        Queryer.create(this, this.handleCreateQueryer);
     }
 
     @EventHandler
     public void onMeasure(ScienceToolMeasureEvent event) {
-        this.queryer.storeNewMeasurement(event.getMeasurement());
+        if (this.queryer != null) {
+            this.queryer.storeNewMeasurement(event.getMeasurement());
+        }
     }
 
 }
