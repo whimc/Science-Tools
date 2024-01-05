@@ -3,9 +3,9 @@ package edu.whimc.sciencetools.models.sciencetool;
 import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.utils.Utils;
 import java.util.Map;
-import me.blackvein.quests.CustomObjective;
-import me.blackvein.quests.Quest;
-import me.blackvein.quests.Quests;
+import me.pikamug.quests.quests.Quest;
+import me.pikamug.quests.module.BukkitCustomObjective;
+import me.pikamug.quests.Quests;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 
@@ -14,7 +14,7 @@ import org.bukkit.event.EventHandler;
  * Adds an objective that requires the player to make X amount of measurements for a given science tool.
  * Requires the user to configure the name of the tool.
  */
-public class QuestsScienceToolObjective extends CustomObjective {
+public class QuestsScienceToolObjective extends BukkitCustomObjective {
 
     private static final String KEY = "Science Tool";
 
@@ -45,7 +45,7 @@ public class QuestsScienceToolObjective extends CustomObjective {
 
         // Increment the count for this objective on all quests for the player
         for (Quest quest : this.quests.getQuester(measurement.getPlayer().getUniqueId()).getCurrentQuests().keySet()) {
-            Map<String, Object> data = getDataForPlayer(measurement.getPlayer(), this, quest);
+            Map<String, Object> data = getDataForPlayer(measurement.getPlayer().getUniqueId(), this, quest);
             if (data == null) {
                 continue;
             }
@@ -57,7 +57,7 @@ public class QuestsScienceToolObjective extends CustomObjective {
                 continue;
             }
 
-            super.incrementObjective(measurement.getPlayer(), this, 1, quest);
+            super.incrementObjective(measurement.getPlayer().getUniqueId(), this, quest, 1);
         }
     }
 }
