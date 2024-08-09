@@ -73,7 +73,9 @@ public class NumericScienceTool extends ScienceTool {
 
         // display converted values
         for (Conversion conversion : conversions) {
-            String converted = Utils.trimDecimals(conversion.convert(data), precision);
+            //conversions now have their own separate precision; not sure what happens if it's left out of the config?
+            //does an unassigned int in Java have a value of 0? Or is it null and does null == 0 in this case?
+            String converted = Utils.trimDecimals(conversion.convert(data), conversion.getPrecision());
             message += " (" + converted + conversion.getUnit() + ")";
         }
 

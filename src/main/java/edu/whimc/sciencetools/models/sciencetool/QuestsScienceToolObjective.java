@@ -3,11 +3,11 @@ package edu.whimc.sciencetools.models.sciencetool;
 import edu.whimc.sciencetools.models.Measurement;
 import edu.whimc.sciencetools.utils.Utils;
 import java.util.Map;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
 import me.pikamug.quests.quests.Quest;
 import me.pikamug.quests.module.BukkitCustomObjective;
 import me.pikamug.quests.Quests;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 
 /**
  * A custom objective for the Quests plugin.
