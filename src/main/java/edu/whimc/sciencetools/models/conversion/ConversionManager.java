@@ -3,11 +3,11 @@ package edu.whimc.sciencetools.models.conversion;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.utils.Utils;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
+import scala.Int;
 
 /**
  * Handles operations regarding Conversions (adding, removing, saving, loading).
@@ -36,9 +36,11 @@ public class ConversionManager {
             Utils.log("&b - &f" + conversion);
             String expr = config.getString("conversions." + conversion + ".expression");
             String unit = config.getString("conversions." + conversion + ".unit");
+            int precision = config.getInt("conversions." + conversion + ".precision"); //no idea if this needs to go in the log
 
             Utils.log("&b\t- Expression: \"&f" + expr + "&b\"");
             Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");
+            Utils.log("&b\t- Precision: \"&f" + precision + "&b\"");
 
             // ensure conversion's expression is valid, skip if not
             JSNumericExpression jsExpr = new JSNumericExpression(expr);
@@ -47,7 +49,7 @@ public class ConversionManager {
                 continue;
             }
 
-            loadConversion(conversion, unit, jsExpr);
+            loadConversion(conversion, unit, jsExpr, precision);
         }
 
         Utils.log("&eConversions loaded!");
@@ -59,10 +61,11 @@ public class ConversionManager {
      * @param name The name of the Conversion.
      * @param unit The unit being converted to.
      * @param expr The Conversion equation.
+     * @param precision The number of places after the decimal place to include.
      * @return The Conversion.
      */
-    private @NotNull Conversion loadConversion(String name, String unit, JSNumericExpression expr) {
-        Conversion conversion = new Conversion(name, unit, expr);
+    private @NotNull Conversion loadConversion(String name, String unit, JSNumericExpression expr, int precision) {
+        Conversion conversion = new Conversion(name, unit, expr, precision);
         conversions.put(name, conversion);
         return conversion;
     }
@@ -75,8 +78,8 @@ public class ConversionManager {
      * @param expr The Conversion equation.
      * @return The Conversion.
      */
-    public Conversion createConversion(String name, String unit, JSNumericExpression expr) {
-        Conversion conversion = loadConversion(name, unit, expr);
+    public Conversion createConversion(String name, String unit, JSNumericExpression expr, int precision) {
+        Conversion conversion = loadConversion(name, unit, expr, precision);
         saveToConfig(conversion);
         return conversion;
     }

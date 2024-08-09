@@ -76,7 +76,7 @@ public class NumericScienceTool extends ScienceTool {
             //fixing precision to always be a certain number of decimals so regular measures can be set to precision 0
             //Jack the reason for this is that kids would read 1.000 as one-thousand too easily due to the MC font
             //So for instance on gravity I've made it an integer percent
-            String converted = Utils.trimDecimals(conversion.convert(data), 3);
+            String converted = Utils.trimDecimals(conversion.convert(data), conversion.getPrecision());
             message += " (" + converted + conversion.getUnit() + ")";
         }
 
