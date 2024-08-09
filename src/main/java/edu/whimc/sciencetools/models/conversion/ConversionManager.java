@@ -36,7 +36,8 @@ public class ConversionManager {
             Utils.log("&b - &f" + conversion);
             String expr = config.getString("conversions." + conversion + ".expression");
             String unit = config.getString("conversions." + conversion + ".unit");
-            int precision = config.getInt("conversions." + conversion + ".precision"); //no idea if this needs to go in the log
+            int precision = config.getInt("conversions." + conversion + ".precision");
+            //no idea if this needs to go in the log ^
 
             Utils.log("&b\t- Expression: \"&f" + expr + "&b\"");
             Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");

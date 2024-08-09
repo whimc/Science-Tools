@@ -73,9 +73,8 @@ public class NumericScienceTool extends ScienceTool {
 
         // display converted values
         for (Conversion conversion : conversions) {
-            //fixing precision to always be a certain number of decimals so regular measures can be set to precision 0
-            //Jack the reason for this is that kids would read 1.000 as one-thousand too easily due to the MC font
-            //So for instance on gravity I've made it an integer percent
+            //conversions now have their own separate precision; not sure what happens if it's left out of the config?
+            //does an unassigned int in Java have a value of 0? Or is it null and does null == 0 in this case?
             String converted = Utils.trimDecimals(conversion.convert(data), conversion.getPrecision());
             message += " (" + converted + conversion.getUnit() + ")";
         }
