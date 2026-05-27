@@ -309,6 +309,8 @@ validation:
 
 ---
 
+## Current Science Tools Explanations
+[Current reference / documentation](https://docs.google.com/document/d/1oX_dHe5SZlKkCxq8a6GdmYuBZfBZeIqgQFrVwMwR3E8/edit?usp=sharing)
 ## Commands
 | Command                                                     | Description                                                        |
 |-------------------------------------------------------------|--------------------------------------------------------------------|
