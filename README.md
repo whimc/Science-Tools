@@ -3,6 +3,27 @@
 
 ScienceTools is a Minecraft plugin to simulate values for scientific tools. This plugin uses [WorldGuard](https://worldguard.enginehub.org/en/latest/developer/dependency/) to define regions in which to set scientific values. To set values, edit the config file.
 
+## Example Science Tools in use on WHIMC
+
+- **Altitude** (`ALTITUDE`) — altitude/height
+- **Airflow** (`AIRFLOW`) — wind speed and airflow
+- **Atmosphere** (`ATMOSPHERE`) — atmospheric composition (nitrogen, oxygen, methane, etc.)
+- **Gravity** (`GRAVITY`) — gravitational pull
+- **Humidity** (`HUMIDITY`) — humidity / water vapor
+- **Magnetic Field** (`MAGNETIC_FIELD`) — magnetic field strength
+- **Oxygen** (`OXYGEN`) — oxygen level
+- **Pressure** (`PRESSURE`) — atmospheric pressure
+- **Radiation** (`RADIATION`) — overall radiation exposure
+- **Cosmic Rays** (`COSMICRAYS`) — galactic cosmic ray exposure
+- **Radius** (`RADIUS`) — planetary radius
+- **Rotational Period** (`ROTATIONAL_PERIOD`) — length of a day / rotation period
+- **Tectonic Activity** (`TECTONIC`) — seismic and tectonic activity
+- **Temperature** (`TEMPERATURE`) — ambient temperature
+- **Tides** (`TIDES`) — tidal variance
+- **Tilt** (`TILT`) — axial tilt
+- **Year** (`YEAR`) — orbital period (length of a year)
+- **Scale** (`SCALE`) — scale/size measurement
+
 _**Requires Java 11+**_
 
 ---
