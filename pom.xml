@@ -98,7 +98,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.6.0</version>
                 <configuration>
                     <filters>
                         <filter>
@@ -122,22 +122,6 @@
                 </executions>
             </plugin>
 
-            <!-- Github release settings -->
-            <plugin>
-                <groupId>de.jutzig</groupId>
-                <artifactId>github-release-plugin</artifactId>
-                <version>1.1.1</version>
-                <configuration>
-                    <description>Release for v${project.version}</description>
-                    <releaseName>${project.artifactId}-${project.version}</releaseName>
-                    <tag>${project.version}</tag>
-                    <fileSets>
-                        <fileSet>
-                            <directory>${project.build.directory}</directory>
-                        </fileSet>
-                    </fileSets>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>
