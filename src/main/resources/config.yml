@@ -7,85 +7,1306 @@ mysql:
   username: user
   password: pass
 conversions:
-  feet:
-    expression: "{VAL} * 3.28084"
-    unit: "ft"
   fahrenheit:
     expression: "({VAL} * 9.0 / 5.0) + 32.0"
-    unit: "°F"
+    unit: " °F"
+  feet:
+    expression: "{VAL} * 3.28084"
+    unit: " feet"
+  kelvin:
+    expression: "{VAL} + 273.15"
+    unit: " °K"
+  miles:
+    expression: "({VAL} * 6371) *.621371"
+    unit: " miles"
+  psi:
+    expression: "{VAL} * 0.145038"
+    unit: " psi"
+  bar:
+    expression: "{VAL} * 0.01"
+    unit: " bar"
+  hPa:
+    expression: "{VAL} * 10.13"
+    unit: " hPa"
+  radiuskm:
+    expression: "{VAL} * 6371"
+    unit: " kilometers"
+  gravityearth:
+    expression: "{VAL} * 0.09807"
+    unit: " m/s^2"
+  mph:
+    expression: "{VAL} * 2.23694"
+    unit: " mph"
+  mSv:
+    expression: "{VAL} * 0.024"
+    unit: " mSv per year"
 messages:
-  measure-format: '{MEASUREMENT}'
-  numeric-measure-format: 'The measured {TOOL} is {MEASUREMENT}{UNIT}'
-  disabled-in-world: "We don't know how to measure that here"
+  disabled-in-world: We don't know how to measure that here
+  measure-format: "{MEASUREMENT}"
+  numeric-measure-format: The measured {TOOL} is {MEASUREMENT}{UNIT}
 tools:
   ALTITUDE:
-    display-name: "altitude"
-    default-measurement: "max(0, {Y})"
-    unit: "m"
-    precision: "4"
+    aliases:
+      - height
     conversions:
       - feet
-    messages:
-      numeric-measure-format: '{MEASUREMENT}'
-    worlds:
-      world:
-        global-measurement: "{Y}"
-      world_nether:
-        global-measurement: "min(0, {Y} - 128)"
+    default-measurement: "{Y} - 62"
     disabled-worlds:
-      - world_the_end
-  OXYGEN:
-    display-name: "oxygen level"
-    default-measurement: "30 + rand(-0.5, 0.5)"
-    unit: "%"
+      - Hub
+      - BrownDwarf
+      - blackhole
+    display-name: altitude
     messages:
-      disabled-in-world: "Oxygen doesn't exist here"
+      numeric-measure-format: The measured {TOOL} is {MEASUREMENT} {UNIT}
+      disabled-in-world: No defined surface present to determine
+    precision: 0
+    unit: meters
     worlds:
-      world:
+      Mars:
+        global-measurement: "{Y} - 120"
+      CAMP:
+        global-measurement: "{Y} - 120"
+      Cancri:
+        global-measurement: "{Y} + 150"
+      ETLife:
+        global-measurement: "{Y} - 80000"
+      Kepler:
+        global-measurement: "{Y} - 61"
+      LunarCrater:
+        global-measurement: "{Y} - 72"
+      MynoaClose:
+        global-measurement: "{Y} + 50"
+      MynoaHalf:
+        global-measurement: "{Y} + 120"
+      MynoaFar:
+        global-measurement: "{Y} + 50"
+      MynoaMangrove:
+        global-measurement: "{Y} + 30"
+  AIRFLOW:
+    aliases:
+      - wind
+    conversions:
+      - mph
+    default-measurement: max(0, rand(-0.1, 0.1) + ({ALTITUDE} / 15))
+    disabled-worlds:
+      - ETLife
+      - blackhole
+    display-name: airflow
+    messages:
+      disabled-in-world: The circulation of particles is unknown
+      numeric-measure-format: The measured {TOOL} is {MEASUREMENT}{UNIT}
+    precision: 2
+    unit: " m/s"
+    worlds:
+      BrownDwarf:
+        global-measurement: 100 + rand(0,200)
+      Cancri:
+        global-measurement: 0.5 + rand(-0.5, 2.5) + ({ALTITUDE}/20)
+      CancriCold:
+        global-measurement: 0.5 + rand(-0.5, 2.5) + ({ALTITUDE}/20)
+      ColderCold:
+        global-measurement: 3.8 + rand(3, 15)
         regions:
-          enclosure: "rand(0, 0.1)"
-          high_oxygen: "100"
-      world_the_end:
+          poi_cscunderground: (0.1)
+      ColderStrip:
+        global-measurement: 3.8 + rand(1, 5)
+      ColderHot:
+        global-measurement: 3.8 + rand(5, 20)
+        regions:
+          poi_cshunderground: (0.1 + rand(1.0,2.0)        
+      EarthControl:
+        regions:
+          tent: "0"
+          ocean: "0"
+      Gliese:
+        global-measurement: 0.5 + rand(-0.5, 2.5)
+      Hub:
+        global-measurement: "0"
+      Kepler:
+        global-measurement: 1.8 + rand(-0.1, 0.1)
+        regions:
+          kepler_habitat: 0.3 + rand(-0.01,0.01)
+      TwoMoonsLluna:
+        global-measurement: "0"
+      LunarCrater:
         global-measurement: "0"
         regions:
-          cage: "10"
-          castle: "5"
+          3dprintingunderground: 0.7 + rand(-0.03,0.03)
+          lunarpbs: 0.7 + rand(-0.02,0.03)
+          biodome: "0.3"
+          habitationdomes: 0.8 + rand(-0.03,0.03)
+          pressuretest1: 0.6 + rand(-0.02,0.02)
+          pressuretest2: 0.6 + rand(-0.02,0.02)
+          pressuretest3: 0.6 + rand(-0.02,0.02)
+          pressuretest4: 0.6 + rand(-0.02,0.02)
+          dockingdome: 0.8 + rand(-0.03,0.03)
+          suitup: 0.8 + rand(-0.03,0.03)
+          icestoragefront: 0.3 + rand(-0.03,0.03)
+          icestoragecave: 0.5 + rand(-0.03,0.03)
+      Mars:
+        global-measurement: 0.1 + rand(-0.1, 3)
+      CAMP:
+        global-measurement: 0.1 + rand(-0.1, 3)
+      MynoaClose:
+        global-measurement: max(0, rand(-0.1, 0.1) + ({ALTITUDE} / 30))
+        regions:
+          ocean: "0"
+      MynoaFar:
+        global-measurement: max(0, rand(-2.1, 2.1) + ({ALTITUDE} / 8))
+        regions:
+          lake: "0"
+          lake-2: "0"
+          lake-3: "0"
+      MynoaHalf:
+        global-measurement: max(0, rand(8.1, 32.1) + ({ALTITUDE} / 12))
+      MynoaMangrove:
+        global-measurement: max(0, rand(-2.1, 2.1) + ({ALTITUDE} / 8))
+      NoMoon:
+        global-measurement: 5 + rand(5, 25) + ({ALTITUDE} / 3)
+        regions:
+          nomoon_house: "0.3"
+      TiltedFrozen:
+        global-measurement: 3.8 + rand(-0.1, 0.1)
+        regions:
+          ocean: "0"
+      TiltedWarm:
+        global-measurement: 3.8 + rand(-0.1, 0.1)
+        regions:
+          ocean: "0"
+      TiltedMelting:
+        global-measurement: 3.8 + rand(-0.1, 0.1)
+        regions:
+          ocean: "0"
+      Trappist:
+        global-measurement: 0.8 + rand(-0.1, 0.1)
+  ATMOSPHERE:
+    aliases:
+      - ozone
+      - carbon
+      - air
+      - nitrogen
+      - methane
+      - composition
+    default-measurement: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
     disabled-worlds:
-      - world_the_end
+      - LunarCrater
+    display-name: planetary atmospheric composition
+    messages:
+      measure-format: "{MEASUREMENT}"
+      disabled-in-world: No detectable atmosphere
+    worlds:
+      ColderHot: 
+        global-measurement: Similar to earth but with less carbon dioxide due to the intense sunlight
+      BrownDwarf:
+        regions:
+          above-cloud: Molecular hydrogen, helium and trace oxygen - fly into the planet
+            to learn more!
+          cloud: Carbon to Oxygen ratio of 1.5! The further you travel into the planet the
+            more dense the atmosphere becomes. With the heavier elements in the
+            atmosphere becoming more common!
+          platform: Venture out to become a probe and find out!
+      Cancri:
+        global-measurement: Hydrogen or Helium based
+      CancriCold:
+        global-measurement: Hydrogen or Helium based
+        regions:
+          CancriCold_station: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          thermal_vents: A mixture of carbon monoxide and silicon
+          thermal_vents2: A mixture of carbon monoxide and silicon
+          thermal_vents3: A mixture of carbon monoxide and silicon
+          cancri_clouds: Primarily hydrogen and silicon
+      EarthControl:
+        regions:
+          lake-2: 100% water
+          ocean: 96% water, 4% combination of chloride, sodium, sulfate, magnesium,
+            calcium and potassium
+      ETLife:
+        global-measurement: mixture of water, carbon dioxide, nitrogen
+      Gliese:
+        global-measurement: 90% hydrogen, 10% unknown, entire planet undergoing
+          exothermic reaction - do you know what fire is?
+        regions:
+          fireice: This water is ice even at the extreme temperatures because it is being
+            compressed by gravity to densities not seen on Earth - the
+            hydrogen/helium shell surrounding the hot ice is being vaporized by
+            the heat from the star and by the greenhouse effect
+      Kepler:
+        global-measurement: 70% nitrogen, 18% oxygen, 12% unknown
+        regions:
+          ocean: mixture of water and potassium permanganate
+      TwoMoonsLluna:
+        global-measurement: None
+      LunarCrater:
+        regions:
+          3dprintingunderground: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          lunarpbs: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          biodome: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          habitationdomes: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          pressuretest1: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          pressuretest2: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          pressuretest3: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          dockingdome: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          suitup: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+          icestoragefront: 78% nitrogen, 21% oxygen, less atmospheric density
+          icestoragecave: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
+      Mars:
+        global-measurement: 95% carbon dioxide, 2.8% nitrogen, 1.6% argon
+      CAMP:
+        global-measurement: 95% carbon dioxide, 2.8% nitrogen, 1.6% argon
+      MynoaClose:
+        global-measurement: 75% nitrogen, 21% oxygen, 1% argon, 1% carbon dioxide, 1% methane, 1% ammonia
+        regions:
+          ocean: 97% water, 3% combination of chloride, sodium, sulfate, magnesium,
+            calcium and potassium
+      MynoaHalf:
+        global-measurement: "Caution: high content of volcanic ash detected in the air!"
+      MynoaFar:
+        regions: null
+      MynoaMangrove: 
+        global-measurement: 73% nitrogen, 21% oxygen, 1% argon, 1% carbon dioxide, 3% methane, 1% ammonia
+        regions:
+          ocean: 97% water, 3% combination of chloride, sodium, sulfate, magnesium,
+            calcium and potassium
+      NoMoon:
+        regions:
+          ocean: 96% water, 4% combination of chloride, sodium, sulfate, magnesium,
+            calcium and potassium
+          spring-lake-1: 90% water, 10% carbon dioxide and hydrogen sulfide
+      TiltedFrozen:
+        regions:
+          ocean: 96% water, 4% combination of chloride, sodium, sulfate, magnesium,
+            calcium and potassium
+          ocean-warmer: 96% water, 4% combination of chloride, sodium, sulfate, magnesium,
+            calcium and potassium
+          ocean-warmer-deep: 96% water, 4% combination of chloride, sodium, sulfate,
+            magnesium, calcium and potassium
+          poi_vent_1: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_2: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_3: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_4: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_5: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_6: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_7: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_8: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_9: A combination of Barium, Calcium, and Silicon minerals
+      TiltedWarm:
+        global-measurement: 76% nitrogen, 19% oxygen, 4% water vapor, 1% other
+        regions:
+          ocean: 96% water, 4% combination of chloride, sodium, sulfate, magnesium, calcium and potassium
+          poi_vent_1: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_2: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_3: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_4: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_5: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_6: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_7: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_8: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_9: A combination of Barium, Calcium, and Silicon minerals
+      TiltedMelting:
+        global-measurement: 77% nitrogen, 20% oxygen, 2% water vapor, 1% other
+        regions:
+          ocean: 96% water, 4% combination of chloride, sodium, sulfate, magnesium,
+            calcium and potassium
+          poi_vent_1: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_2: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_3: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_4: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_5: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_6: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_7: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_8: A combination of Barium, Calcium, and Silicon minerals
+          poi_vent_9: A combination of Barium, Calcium, and Silicon minerals
+      Trappist:
+        global-measurement: Water, Oxygen, Ozone, Carbon Dioxide, Methane, and Nitrous Oxide
+        regions:
+          trappist-pool-1: "CAUTION: High concentrations of chloride, sodium, silica, and
+            hydrogen sulfide!"
+          trappist-pool-2: "CAUTION: Moderate concentrations of sulfate, alkalinity, and
+            arsenic!"
+          trappist-pool-3: "CAUTION: Moderate concentrations of sulfate, alkalinity, and
+            arsenic!"
+      blackhole:
+        global-measurement: Its difficult to know the composition of the accresion disc
+          surrounding the blackhole. The blackhole itself is a vast collection
+          of materials compressed to the very center of the blackhole at a point
+          called the singularity.
+  GRAVITY:
+    conversions:
+      - gravityearth
+    default-measurement: "100"
+    disabled-worlds:
+      - EarthControl
+      - RocketLaunch
+      - NoMoon
+      - ColderCold
+      - ColderStrip
+      - ColderHot
+      - TiltedFrozen
+      - TiltedMelting
+      - TiltedWarm
+      - MynoaClose
+      - MynoaFar
+      - MynoaHalf
+      - TwoMoons
+      - TwoMoonsLluna
+      - TwoMoonsLow
+    display-name: gravitational pull
+    messages:
+      numeric-measure-format: The measured {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: The gravity here is the same as earth (9.8 m/s^2)
+    precision: 0
+    unit: "% of the Earth's gravity"
+    worlds:
+      BrownDwarf:
+        global-measurement: "982"
+      Mars:
+        global-measurement: "38"
+      CAMP:
+        global-measurement: "38"
+      Cancri:
+        global-measurement: "214"
+      CancriCold:
+        global-measurement: "214"
+      ETLife:
+        global-measurement: "13"
+      Gliese:
+        global-measurement: "118"
+      Hub:
+        global-measurement: "1"
+      Kepler:
+        global-measurement: "130"
+      TwoMoonsLluna:
+        global-measurement: "16.5697"
+      LunarCrater:
+        global-measurement: "16.5697"
+      Trappist:
+        global-measurement: "93"
+      blackhole:
+        global-measurement: ((7.55 * 10e21)/(({X} - 8)e2 + ({Y} - 128)e2 + ({Z} - 8)e2))*100
+      MynoaClose:
+        global-measurement: "95"
+      MynoaFar:
+        global-measurement: "105"
+      MynoaHalf:
+        global-measurement: "100"
+      MynoaMangrove:
+        global-measurement: "105"
+  HUMIDITY:
+    aliases:
+      - water
+      - vapor
+    default-measurement: 60 + rand(-10,10)
+    disabled-worlds:
+      - Mars
+      - CAMP
+      - Cancri
+      - CancriCold
+      - Gliese
+      - Trappist
+      - BrownDwarf
+      - ETLife
+      - blackhole
+    display-name: humidity
+    messages:
+      numeric-measure-format: The measured {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: Humidity undetectable - is there an atmosphere?
+    precision: 1
+    unit: "%"
+    worlds:
+      ColderCold:
+        global-measurement: 10 + rand(-3, 3)
+      ColderStrip:
+        regions:
+          poi_habitable_strip_savanna: 15 + rand(-3,3)
+          poi_habitable_strip_snowy_edge: 15 + rand(-3,3)
+          poi_habitable_strip_desert: 5 + rand(-3,3)
+          poi_habitable_strip_jungle: 85 + rand(8,8)
+          poi_habitable_strip_cold_taiga: 35 + rand(-8,8)
+          poi_habitable_strip_temperate_forest: 50 + rand(-8,8)
+      ColderHot:
+        global-measurement: "0"
+        regions:
+          poi_cshunderground: 4 + rand(-1, 1)
+      EarthControl:
+        regions:
+          around-tent: 30 + rand(-10, 10)
+          earthcontrol-lava-1: 10 + rand(-10, 10)
+          lake-2: "100"
+          lava-temperature: 10 + rand(-10, 10)
+          ocean: "100"
+          yellowstone: 70 + rand(-10,10)
+          hot_shrubland: 30 + rand(-5,5)
+          scarlet_tundra: 50 + rand (-5,5)
+          orchid_swamp: 80 + rand (-10,10)
+          tropical_archipelago: 80 + rand(-5,5)
+          volcano: 70 + rand(-10,10)
+      Hub:
+        global-measurement: 45 + rand(-10, 10)
+        regions:
+          0g-construction: "0"
+      Kepler:
+        global-measurement: 85 + rand(-10, 10)
+        regions:
+          kepler_habitat: 65 + rand(-10, 10)
+      TwoMoonsLluna:
+        global-measurement: "0"
+      LunarCrater:
+        global-measurement: "0"
+        regions:
+          3dprintingunderground: 35 + rand(-10, 10)
+          3dprintingcontrol: 35 + rand(-10, 10)
+          lunarpbs: 35 + rand(-10, 10)
+          frontairlock: 45 + rand(-10, 10)
+          biodome: 75 + rand(-10, 10)
+          habitationdomes: 45 + rand(-10, 10)
+          pressuretest1: 45 + rand(-10, 10)
+          pressuretest2: 45 + rand(-10, 10)
+          pressuretest3: 45 + rand(-10, 10)
+          pressuretest4: 45 + rand(-10, 10)
+          dockingdome: 45 + rand(-10, 10)
+          suitup: 45 + rand(-10, 10)
+      MynoaClose:
+        global-measurement: 85 + rand(-10, 10)
+        regions:
+          ocean: "100"
+      MynoaHalf:
+        global-measurement: 10 + rand(-10, 10)
+      MynoaMangrove:
+        global-measurement: 85 + rand(-10, 10)
+        regions:
+          ocean: "100"
+      NoMoon:
+        regions:
+          nomoon-greenhouse: 85 + rand(-10, 10)
+          ocean: "100"
+          spring-lake-1: "100"
+      TiltedFrozen:
+        global-measurement: 10 + rand(-10, 10)
+        regions:
+          ocean: "100"
+          poi_polarbear_den: 30 + rand(-10, 10)
+      TiltedWarm:
+        global-measurement: 85 + rand(-10,10)
+        regions:
+          ocean: "100"
+      TiltedMelting:
+        global-measurement: 70 + rand(-5,5)
+        regions:
+          ocean: "100"
+  MAGNETIC_FIELD:
+    aliases:
+      - solar_wind
+      - solarwind
+      - magneticfield
+    default-measurement: moderate
+    disabled-worlds:
+      - Cancri
+      - CancriCold
+      - Gliese
+      - Kepler
+      - Trappist
+    display-name: magnetic field strength
+    messages:
+      measure-format: The {TOOL} is {MEASUREMENT}
+      disabled-in-world: We have no way of measuring this without visiting
+    worlds:
+      BrownDwarf:
+        global-measurement: very strong
+      Mars:
+        global-measurement: nonexistent
+      CAMP:
+        global-measurement: nonexistent
+      ETLife:
+        global-measurement: weak, influenced by nearby gas giant
+      TwoMoonsLluna:
+        global-measurement: nonexistent
+      LunarCrater:
+        global-measurement: nonexistent
+      MynoaClose:
+        global-measurement: strong, influenced by nearby gas giant
+      MynoaFar:
+        global-measurement: strong, influenced by nearby gas giant
+      MynoaHalf:
+        global-measurement: strong, influenced by nearby gas giant
+      MynoaMangrove:
+        global-measurement: strong, influenced by nearby gas giant
+      blackhole:
+        global-measurement: Very strong, the orientation of the magnetic field depends
+          on the blackholes spin, which is difficult to determine
+  OXYGEN:
+    aliases:
+      - air
+    default-measurement: 21 + rand(-0.5, 0.5)
+    disabled-worlds:
+      - BrownDwarf
+      - ETLife
+      - Gliese
+      - blackhole
+      - Trappist
+    display-name: oxygen level
+    messages:
+      numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: Likely none but we don't know yet
+    precision: 2
+    unit: "%"
+    worlds:
+      Cancri:
+        global-measurement: "0.1"
+      CancriCold:
+        global-measurement: "0.1"
+      Hub:
+        regions:
+          0g-construction: "0"
+      Kepler:
+        global-measurement: 18 + rand(-0.5, 0.5)
+        regions:
+          kepler_habitat: 21 + rand(-0.5, 0.5)
+      TwoMoonsLluna:
+        global-measurement: "0"
+      LunarCrater:
+        global-measurement: "0"
+        regions:
+          airlockleak: "0.04"
+          3dprintingunderground: 20 + rand(-0.25, 0.25)
+          3dprintingcontrol: 21 + rand(-0.5, 0.5)
+          lunarpbs: 21 + rand(-0.5, 0.5)
+          frontairlock: 21 + rand(-0.25, 0.25)
+          biodome: 25 + rand(-0.25, 0.25)
+          habitationdomes: 21 + rand(-0.25, 0.25)
+          pressuretest1: 21 + rand(-0.25, 0.25)
+          pressuretest2: 21 + rand(-0.25, 0.25)
+          pressuretest3: 21 + rand(-0.25, 0.25)
+          pressuretest4: 21 + rand(-0.25, 0.25)
+          dockingdome: 21 + rand(-0.25, 0.25)
+          suitup: 21 + rand(-0.25, 0.25)
+          icestoragefront: 21 + rand(-0.25, 0.25)
+          icestoragecave: 21 + rand(-0.25, 0.25)
+      Mars:
+        global-measurement: 0.17 + rand(-0.01, 0.01)
+      CAMP:
+        global-measurement: 0.17 + rand(-0.01, 0.01)
+      TiltedWarm:
+        global-measurement: 19 + rand(-0.5, 0.25)
+      TiltedMelting:
+        global-measurement: 20 + rand(-0.5, 0.25)
+  PRESSURE:
+    aliases:
+      - air_pressure
+      - atmosphere_pressure
+    conversions:
+      - psi
+      - hPa
+      - bar
+    default-measurement: ((1013-((({Y}-63)*0.1)+({WEATHER}*rand(-2,-1))))/1013)*100
+    disabled-worlds:
+      - blackhole
+    display-name: atmospheric pressure
+    messages:
+      numeric-measure-format: The measured {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: None (no atmosphere)
+    precision: 0
+    unit: "% of the Earth's pressure"
+    worlds:
+      BrownDwarf:
+        global-measurement:  ((((94-{Y})*150.04))/1013)*100
+      Cancri:
+        global-measurement: ((500+rand(-25,35))/1013)*100
+      CancriCold:
+        global-measurement: ((500+rand(-25,25))/1013)*100
+      ETLife:
+        global-measurement: ((182420 + rand(-1111, 1111))/1013)*100
+      EarthControl:
+        regions:
+          ocean: ((((61-{Y})*10.04)+1013)/1013)*100
+      Gliese:
+        global-measurement: ((((94-{Y})*150.04))/1013)*100
+      Hub:
+        global-measurement: (1 + rand(-0.01, 0.03))*100
+        regions:
+          0g-construction: "0"
+      Kepler:
+        global-measurement: ((90.1 + rand(-10.1, 10.1))/1013)*100
+        regions:
+          kepler_habitat: "100"
+          ocean: ((((61-{Y})*10.04)+1013)/1013)*100
+      TwoMoonsLluna:
+        global-measurement: "0"
+      LunarCrater:
+        global-measurement: "0"
+        regions:
+          airlockleak: "0"
+          3dprintingunderground: 1 + rand(-0.01, 0.03))*100
+          3dprintingcontrol: "(1*100)"
+          lunarpbs: (1 + rand(-0.01, 0.03))*100
+          frontairlock: (1 + rand(-0.01, 0.03))*100
+          biodome: (1 + rand(-0.01, 0.03))*100
+          habitationdomes: (1 + rand(-0.01, 0.03))*100
+          pressuretest1: "100"
+          pressuretest2: "100"
+          pressuretest3: "100"
+          pressuretest4: "100"
+          dockingdome: (1 + rand(-0.01, 0.03))*100
+          suitup: (1 + rand(-0.01, 0.03))*100
+          icestoragefront: (0.8 + rand(-0.01, 0.03))*100
+          icestoragecave: (1 + rand(-0.01, 0.03))*100
+      Mars:
+        global-measurement: ((0.655 + rand(-0.1, 0.1))/1013)*100
+      sdp13:
+        global-measurement: ((0.655 + rand(-0.1, 0.1))/1013)*100
+      MynoaClose:
+        regions:
+          ocean: ((((61-{Y})*10.04)+1013)/1013)*100
+      MynoaMangrove:
+        regions:
+          ocean: ((((71-{Y})*10.04)+1013)/1013)*100
+      NoMoon:
+        regions:
+          ocean: ((((61-{Y})*10.04)+1013)/1013)*100
+      TiltedFrozen:
+        regions:
+          ocean: ((((61-{Y})*10.04)+1013)/1013)*100
+      TiltedWarm:
+        regions:
+          ocean: ((((61-{Y})*10.04)+1013)/1013)*100
+      TiltedMelting:
+        regions:
+          ocean: ((((61-{Y})*10.04)+1013)/1013)*100
+      Trappist:
+        global-measurement: ((75 + rand(-25,25))/1013)*100
+  RADIATION:
+    conversions:
+      - mSv
+    default-measurement: ((2.4 + rand(-0.01, 0.01) + ({Y} / 180))/2.4)*100
+    disabled-worlds: null
+    display-name: overall radiation exposure per year
+    messages:
+      numeric-measure-format: "The {TOOL} is {MEASUREMENT}{UNIT} "
+      disabled-in-world: We have no way of measuring this without visiting
+    precision: 0
+    unit: "% of typical radiation exposure on earth"
+    worlds:
+      BrownDwarf:
+        global-measurement: (400/2.4)*100
+      Cancri:
+        global-measurement: (600/2.4)*100
+      CancriCold:
+        global-measurement: ((200+rand(-50,50))/2.4)*100
+      ColderCold:
+        global-measurement: ((0.5 + rand(-0.1, 0.1))/2.4)*100
+      ColderHot:
+        global-measurement: ((12.4 + rand(-0.01, 0.01) + ({Y} / 180) * 1.2)/2.4)*100
+        regions:
+          poi_cshunderground: (3.1 + rand(1.0,2.0))*100
+      ETLife:
+        global-measurement: "0"
+      Gliese:
+        global-measurement: (42/2.4)*100
+      Hub:
+        global-measurement: ((5 + rand(0,450))/2.4)*100
+      Kepler:
+        global-measurement: ((1.4 + rand(-0.2,0.2))/2.4)*100
+      TwoMoonsLluna:
+        global-measurement: (380/2.4)*100
+      LunarCrater:
+        global-measurement: (380/2.4)*100
+        regions:
+          3dprintingunderground: ((100 + rand(-10,10))/2.4)*100
+          3dprintingcontrol: ((150 + rand(-10,10))/2.4)*100
+          icestoragecave: ((100 + rand(-10,10))/2.4)*100
+          lunarpbs: ((200 + rand (-10,10))/2.4)*100
+          frontairlock: ((150 + rand(-10,10))/2.4)*100
+          biodome: ((200 + rand (-10,10))/2.4)*100
+          habitationdomes: ((150 + rand(-10,10))/2.4)*100
+          pressuretest1: ((100 + rand(-10,10))/2.4)*100
+          pressuretest2: ((100 + rand(-10,10))/2.4)*100
+          pressuretest3: ((100 + rand(-10,10))/2.4)*100
+          pressuretest4: ((100 + rand(-10,10))/2.4)*100
+          dockingdome: ((150 + rand(-10,10))/2.4)*100
+          suitup: ((150 + rand(-10,10))/2.4)*100
+      Mars:
+        global-measurement: ((240 + rand(0,60))/2.4)*100
+      sdp13:
+        global-measurement: ((240 + rand(0,60))/2.4)*100
+      MynoaClose:
+        global-measurement: "0"
+      MynoaFar:
+        global-measurement: ((0.09 + rand(-0.01, 0.01) + ({Y} / 180) * 0.09)/2.4)*100
+      MynoaMangrove:
+        global-measurement: ((0.09 + rand(-0.01, 0.01) + ({Y} / 180) * 0.09)/2.4)*100
+      MynoaHalf:
+        global-measurement: ((0.09 + rand(-0.01, 0.01) + ({Y} / 180) * 0.09)/2.4)*100
+      TiltedFrozen:
+        global-measurement: (0.83/2.4)*100
+      TiltedWarm:
+        global-measurement: ((2.4 + rand(-0.01, 0.01) + ({Y} / 180) * 4.8)/2.4)*100
+      TiltedMelting:
+        global-measurement: ((2.4 + rand(-0.01, 0.01) + ({Y} / 180) * 1.1)/2.4)*100
+      Trappist:
+        global-measurement: ((0.8 + rand(-0.1, 0.1))/2.4)*100
+  COSMICRAYS:
+    default-measurement: "0"
+    disabled-worlds: null
+    display-name: localized galactic cosmic rays
+    messages:
+      numeric-measure-format: The power of {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: We have no way of measuring this without visiting
+    precision: 1
+    unit: MeV
+    worlds:
+      Mars:
+        global-measurement: rand(0,1)*rand(50,7000)
+      CAMP:
+        global-measurement: rand(0,1)*rand(50,7000)
+      Hub:
+        global-measurement: rand(0,1)*rand(100,10000)
+      TwoMoonsLluna:
+        global-measurement: rand(0,1)*rand(50,7000)
+      LunarCrater:
+        global-measurement: rand(0,1)*rand(50,7000)
+  RADIUS:
+    conversions:
+      - radiuskm
+      - miles
+    default-measurement: "1"
+    disabled-worlds:
+      - Hub
+    display-name: mean radius of the planet
+    messages:
+      numeric-measure-format: The {TOOL} is {MEASUREMENT} {UNIT}
+      disabled-in-world: This is not a planet with a radius
+    precision: 1
+    unit: times the Earth's radius
+    worlds:
+      BrownDwarf:
+        global-measurement: "10.32"
+      Mars:
+        global-measurement: ".53"
+      CAMP:
+        global-measurement: ".53"
+      Cancri:
+        global-measurement: "10.32"
+      CancriCold:
+        global-measurement: "10.32"
+      ETLife:
+        global-measurement: ".25"
+      Gliese:
+        global-measurement: "4.33"
+      Kepler:
+        global-measurement: "1.17"
+      TwoMoonsLluna:
+        global-measurement: ".27"
+      LunarCrater:
+        global-measurement: ".27"
+      Trappist:
+        global-measurement: ".91"
+      blackhole:
+        global-measurement: ".0076"
+  ROTATIONAL_PERIOD:
+    aliases:
+      - daylength
+      - daytime
+      - rotationalperiod
+      - rotational
+    default-measurement: "24"
+    disabled-worlds:
+      - BrownDwarf
+      - Cancri
+      - CancriCold
+      - ColderCold
+      - ColderStrip
+      - ColderHot
+      - Gliese
+      - Hub
+      - Kepler
+      - Trappist
+    display-name: planetary rotational period
+    messages:
+      numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: This planetary body or object is tidally-locked OR does not rotate
+    precision: 1
+    unit: " hours"
+    worlds:
+      Mars:
+        global-measurement: "24.6"
+      CAMP:
+        global-measurement: "24.6"
+      ETLife:
+        global-measurement: "85"
+      TwoMoonsLluna:
+        global-measurement: "708.7"
+      LunarCrater:
+        global-measurement: "708.7"
+      MynoaClose:
+        global-measurement: "102"
+      MynoaHalf:
+        global-measurement: "102"
+      MynoaFar:
+        global-measurement: "102"
+      MynoaMangrove:
+        global-measurement: "102"
+      NoMoon:
+        global-measurement: "8"
+      TwoMoons:
+        global-measurement: "96"
+      TwoMoonsLow:
+        global-measurement: "96"
+      Kepler:
+        global-measurement: "3120"
+      blackhole:
+        global-measurement: "26.4"
+  TECTONIC:
+    aliases:
+      - seismic
+      - seismometer
+      - tektounic
+    default-measurement: average
+    disabled-worlds:
+      - Hub
+      - blackhole
+    display-name: tectonic activity
+    messages:
+      measure-format: The {TOOL} is {MEASUREMENT}
+      disabled-in-world: This is not a planet so it has no tectonic activity
+    worlds:
+      TwoMoonsLluna:
+        global-measurement: High
+      LunarCrater:
+        global-measurement: None
+      Mars:
+        global-measurement: None
+      CAMP:
+        global-measurement: None
+      MynoaHalf:
+        global-measurement: High
+      Gliese:
+        global-measurement: Gliese is similar to any other gas giant. Where it has a
+          very dense rocky core that is tecctonically inactive.
+  TEMPERATURE:
+    aliases:
+      - temp
+    conversions:
+      - fahrenheit
+      - kelvin
+    default-measurement: 21 + rand(-0.1, 0.1) +
+      ({ALTITUDE}/20+{WEATHER}*rand(-3.1,-1.1)+{NIGHT}*rand(-20,-10))
+    disabled-worlds:
+      - blackhole
+    display-name: ambient temperature
+    messages:
+      numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: We have no way of measuring this without visiting
+    precision: 1
+    unit: °C
+    worlds:
+      BrownDwarf:
+        global-measurement: 856.85 + rand(-50,50)
+      Cancri:
+        global-measurement: 2436 + rand(-130,130)
+      CancriCold:
+        global-measurement: 1350 + rand(-100,100)
+        regions:
+          CancriCold_station: 21 + rand(-0.1, 0.1)
+          thermal_vents: 1700 + rand(-100,100)
+          thermal_vents2: 1700 + rand(-100,100)
+          thermal_vents3: 1700 + rand(-100,100)
+          lavalake1: 1550 + rand(-75,75)
+          lavalake2: 1550 + rand(-75,75)
+          lavalake3: 1550 + rand(-75,75)
+          lavalake4: 1550 + rand(-75,75)
+      ColderCold:
+        global-measurement: -110 + rand(-10,10)
+        regions:
+          poi_cscunderground: 24 + rand(-1,1)
+          fog-release: 0 + rand(-10, 5)
+      ColderStrip:
+        regions:
+          poi_habitable_strip_savanna: 27 + rand(-1,1)
+          poi_habitable_strip_snowy_edge: -8 + rand(-2,2)
+          poi_habitable_strip_desert: 34 + rand(-1,1)
+          poi_habitable_strip_jungle: 20 + rand(1,2)
+          poi_habitable_strip_cold_taiga: 10 + rand(-2,2)
+          poi_habitable_strip_temperate_forest: 23 + rand(-1,1)
+      ColderHot:
+        global-measurement: 110 + rand(-10,10)
+        regions:
+          poi_cshunderground: 20 + rand(-2.2,2.2)
+      ETLife:
+        global-measurement: 42.1 + rand(-2.1,2.3)
+      EarthControl:
+        regions:
+          around-tent: 24 + rand(-1,1)
+          earthcontrol-lava-1: 300 + rand(1,20)
+          lava-temperature: 400 + rand(1,10)
+          ocean: 12.0 + rand(-4,2)
+          hotspringlake: 50.0 + rand(-1,4)
+          yellowstone: 21 + rand(-2, 2) +
+            ({ALTITUDE}/20+{WEATHER}*rand(-3.1,-1.1)+{NIGHT}*rand(-20,-10))
+          hot_shrubland: 24 + rand(-2, 4) +
+            ({ALTITUDE}/20+{WEATHER}*rand(-3.1,-1.1)+{NIGHT}*rand(-20,-10))
+          scarlet_tundra: 0 + rand (-23, 1) +
+            ({ALTITUDE}/20+{WEATHER}*rand(-3.1,-1.1)+{NIGHT}*rand(-20,-10))
+          orchid_swamp: ({ALTITUDE}/20+{WEATHER}*rand(-3.1,-1.1)+{NIGHT}*rand(-20,-10))
+          tropical_archipelago: 24 + rand(-2, 4) +
+            ({ALTITUDE}/20+{WEATHER}*rand(-3.1,-1.1)+{NIGHT}*rand(-20,-10))
+          volcano: 32 + rand(-2, 10) + ({ALTITUDE}/40+{WEATHER}*rand(-3.1,-1.1))
+      Gliese:
+        global-measurement: 439 + rand(-36,36)
+      Kepler:
+        global-measurement: 58 + rand(-10,10)
+        regions:
+          kepler_habitat: 20 + rand(1,2)
+          ocean: 12.0 + rand(-4,2) 
+      TwoMoonsLluna:
+        global-measurement: -173 - 0.001 * {Y}
+        regions:
+          eastvolcano: 300 + rand(1,20)
+          northvolcano: 300 + rand(1,20)
+      LunarCrater:
+        global-measurement: -173 - 0.001 * {Y}
+        regions:
+          3dprintingunderground: 21 + rand(-0.2,0.2)
+          3dprintingcontrol: 20 + rand(1,2)
+          lunarpbs: 20 + rand(1,2)
+          frontairlock: 21 + rand(-0.2, 0.2)
+          biodome: 26.9 + rand(-0.2, 0.2)
+          habitationdomes: 21 + rand(-0.2, 0.2)
+          pressuretest1: 17.3 + rand(-0.2,0.2)
+          pressuretest2: 17.3 + rand(-0.2,0.2)
+          pressuretest3: 17.3 + rand(-0.2,0.2)
+          pressuretest4: 17.3 + rand(-0.2,0.2)
+          dockingdome: 21 + rand(-0.2,0.2)
+          suitup: 21 + rand(-0.2,0.2)
+          icestoragefront: "-20.6"
+          icestoragecave: 11.3 + rand(-0.2,0.2)
+      Mars:
+        global-measurement: -60 + rand(-2.1,2.3)
+      CAMP:
+        global-measurement: -60 + rand(-2.1,2.3)
+      MynoaClose:
+        global-measurement: 4 + rand(-0.1, 0.1)
+        regions:
+          ocean: (({Y}-52)/2) + rand(-0.5, 0.5)
+      MynoaFar:
+        global-measurement: 22 + rand(-0.1, 0.1)
+      MynoaMangrove:
+        global-measurement: 22 + rand(-0.1, 0.1)
+      MynoaHalf:
+        global-measurement: 300 + rand(-10, 10)
+      NoMoon:
+        regions:
+          nomoon-greenhouse: 26.9 + rand(-0.2, 0.2)
+          ocean: 16.3 + rand(-0.4, 0.4)
+          spring-lake-1: 36.9 + rand(-0.2, 4.2)
+          spring-lake-2: 36.9 + rand(-0.2, 4.2)
+      TiltedFrozen:
+        global-measurement: -25.5 + rand(-0.5,1.5)
+        regions:
+          poi_vent_1: 700 + rand(-25,25)
+          poi_vent_2: 700 + rand(-25,25)
+          poi_vent_3: 700 + rand(-25,25)
+          poi_vent_4: 700 + rand(-25,25)
+          poi_vent_5: 700 + rand(-25,25)
+          poi_vent_6: 700 + rand(-25,25)
+          poi_vent_7: 700 + rand(-25,25)
+          poi_vent_8: 700 + rand(-25,25)
+          poi_vent_9: 700 + rand(-25,25)
+          poi_polarbearden: 20 + rand(-5,5)
+          poi_rabbitden: 18 + rand(-5,5)
+          ocean: 10 + rand(-3,3)
+          ocean-warmer: 20 + rand(-3,3)
+          ocean-warmer-deep: 120 + rand (-15,15)
+      TiltedWarm:
+        global-measurement: 26.9 + rand(-0.2,0.2)
+        regions:
+          poi_vent_1: 700 + rand(-25,25)
+          poi_vent_2: 700 + rand(-25,25)
+          poi_vent_3: 700 + rand(-25,25)
+          poi_vent_4: 700 + rand(-25,25)
+          poi_vent_5: 700 + rand(-25,25)
+          poi_vent_6: 700 + rand(-25,25)
+          poi_vent_7: 700 + rand(-25,25)
+          poi_vent_8: 700 + rand(-25,25)
+          poi_vent_9: 700 + rand(-25,25)
+          ocean: 50 + rand(-3,3)
+          ocean-warmer: 70 + rand(-3,3)
+          ocean-warmer-deep: 120 + rand (-15,15)
+      TiltedMelting:
+        global-measurement: -4 + rand(1,3)
+        regions:
+          poi_vent_1: 700 + rand(-25,25)
+          poi_vent_2: 700 + rand(-25,25)
+          poi_vent_3: 700 + rand(-25,25)
+          poi_vent_4: 700 + rand(-25,25)
+          poi_vent_5: 700 + rand(-25,25)
+          poi_vent_6: 700 + rand(-25,25)
+          poi_vent_7: 700 + rand(-25,25)
+          poi_vent_8: 700 + rand(-25,25)
+          poi_vent_9: 700 + rand(-25,25)
+          ocean: 50 + rand(-3,3)
+          ocean-warmer: 70 + rand(-3,3)
+          ocean-warmer-deep: 120 + rand (-15,15)
+      Trappist:
+        global-measurement: -27 + rand(-3.5,3.5)
+        regions:
+          trappist-pool-1: -17 + rand(-10,10)
+          trappist-pool-2: -7 + rand(-15,15)
+          trappist-pool-3: -10 + rand(-15,15)
+      TwoMoons:
+        global-measurement: 18 + rand(-0.1, 0.1)
+        regions:
+          ocean: (({Y}-32)/10) + rand(-0.5, 0.5)
+      TwoMoonsLow:
+        global-measurement: 18 + rand(-0.1, 0.1)
+        regions:
+          ocean: (({Y}-32)/10) + rand(-0.5, 0.5)
+  TIDES:
+    aliases:
+      - tidal_variance
+      - ocean_level
+    default-measurement: similar to earth
+    disabled-worlds:
+      - BrownDwarf
+      - Mars
+      - CAMP
+      - Cancri
+      - CancriCold
+      - ETLife
+      - Gliese
+      - Hub
+      - Kepler
+      - TwoMoonsLluna
+      - LunarCrater
+      - blackhole
+    display-name: tidal variance
+    messages:
+      measure-format: The {TOOL} is {MEASUREMENT}
+      disabled-in-world: Tides are not possible here
+    worlds:
+      ColderCold:
+        global-measurement: slightly less than earth
+      ColderStrip:
+        global-measurement: slightly less than earth
+      ColderHot:
+        global-measurement: slightly less than earth
+      MynoaClose:
+        global-measurement: greater than earth, currently high tide
+      MynoaFar:
+        global-measurement: greater than earth, currently low tide
+      MynoaMangrove:
+        global-measurement: greater than earth, currently lower tide
+      MynoaHalf:
+        global-measurement: greater than earth
+      NoMoon:
+        global-measurement: 1/3 that of earth
+      Trappist:
+        global-measurement: unknown
+      TwoMoons:
+        global-measurement: About 8 times greater than the range of tides on Earth,
+          currently high tide
+      TwoMoonsLow:
+        global-measurement: About 8 times greater than the range of tides on Earth,
+          currently low tide
+      TwoMoonsLluna:
+        global-measurement: There is no water here but if there was the tides would be big, check tectonic
+  TILT:
+    aliases:
+      - axis_tilt
+      - axial_tilt
+    default-measurement: "23.4"
+    disabled-worlds:
+      - blackhole
+    display-name: axial tilt
+    messages:
+      numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: unknown
+    precision: 1
+    unit: °
+    worlds:
+      BrownDwarf:
+        global-measurement: "7"
+      Mars:
+        global-measurement: "25"
+      CAMP:
+        global-measurement: "25"
+      Cancri:
+        global-measurement: 86 + rand(-33.4,30.7)
+      CancriCold:
+        global-measurement: 86 + rand(-33.4,30.7)
+      ColderCold:
+        global-measurement: "0"
+      ColderStrip:
+        global-measurement: "0"
+      ColderHot:
+        global-measurement: "0"
+      ETLife:
+        global-measurement: "0.1"
+      Hub:
+        global-measurement: "0"
+      Kepler:
+        global-measurement: "25"
+      Gliese:
+        global-measurement: "85.8"
+      TwoMoonsLluna:
+        global-measurement: "1.5"
+      LunarCrater:
+        global-measurement: "1.5"
+      MynoaClose:
+        global-measurement: "0"
+      MynoaFar:
+        global-measurement: "0"
+      MynoaMangrove:
+        global-measurement: "0"
+      MynoaHalf:
+        global-measurement: "0"
+      TiltedFrozen:
+        global-measurement: "90"
+      TiltedWarm:
+        global-measurement: "90"
+      TiltedMelting:
+        global-measurement: "90"
+      Trappist:
+        global-measurement: "89.74"
+      NoMoon:
+        global-measurement: "0"
+  YEAR:
+    aliases:
+      - orbital_period
+    default-measurement: "365"
+    disabled-worlds:
+      - Hub
+      - blackhole
+    display-name: time to orbit the star
+    messages:
+      numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
+      disabled-in-world: Unknown at this time
+    precision: 1
+    unit: " days"
+    worlds:
+      BrownDwarf:
+        global-measurement: "3"
+      Mars:
+        global-measurement: "687"
+      CAMP:
+        global-measurement: "687"
+      Cancri:
+        global-measurement: "0.7"
+      CancriCold:
+        global-measurement: "0.7"
+      ColderCold:
+        global-measurement: "100"
+      ColderStrip:
+        global-measurement: "100"
+      ColderHot:
+        global-measurement: "100"
+      ETLife:
+        global-measurement: "4333"
+      Gliese:
+        global-measurement: "2.6"
+      Kepler:
+        global-measurement: "130"
+      NoMoon:
+        global-measurement: "1095"
+      Trappist:
+        global-measurement: "6"
+      TwoMoons:
+        global-measurement: "91.2"
+      TwoMoonsLow:
+        global-measurement: "91.2"
+  SCALE:
+    aliases:
+      - size
+      - blocksize
+    disabled-worlds:
+      - Gliese
+      - BrownDwarf
+    default-measurement: 1 meter
+    display-name: scale
+    messages:
+      measure-format: The {TOOL} of this world is {MEASUREMENT} per block
+      disabled-in-world: The scale of this world is inaccurate due to Minecraft world height limits
+    worlds:
+      NeutronStar:
+        global-measurement: "482.8 meters (1584 feet) "
+      Sagittarius:
+        global-measurement: "260,000 miles "
+      Quasar:
+        global-measurement: "32,259 miles "
+      Pillars:
+        global-measurement: "0.006 light years "
+      Universe:
+        global-measurement: "19.5 million light years "
+      Blackhole:
+        global-measurement: "975,976 miles "
+      SuperCluster:
+        global-measurement: "4.9 trillion miles "
+      ETLife:
+        global-measurement: "0.015 millimeters or "
+      SolarSystem:
+        global-measurement: "416 miles"
 validation:
-  tolerance: 1.0
-  timeout: 30
-  messages:
-    prompt:
-      all:
-        - '&aWhat value did you measure for &f&l{TOOL}&a?'
-        - '&7&oPlease type your answer in chat!'
-    timeout:
-      all:
-        - '&c&lYou failed to tell us a value for {TOOL}! Please try again'
-    no-number:
-      all:
-        - '&cYour message did not contain any numbers!'
-    found-number:
-      all:
-        - 'We found the number ''&7{VAL}&f'' in your message'
-    success:
-      all:
-        - '&a&lGood job!'
-        - '&2{VAL} &amatches our calculations!'
-    failure:
-      all:
-        - '&c&lTry again!'
-        - '&4{VAL} &cis not quite close enough.'
   commands:
+    found-number:
+      all: []
+    no-number:
+      all: []
     prompt:
+      all: []
+    success:
+      AIRFLOW:
+        - questadmin nextstage {PLAYER} Not-So-Solar-Wind
+      GRAVITY:
+        - questadmin nextstage {PLAYER} Ice on Fire!
+      OXYGEN:
+        - questadmin nextstage {PLAYER} A Breath of Fresh Air
+      PRESSURE:
+        - questadmin nextstage {PLAYER} Feeling the Pressure
+      RADIATION:
+        - questadmin nextstage {PLAYER} Seas of Lava?
+      TEMPERATURE:
+        - questadmin nextstage {PLAYER} What's Cooler Than Being Cool?
       all:
+        - title {PLAYER} title {"text":"Good job!"}
     timeout:
+      all: []
+  messages:
+    failure:
+      AIRFLOW:
+        - "&8>   &7If you're stuck, talk to &fHuxley&7 again!"
+      OXYGEN:
+        - "&8>   &7If you're stuck, talk to &fOlivia&7 again!"
+      PRESSURE:
+        - "&8>   &7Make sure you use percent. If you're stuck, talk to &fHarlem&7
+          again!"
+      TEMPERATURE:
+        - "&8>   &7Make sure you use Celcius. If you're stuck, talk to
+          &fMisavo&7 again!"
       all:
+        - "&8> &e{VAL}{UNIT}&7 does not match the range of possible data."
+        - "&8> &7Click the computer to try again!"
+    found-number:
+      all: []
     no-number:
       all:
-    found-number:
+        - "&8> &cNo numbers detected!"
+        - "&8> &7Click the computer to try again!"
+    prompt:
       all:
+        - "&8>"
+        - "&8> &7&lData Entry Computer &7&o(v2.0)"
+        - "&8>"
+        - "&8>   &7Current {TOOL}: &8Unknown"
+        - "&8>"
+        - "&8>   &7Please type the {TOOL} value you just measured:"
+        - "&8>"
     success:
       all:
-      - 'title {PLAYER} title {"text":"Good job!"}'
+        - "&8> &7Value updated!"
+        - "&8> &7Current {TOOL}: &a{VAL}{UNIT}"
+    timeout:
+      all:
+        - "&8>"
+        - "&8> &7Computer left idle."
+        - "&8> &7Logging off... Goodbye!"
+        - "&8>"
+  timeout: 30
+  tolerance: 1
