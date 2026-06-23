@@ -20,6 +20,8 @@ public class Conversion {
     private String unit;
     /* The expression to calculate the passed value in the new unit*/
     private JSNumericExpression expression;
+    /* The decimal precision of the tool. */
+    private final int precision;
 
     /**
      * Constructs a Conversion.
@@ -27,11 +29,13 @@ public class Conversion {
      * @param name       The name of the Conversion.
      * @param unit       The unit being converted to.
      * @param expression The Conversion equation.
+     * @param precision  The number of places after the decimal place to include
      */
-    protected Conversion(String name, String unit, JSNumericExpression expression) {
+    protected Conversion(String name, String unit, JSNumericExpression expression, int precision) {
         this.name = name;
         this.unit = unit;
         this.expression = expression;
+        this.precision = precision;
     }
 
     /**
@@ -50,6 +54,10 @@ public class Conversion {
 
     public String getUnit() {
         return this.unit;
+    }
+
+    public int getPrecision() {
+        return this.precision;
     }
 
     /**
@@ -86,7 +94,8 @@ public class Conversion {
         Utils.msg(sender,
                 getName() + ":",
                 "  Expression: " + getExpression(),
-                "  Unit: " + getUnit());
+                "  Unit: " + getUnit(),
+                "  Precision: " + getPrecision());
     }
 
 }
