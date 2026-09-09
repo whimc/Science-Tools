@@ -6,11 +6,10 @@ ScienceTools is a Minecraft plugin to simulate values for scientific tools. This
 
 - **Altitude** (`ALTITUDE`) — altitude/height
 - **Airflow** (`AIRFLOW`) — wind speed and airflow
-- **Atmosphere** (`ATMOSPHERE`) — atmospheric composition (nitrogen, oxygen, methane, etc.)
+- **Atmosphere** (`ATMOSPHERE`) — atmospheric composition (nitrogen, oxygen, methane, etc.). `/oxygen` and `/o2` are aliases.
 - **Gravity** (`GRAVITY`) — gravitational pull
 - **Humidity** (`HUMIDITY`) — humidity / water vapor
 - **Magnetic Field** (`MAGNETIC_FIELD`) — magnetic field strength
-- **Oxygen** (`OXYGEN`) — oxygen level
 - **Pressure** (`PRESSURE`) — atmospheric pressure
 - **Radiation** (`RADIATION`) — overall radiation exposure
 - **Cosmic Rays** (`COSMICRAYS`) — galactic cosmic ray exposure
@@ -341,7 +340,7 @@ validation:
         - "&8>   &7If you're stuck, talk to &fHarlem&7 again!"
       WIND:
         - "&8>   &7If you're stuck, talk to &fHuxley&7 again!"
-      OXYGEN:
+      ATMOSPHERE:
         - "&8>   &7If you're stuck, talk to &fOlivia&7 again!"
   commands:
     prompt:
@@ -362,7 +361,7 @@ validation:
       - 'questadmin nextstage {PLAYER} Feeling the Pressure'
       WIND:
       - 'questadmin nextstage {PLAYER} Not-So-Solar-Wind'
-      OXYGEN:
+      ATMOSPHERE:
       - 'questadmin nextstage {PLAYER} A Breath of Fresh Air'
       RADIATION:
       - 'questadmin nextstage {PLAYER} Seas of Lava?'
@@ -391,9 +390,9 @@ validation:
 
 ## Science Tools GUI (Tricorder)
 
-Right-click a glowing **Tricorder** (an Observer) to open a chest GUI of every loaded science tool. Hover an icon for a short explanation of what it measures; **left-click** to measure at your current location. The GUI closes so the result is visible in chat, with a sound and on-screen title. **Right-click** a numeric tool to cycle its display unit. A book in the top-left shows your last 5 measurements. Requires `sciencetools.user`.
+Right-click a glowing **Tricorder** (an Observer) to open a chest GUI of every loaded science tool. Hover an icon for a short explanation of what it measures; **left-click** to measure at your current location. The GUI closes so the result can show on screen as two small lines: the tool name, then the reading and unit. Chat is off by default. **Shift-click** a numeric tool to cycle its display unit. A book in the top-left shows your last 5 measurements; left-click it to print them in chat. Requires `sciencetools.user`.
 
-There is a 5-second cooldown per tool (`gui.measure-cooldown-seconds`).
+There is a 5-second cooldown per tool (`gui.measure-cooldown-seconds`). Operators can hide tools in the GUI per world with `/sciencetools hide` (commands like `/gravity` still work).
 
 ![Science Tools GUI](docs/science-tools-gui.png)
 
@@ -414,7 +413,47 @@ Operators can give every player a **Tricorder**. Locked mode keeps it in **hotba
 
 `/tricorder` requires `sciencetools.admin`. The global mode is saved as `gui.tricorder-mode` (`off`, `locked`, or `unlocked`).
 
-If a typed command like `/rad` matches more than one tool, chat will ask **Did you mean /radius?** with clickable names.
+### Measurement display
+
+After a successful measure, the plugin can show the reading on screen, in chat, or both.
+
+| Key | Default | What it does |
+| --- | --- | --- |
+| `gui.show-on-screen` | `true` | Two small lines: tool name, then reading and unit |
+| `gui.show-in-chat` | `false` | The usual chat measurement line |
+
+Errors still go to chat (cooldown, tool disabled in this world, unknown tool). Clicking the last-5 book still prints history in chat. Measurements are still stored for Quests and MySQL either way.
+
+### Misspelled tool names
+
+Kids can type a close spelling of a tool command. `/amisfer` is rewritten to `/atmosphere`. The matcher uses the tool key, aliases, and words from the display name (so “atmospheric” also points at Atmosphere). If two tools are equally close, chat asks **Did you mean /radius?** with clickable names. `/sciencetools measure` uses the same matching.
+
+### Hiding tools in the GUI
+
+`gui.hidden` only removes icons from the Tricorder. `/gravity` and the other tool commands still work.
+
+```yaml
+gui:
+  hidden:
+    all:
+      - SCALE              # hidden in every world
+      - COSMICRAYS
+    RocketLaunch:          # extra tools hidden only in this world
+      - ALTITUDE
+      - GRAVITY
+      # ...every tool, so the Tricorder is empty on RocketLaunch
+```
+
+`all` is not a Minecraft world. It is the global list. The sample config hides **Scale** and **Cosmic Rays** everywhere and hides **every tool** on `RocketLaunch`. A world name key hides extra tools only in that world. A tool listed under both `all` and a world is hidden in that world either way.
+
+| Command | Effect |
+| --- | --- |
+| `/sciencetools hide SCALE all` | Hide Scale in the GUI on every world |
+| `/sciencetools hide YEAR Hub` | Hide Year in the GUI only on Hub |
+| `/sciencetools show SCALE all` | Put Scale back on the global list |
+| `/sciencetools hide SCALE` | Hide Scale in the sender’s current world |
+
+`/sciencetools hide` and `show` require `sciencetools.admin` and write back to `config.yml`.
 
 ### GUI configuration
 
@@ -424,12 +463,15 @@ If a typed command like `/rad` matches more than one tool, chat will ask **Did y
 | `gui.enabled` | Whether right-clicking the Tricorder opens the GUI |
 | `gui.trigger-item` | Material for the Tricorder (default `OBSERVER`) |
 | `gui.item-name` | Display name used to identify the Tricorder (default `Tricorder`) |
-| `gui.tricorder-mode` | `off`, `locked`, or `unlocked` |
+| `gui.tricorder-mode` | `off`, `locked`, or `unlocked` (sample default `locked`) |
 | `gui.locked-item` | Legacy flag; `true` means locked if `tricorder-mode` is missing |
 | `gui.measure-cooldown-seconds` | Wait time before measuring the same tool again (default `5`) |
+| `gui.show-on-screen` | Two small on-screen lines: tool name, then reading and unit (default `true`) |
+| `gui.show-in-chat` | Print the measurement in chat (default `false`) |
 | `gui.title` | Chest GUI title |
 | `gui.items` | Material for each tool icon |
 | `gui.lore` | Short hover-text explanation for each tool |
+| `gui.hidden` | Tools to omit from the GUI. `all` is every world (not a world name). Sample hides Scale and Cosmic Rays everywhere and every tool on RocketLaunch |
 
 
 Icons sit three per row with a gap between each. Radius uses an **Ender Pearl**; magnetic field still uses a Compass.
@@ -444,16 +486,16 @@ Icons sit three per row with a gap between each. Radius uses an **Ender Pearl**;
 | `/sciencetools validate <tool> <player> <world> <x> <y> <z>` | Take the value of the tool at the provided location                |
 | `/sciencetools reload`                                       | Reload the plugin's config                                         |
 | `/sciencetools js`                                           | Run interpreted JavaScript                                         |
-| `/sciencetools measure <tool>`                               | Measure the given science tool                                     |
+| `/sciencetools hide <tool> [world\|all]` | Hide a tool in the Tricorder GUI for a world |
+| `/sciencetools show <tool> [world\|all]` | Show a hidden tool in the Tricorder GUI |
 | `/tricorder on|off|unlock [player]`                          | Give, unlock, or remove the Tricorder                              |
 
 
  
 
-Using `/sciencetools validate OXYGEN MyName` when standing on LunarCrater (outdoors)
-on our server will open a data entry computer prompt in the chat that accepts a
-value (input by typing a number in the chat). It will want a value of 0.0% since
-the oxygen levels on the moon are at 0.0%.
+Using `/atmosphere` (also `/oxygen` or `/o2`) when standing on LunarCrater (outdoors)
+on our server reports that there is no detectable atmosphere. Indoors, the same
+tool describes the station air mix (nitrogen, oxygen, and other gases).
 
 Using `/sciencetools validate PRESSURE MyName LunarCrater 40 22 37` 
 on our server will open a data entry computer prompt in the chat that accepts a

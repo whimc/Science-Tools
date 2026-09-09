@@ -79,6 +79,15 @@ public final class ToolNameMatcher {
         if (tool.getAliases() != null) {
             names.addAll(tool.getAliases());
         }
+        String display = tool.getDisplayName();
+        if (display != null && !display.isEmpty()) {
+            names.add(display);
+            for (String word : display.split("\\s+")) {
+                if (lettersOnly(word).length() >= 4) {
+                    names.add(word);
+                }
+            }
+        }
         return names;
     }
 
@@ -111,18 +120,19 @@ public final class ToolNameMatcher {
         }
 
         int skelDist = levenshtein(nameSkel, inputSkel);
-        if (skelDist == 1 && Math.min(nameSkel.length(), inputSkel.length()) >= 4) {
-            return 30;
+        int minSkel = Math.min(nameSkel.length(), inputSkel.length());
+        if (skelDist > 0 && skelDist <= 2 && minSkel >= 4 && inputKey.length() >= 5) {
+            return 28 + skelDist * 2;
         }
 
         int normDist = levenshtein(nameNorm, inputNorm);
-        int maxNorm = Math.max(2, Math.min(3, inputNorm.length() / 3));
+        int maxNorm = Math.max(2, Math.min(4, inputNorm.length() / 2));
         if (normDist > 0 && normDist <= maxNorm && inputNorm.length() >= 5) {
             return 40 + normDist;
         }
 
         int rawDist = levenshtein(nameKey, inputKey);
-        if (rawDist > 0 && rawDist <= 2 && inputKey.length() >= 6) {
+        if (rawDist > 0 && rawDist <= 3 && inputKey.length() >= 6) {
             return 42 + rawDist;
         }
 

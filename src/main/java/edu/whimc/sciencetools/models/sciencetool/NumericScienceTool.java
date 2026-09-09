@@ -94,7 +94,10 @@ public class NumericScienceTool extends ScienceTool {
             message += " (" + converted + conversion.getUnit() + ")";
         }
 
-        Utils.msg(player, message);
+        state.prepareTitle(player, primaryValue, primaryUnit == null ? "" : primaryUnit);
+        if (state.showInChat()) {
+            Utils.msg(player, message);
+        }
         return primaryValue + primaryUnit;
     }
 

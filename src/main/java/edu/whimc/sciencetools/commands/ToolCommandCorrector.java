@@ -25,12 +25,8 @@ public class ToolCommandCorrector implements Listener {
      *
      * @param event The command preprocess event.
      */
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         String message = event.getMessage();
         if (message == null || message.length() < 2 || message.charAt(0) != '/') {
             return;
@@ -60,16 +56,13 @@ public class ToolCommandCorrector implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (!player.hasPermission("sciencetools.user")) {
-            return;
-        }
-
         if (matches.size() > 1) {
             event.setCancelled(true);
             Utils.sendDidYouMean(player, matches);
             return;
         }
 
+        event.setCancelled(false);
         event.setMessage("/" + matches.get(0).getToolKey() + args);
     }
 

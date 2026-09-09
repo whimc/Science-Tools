@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 /**
@@ -26,6 +25,7 @@ public class PlayerToolState {
     private final Map<UUID, Map<String, Long>> lastMeasure = new HashMap<>();
     private final Map<UUID, Map<String, Integer>> unitIndex = new HashMap<>();
     private final Map<UUID, Deque<Measurement>> history = new HashMap<>();
+    private final Map<UUID, String[]> titleParts = new HashMap<>();
 
     /**
      * Seconds left before this player can measure this tool again.
@@ -65,19 +65,50 @@ public class PlayerToolState {
     }
 
     /**
-     * Plays a click sound and shows a short title with the measurement.
+     * Remembers the value and unit from a measurement so the title can show them apart.
      *
-     * @param player       The player.
-     * @param tool         The tool that was measured.
-     * @param measurement  The value shown to the player.
+     * @param player The player.
+     * @param value  The numeric or text reading.
+     * @param unit   The unit, or empty when the tool has none.
      */
-    public void playSuccess(Player player, ScienceTool tool, String measurement) {
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 1.4F);
-        String subtitle = ChatColor.stripColor(Utils.colored(measurement));
-        if (subtitle.length() > 48) {
-            subtitle = subtitle.substring(0, 45) + "...";
+    public void prepareTitle(Player player, String value, String unit) {
+        this.titleParts.put(player.getUniqueId(), new String[]{
+                value == null ? "" : value,
+                unit == null ? "" : unit
+        });
+    }
+
+    /**
+     * Shows two small subtitle lines: tool name, then the reading and unit.
+     *
+     * @param player The player.
+     * @param tool   The tool that was measured.
+     */
+    public void playSuccess(Player player, ScienceTool tool) {
+        if (!showOnScreen()) {
+            return;
         }
-        player.sendTitle(Utils.colored("&b" + tool.getDisplayName()), Utils.colored("&f" + subtitle), 5, 40, 10);
+        String[] parts = this.titleParts.remove(player.getUniqueId());
+        String value = parts == null ? "" : parts[0];
+        String unit = parts == null ? "" : parts[1];
+        String type = ChatColor.stripColor(Utils.colored(tool.getDisplayName())).trim();
+        if (type.isEmpty()) {
+            type = tool.getToolKey();
+        }
+        String reading = ChatColor.stripColor(Utils.colored(value == null ? "" : value)).trim();
+        String unitText = ChatColor.stripColor(Utils.colored(unit == null ? "" : unit)).trim();
+        String amount = reading;
+        if (!unitText.isEmpty()) {
+            amount = reading.isEmpty() ? unitText : reading + " " + unitText;
+        }
+
+        // Empty large title so both lines use the smaller subtitle size.
+        player.sendTitle(" ",
+                Utils.colored("&f" + escapeTitle(type) + "\n&b" + escapeTitle(amount)), 5, 50, 10);
+    }
+
+    private static String escapeTitle(String text) {
+        return text.replace("%", "%%");
     }
 
     /**
@@ -160,6 +191,24 @@ public class PlayerToolState {
         }
         Integer index = byTool.get(tool.getToolKey().toLowerCase());
         return index == null ? 0 : index;
+    }
+
+    /**
+     * Whether measurements should show as an on-screen title.
+     *
+     * @return True if titles are enabled (default true).
+     */
+    public boolean showOnScreen() {
+        return ScienceTools.getInstance().getConfig().getBoolean("gui.show-on-screen", true);
+    }
+
+    /**
+     * Whether measurements should print in chat.
+     *
+     * @return True if chat lines are enabled (default false).
+     */
+    public boolean showInChat() {
+        return ScienceTools.getInstance().getConfig().getBoolean("gui.show-in-chat", false);
     }
 
     private int cooldownSeconds() {

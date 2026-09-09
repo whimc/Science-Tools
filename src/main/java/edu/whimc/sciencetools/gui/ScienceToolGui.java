@@ -7,14 +7,12 @@ import edu.whimc.sciencetools.models.sciencetool.PlayerToolState;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.utils.Utils;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -28,7 +26,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +48,6 @@ public class ScienceToolGui implements Listener {
         DEFAULT_ITEMS.put("GRAVITY", Material.ANVIL);
         DEFAULT_ITEMS.put("HUMIDITY", Material.SPONGE);
         DEFAULT_ITEMS.put("MAGNETIC_FIELD", Material.COMPASS);
-        DEFAULT_ITEMS.put("OXYGEN", Material.TURTLE_HELMET);
         DEFAULT_ITEMS.put("PRESSURE", Material.PISTON);
         DEFAULT_ITEMS.put("RADIATION", Material.GLOWSTONE);
         DEFAULT_ITEMS.put("COSMICRAYS", Material.NETHER_STAR);
@@ -62,7 +58,7 @@ public class ScienceToolGui implements Listener {
         DEFAULT_ITEMS.put("TIDES", Material.PRISMARINE);
         DEFAULT_ITEMS.put("TILT", Material.LEVER);
         DEFAULT_ITEMS.put("YEAR", Material.SUNFLOWER);
-        DEFAULT_ITEMS.put("SCALE", Material.MAP);
+        DEFAULT_ITEMS.put("SCALE", materialOr("CARTOGRAPHY_TABLE", Material.MAP));
 
         DEFAULT_LORE.put("ALTITUDE", "How high up you are");
         DEFAULT_LORE.put("AIRFLOW", "How fast the wind is blowing");
@@ -70,7 +66,6 @@ public class ScienceToolGui implements Listener {
         DEFAULT_LORE.put("GRAVITY", "How hard things get pulled down");
         DEFAULT_LORE.put("HUMIDITY", "How much water is in the air");
         DEFAULT_LORE.put("MAGNETIC_FIELD", "How strong magnets work here");
-        DEFAULT_LORE.put("OXYGEN", "How much oxygen you can breathe");
         DEFAULT_LORE.put("PRESSURE", "How hard the air is pushing");
         DEFAULT_LORE.put("RADIATION", "How much harmful energy is here");
         DEFAULT_LORE.put("COSMICRAYS", "Tiny space particles hitting here");
@@ -101,10 +96,9 @@ public class ScienceToolGui implements Listener {
      * @param player The player who will see the GUI.
      */
     public void open(Player player) {
-        List<ScienceTool> tools = new ArrayList<>(ScienceTools.getInstance().getToolManager().getTools());
-        tools.sort(Comparator.comparing(tool -> tool.getToolKey().toLowerCase(Locale.ROOT)));
+        List<ScienceTool> tools = GuiVisibility.visibleTools(player);
         if (tools.isEmpty()) {
-            Utils.msg(player, "&cNo science tools are loaded.");
+            Utils.msg(player, "&cNo science tools are available here.");
             return;
         }
 
@@ -157,13 +151,13 @@ public class ScienceToolGui implements Listener {
     }
 
     /**
-     * Runs the clicked science tool and prevents taking items from the GUI.
+     * Left-click measures. Shift-click cycles units. Items cannot be taken.
      *
      * @param event The inventory click event.
      */
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!(event.getInventory().getHolder() instanceof Holder)) {
+        if (!(event.getView().getTopInventory().getHolder() instanceof Holder)) {
             return;
         }
         event.setCancelled(true);
@@ -171,30 +165,31 @@ public class ScienceToolGui implements Listener {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
-        if (event.getClickedInventory() == null
-                || !(event.getClickedInventory().getHolder() instanceof Holder)) {
+
+        Inventory top = event.getView().getTopInventory();
+        int slot = event.getRawSlot();
+        if (slot < 0 || slot >= top.getSize()) {
             return;
         }
 
-        Holder holder = (Holder) event.getInventory().getHolder();
+        Holder holder = (Holder) top.getHolder();
         Player player = (Player) event.getWhoClicked();
-        if (event.getSlot() == HISTORY_SLOT) {
+        if (slot == HISTORY_SLOT) {
             showHistory(player);
             return;
         }
 
-        ScienceTool tool = holder.toolsBySlot.get(event.getSlot());
+        ScienceTool tool = holder.toolsBySlot.get(slot);
         if (tool == null) {
             return;
         }
 
-        if (event.isRightClick() && tool instanceof NumericScienceTool
-                && !((NumericScienceTool) tool).getConversions().isEmpty()) {
-            NumericScienceTool numeric = (NumericScienceTool) tool;
-            String unit = ScienceTools.getInstance().getPlayerToolState().cycleUnit(player, numeric);
-            event.getInventory().setItem(event.getSlot(), iconFor(numeric, player));
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.2F);
-            Utils.msg(player, "&7Unit set to &b" + unit);
+        if (event.isShiftClick()) {
+            cycleUnit(player, top, slot, tool);
+            return;
+        }
+
+        if (!event.isLeftClick()) {
             return;
         }
 
@@ -202,6 +197,19 @@ public class ScienceToolGui implements Listener {
             player.closeInventory();
             tool.measure(player);
         });
+    }
+
+    private void cycleUnit(Player player, Inventory top, int slot, ScienceTool tool) {
+        if (!(tool instanceof NumericScienceTool)
+                || ((NumericScienceTool) tool).getConversions().isEmpty()) {
+            Utils.msg(player, "&7This tool has only one unit.");
+            return;
+        }
+        NumericScienceTool numeric = (NumericScienceTool) tool;
+        String unit = ScienceTools.getInstance().getPlayerToolState().cycleUnit(player, numeric);
+        top.setItem(slot, iconFor(numeric, player));
+        player.updateInventory();
+        Utils.msg(player, "&7Unit set to &b" + unit);
     }
 
     /**
@@ -250,7 +258,7 @@ public class ScienceToolGui implements Listener {
                 PlayerToolState state = ScienceTools.getInstance().getPlayerToolState();
                 lore.add(Utils.colored("&eUnit: " + state.unitLabel(player, numeric)));
                 if (!numeric.getConversions().isEmpty()) {
-                    lore.add(Utils.colored("&8Right-click to change unit"));
+                    lore.add(Utils.colored("&8Shift-click to change unit"));
                 }
             }
             lore.add(Utils.colored("&8/" + tool.getToolKey().toLowerCase(Locale.ROOT)));
@@ -261,13 +269,10 @@ public class ScienceToolGui implements Listener {
     }
 
     private ItemStack historyBook(Player player) {
-        ItemStack item = new ItemStack(Material.WRITTEN_BOOK);
+        ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
-        if (meta instanceof BookMeta) {
-            BookMeta book = (BookMeta) meta;
-            book.setTitle("Last measurements");
-            book.setAuthor("Tricorder");
-            book.setDisplayName(Utils.colored("&bLast measurements"));
+        if (meta != null) {
+            meta.setDisplayName(Utils.colored("&bLast measurements"));
             List<String> lore = new ArrayList<>();
             List<Measurement> recent = ScienceTools.getInstance().getPlayerToolState().recent(player);
             if (recent.isEmpty()) {
@@ -278,9 +283,9 @@ public class ScienceToolGui implements Listener {
                             + ": &f" + measurement.getMeasurement()));
                 }
             }
-            lore.add(Utils.colored("&8Click to print in chat"));
-            book.setLore(lore);
-            item.setItemMeta(book);
+            lore.add(Utils.colored("&8Left-click to print in chat"));
+            meta.setLore(lore);
+            item.setItemMeta(meta);
         }
         return item;
     }

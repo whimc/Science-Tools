@@ -1,9 +1,11 @@
 package edu.whimc.sciencetools.commands;
 
 import edu.whimc.sciencetools.commands.subcommands.AbstractSubCommand;
+import edu.whimc.sciencetools.commands.subcommands.Hide;
 import edu.whimc.sciencetools.commands.subcommands.JSInterpreter;
 import edu.whimc.sciencetools.commands.subcommands.Measure;
 import edu.whimc.sciencetools.commands.subcommands.Reload;
+import edu.whimc.sciencetools.commands.subcommands.Show;
 import edu.whimc.sciencetools.commands.subcommands.Validate;
 import edu.whimc.sciencetools.utils.Utils;
 import java.util.Arrays;
@@ -28,9 +30,11 @@ public class ScienceToolCommand implements CommandExecutor, TabCompleter {
      * Constructs the ScienceTools command and adds all subcommands.
      */
     public ScienceToolCommand() {
+        subCommands.put("hide", new Hide());
         subCommands.put("js", new JSInterpreter());
         subCommands.put("measure", new Measure());
         subCommands.put("reload", new Reload());
+        subCommands.put("show", new Show());
         subCommands.put("validate", new Validate());
     }
 

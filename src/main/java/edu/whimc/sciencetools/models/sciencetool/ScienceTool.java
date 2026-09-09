@@ -168,7 +168,11 @@ public class ScienceTool {
         }
 
         String measurement = getMeasurement(player.getLocation());
-        Utils.msg(player, Message.MEASURE.format(this, player, measurement, null));
+        PlayerToolState state = ScienceTools.getInstance().getPlayerToolState();
+        state.prepareTitle(player, measurement, "");
+        if (state.showInChat()) {
+            Utils.msg(player, Message.MEASURE.format(this, player, measurement, null));
+        }
         return measurement;
     }
 
@@ -189,7 +193,7 @@ public class ScienceTool {
         String measurement = displayMeasurement(player);
         if (measurement != null) {
             state.markMeasured(player, this);
-            state.playSuccess(player, this, measurement);
+            state.playSuccess(player, this);
             Bukkit.getPluginManager().callEvent(new ScienceToolMeasureEvent(player, this, measurement));
         }
     }

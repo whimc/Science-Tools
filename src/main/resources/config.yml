@@ -14,8 +14,11 @@ gui:
   # Legacy flag used only if tricorder-mode is missing. true means locked.
   locked-item: false
   # off = do not give the item; locked = slot 9, cannot drop; unlocked = give but allow move/drop
-  tricorder-mode: off
+  tricorder-mode: locked
   measure-cooldown-seconds: 5
+  # Title on screen when measuring. Chat line is off so kids read the title.
+  show-on-screen: true
+  show-in-chat: false
   title: "Science Tools"
   items:
     ALTITUDE: LADDER
@@ -24,7 +27,6 @@ gui:
     GRAVITY: ANVIL
     HUMIDITY: SPONGE
     MAGNETIC_FIELD: COMPASS
-    OXYGEN: TURTLE_HELMET
     PRESSURE: PISTON
     RADIATION: GLOWSTONE
     COSMICRAYS: NETHER_STAR
@@ -35,15 +37,14 @@ gui:
     TIDES: PRISMARINE
     TILT: LEVER
     YEAR: SUNFLOWER
-    SCALE: MAP
+    SCALE: CARTOGRAPHY_TABLE
   lore:
     ALTITUDE: How high up you are
     AIRFLOW: How fast the wind is blowing
     ATMOSPHERE: What gases are in the air
     GRAVITY: How hard things get pulled down
     HUMIDITY: How much water is in the air
-    MAGNETIC_FIELD: How strong magnets work here
-    OXYGEN: How much oxygen you can breathe
+    MAGNETIC_FIELD: Magnetic force fields
     PRESSURE: How hard the air is pushing
     RADIATION: How much harmful energy is here
     COSMICRAYS: Tiny space particles hitting here
@@ -55,6 +56,28 @@ gui:
     TILT: How tipped this world is
     YEAR: How long a year lasts here
     SCALE: How big or small things are here
+  hidden:
+    all:
+      - SCALE
+      - COSMICRAYS
+    RocketLaunch:
+      - ALTITUDE
+      - AIRFLOW
+      - ATMOSPHERE
+      - GRAVITY
+      - HUMIDITY
+      - MAGNETIC_FIELD
+      - PRESSURE
+      - RADIATION
+      - COSMICRAYS
+      - RADIUS
+      - ROTATIONAL_PERIOD
+      - TECTONIC
+      - TEMPERATURE
+      - TIDES
+      - TILT
+      - YEAR
+      - SCALE
 conversions:
   fahrenheit:
     expression: "({VAL} * 9.0 / 5.0) + 32.0"
@@ -245,6 +268,7 @@ tools:
       - carbon
       - air
       - oxygen
+      - o2
       - nitrogen
       - methane
       - composition
@@ -594,62 +618,6 @@ tools:
       blackhole:
         global-measurement: Very strong, the orientation of the magnetic field depends
           on the blackholes spin, which is difficult to determine
-  OXYGEN:
-    aliases:
-      - o2
-    default-measurement: 21 + rand(-0.5, 0.5)
-    disabled-worlds:
-      - BrownDwarf
-      - ETLife
-      - Gliese
-      - blackhole
-      - Trappist
-    display-name: oxygen level
-    messages:
-      numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
-      disabled-in-world: Likely none but we don't know yet
-    precision: 2
-    unit: "%"
-    worlds:
-      Cancri:
-        global-measurement: "0.1"
-      CancriCold:
-        global-measurement: "0.1"
-      Hub:
-        regions:
-          0g-construction: "0"
-      Kepler:
-        global-measurement: 18 + rand(-0.5, 0.5)
-        regions:
-          kepler_habitat: 21 + rand(-0.5, 0.5)
-      TwoMoonsLluna:
-        global-measurement: "0"
-      LunarCrater:
-        global-measurement: "0"
-        regions:
-          airlockleak: "0.04"
-          3dprintingunderground: 20 + rand(-0.25, 0.25)
-          3dprintingcontrol: 21 + rand(-0.5, 0.5)
-          lunarpbs: 21 + rand(-0.5, 0.5)
-          frontairlock: 21 + rand(-0.25, 0.25)
-          biodome: 25 + rand(-0.25, 0.25)
-          habitationdomes: 21 + rand(-0.25, 0.25)
-          pressuretest1: 21 + rand(-0.25, 0.25)
-          pressuretest2: 21 + rand(-0.25, 0.25)
-          pressuretest3: 21 + rand(-0.25, 0.25)
-          pressuretest4: 21 + rand(-0.25, 0.25)
-          dockingdome: 21 + rand(-0.25, 0.25)
-          suitup: 21 + rand(-0.25, 0.25)
-          icestoragefront: 21 + rand(-0.25, 0.25)
-          icestoragecave: 21 + rand(-0.25, 0.25)
-      Mars:
-        global-measurement: 0.17 + rand(-0.01, 0.01)
-      CAMP:
-        global-measurement: 0.17 + rand(-0.01, 0.01)
-      TiltedWarm:
-        global-measurement: 19 + rand(-0.5, 0.25)
-      TiltedMelting:
-        global-measurement: 20 + rand(-0.5, 0.25)
   PRESSURE:
     aliases:
       - air_pressure
@@ -1317,7 +1285,7 @@ validation:
         - questadmin nextstage {PLAYER} Not-So-Solar-Wind
       GRAVITY:
         - questadmin nextstage {PLAYER} Ice on Fire!
-      OXYGEN:
+      ATMOSPHERE:
         - questadmin nextstage {PLAYER} A Breath of Fresh Air
       PRESSURE:
         - questadmin nextstage {PLAYER} Feeling the Pressure
@@ -1333,7 +1301,7 @@ validation:
     failure:
       AIRFLOW:
         - "&8>   &7If you're stuck, talk to &fHuxley&7 again!"
-      OXYGEN:
+      ATMOSPHERE:
         - "&8>   &7If you're stuck, talk to &fOlivia&7 again!"
       PRESSURE:
         - "&8>   &7Make sure you use percent. If you're stuck, talk to &fHarlem&7
