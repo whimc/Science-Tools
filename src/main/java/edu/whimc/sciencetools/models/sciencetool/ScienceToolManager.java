@@ -5,6 +5,8 @@ import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.javascript.JSPlaceholder;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.models.conversion.ConversionManager;
+import edu.whimc.sciencetools.utils.ConfigChecker;
+import edu.whimc.sciencetools.utils.ToolNameMatcher;
 import edu.whimc.sciencetools.utils.Utils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -96,41 +97,38 @@ public class ScienceToolManager {
             }
 
             // Load disabled worlds
-            Set<World> disabledWorlds = new HashSet<>();
+            Set<String> disabledWorlds = new HashSet<>();
             if (section.isSet("disabled-worlds")) {
                 Utils.log("&b\t- Disabled worlds");
                 for (String worldName : section.getStringList("disabled-worlds")) {
-                    World world = Bukkit.getWorld(worldName);
-                    if (world == null) {
-                        Utils.log("&c\t\t- Unknown world " + worldName);
-                        continue;
+                    if (Bukkit.getWorld(worldName) == null) {
+                        Utils.log("&e\t\t- " + worldName + " (not loaded yet)");
+                    } else {
+                        Utils.log("&b\t\t- &f" + worldName);
                     }
-                    Utils.log("&b\t\t- &f" + worldName);
-                    disabledWorlds.add(world);
+                    disabledWorlds.add(worldName);
                 }
             }
 
             // Load world settings
-            Map<World, String> worldMeasurements = new HashMap<>();
-            Map<World, Map<String, String>> worldRegionMeasurements = new HashMap<>();
+            Map<String, String> worldMeasurements = new HashMap<>();
+            Map<String, Map<String, String>> worldRegionMeasurements = new HashMap<>();
 
             if (section.isSet("worlds")) {
                 Utils.log("&b\t- World settings");
                 for (String worldName : section.getConfigurationSection("worlds").getKeys(false)) {
-                    World world = Bukkit.getWorld(worldName);
-                    if (world == null) {
-                        Utils.log("&c\t\t- Unknown world " + worldName);
-                        continue;
+                    if (Bukkit.getWorld(worldName) == null) {
+                        Utils.log("&e\t\t- &f" + worldName + " &e(not loaded yet)");
+                    } else {
+                        Utils.log("&b\t\t- &f" + worldName);
                     }
-
-                    Utils.log("&b\t\t- &f" + worldName);
 
                     // Global measurement
                     ConfigurationSection worldSection = section.getConfigurationSection("worlds." + worldName);
                     String globalMeasurement = worldSection.getString("global-measurement");
                     if (globalMeasurement != null) {
                         Utils.log("&b\t\t\t- Global measurement: \"&f" + globalMeasurement + "&b\"");
-                        worldMeasurements.put(world, globalMeasurement);
+                        worldMeasurements.put(worldName, globalMeasurement);
                     }
 
                     // Region measurements
@@ -142,7 +140,7 @@ public class ScienceToolManager {
                             Utils.log("&b\t\t\t\t- &f" + region + "&b: \"&f" + regionMeasurement + "&b\"");
                             regionMeasurements.put(region, regionMeasurement);
                         }
-                        worldRegionMeasurements.put(world, regionMeasurements);
+                        worldRegionMeasurements.put(worldName, regionMeasurements);
                     }
 
                 }
@@ -190,6 +188,7 @@ public class ScienceToolManager {
         }
 
         Utils.log("&eScience tools loaded!");
+        ConfigChecker.check();
     }
 
     /**
@@ -200,6 +199,57 @@ public class ScienceToolManager {
      */
     public ScienceTool getTool(String key) {
         return this.tools.getOrDefault(key.toLowerCase(), null);
+    }
+
+    /**
+     * Resolves a tool from an exact key, exact alias, or a kid-friendly misspelling.
+     *
+     * @param name The typed tool name.
+     * @return The matching tool, or null.
+     */
+    public ScienceTool resolveTool(String name) {
+        List<ScienceTool> matches = resolveToolCandidates(name);
+        return matches.size() == 1 ? matches.get(0) : null;
+    }
+
+    /**
+     * Resolves exact names, or every equally likely misspelling when there is a tie.
+     *
+     * @param name The typed tool name.
+     * @return Matching tools, possibly more than one on a tie.
+     */
+    public List<ScienceTool> resolveToolCandidates(String name) {
+        if (name == null || name.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        ScienceTool exact = resolveExact(name);
+        if (exact != null) {
+            List<ScienceTool> single = new ArrayList<>();
+            single.add(exact);
+            return single;
+        }
+
+        return ToolNameMatcher.findBestMatches(name, this.tools.values());
+    }
+
+    private ScienceTool resolveExact(String name) {
+        ScienceTool exact = getTool(name);
+        if (exact != null) {
+            return exact;
+        }
+
+        for (ScienceTool tool : this.tools.values()) {
+            if (tool.getAliases() == null) {
+                continue;
+            }
+            for (String alias : tool.getAliases()) {
+                if (alias.equalsIgnoreCase(name)) {
+                    return tool;
+                }
+            }
+        }
+        return null;
     }
 
     public Collection<ScienceTool> getTools() {

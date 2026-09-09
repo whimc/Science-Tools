@@ -3,11 +3,10 @@ package edu.whimc.sciencetools.commands.subcommands;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import edu.whimc.sciencetools.models.sciencetool.ScienceToolManager;
-import edu.whimc.sciencetools.models.sciencetool.ScienceToolMeasureEvent;
 import edu.whimc.sciencetools.utils.Utils;
 import java.util.Arrays;
 import java.util.List;
-import org.bukkit.Bukkit;
+import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -40,7 +39,19 @@ public class Measure extends AbstractSubCommand {
 
         // set up tool
         ScienceToolManager manager = ScienceTools.getInstance().getToolManager();
-        ScienceTool tool = manager.getTool(args[0]);
+        List<ScienceTool> matches = manager.resolveToolCandidates(args[0]);
+        if (matches.size() > 1) {
+            if (sender instanceof Player) {
+                Utils.sendDidYouMean((Player) sender, matches);
+            } else {
+                Utils.msg(sender, "&eDid you mean /"
+                        + matches.stream().map(tool -> tool.getToolKey().toLowerCase())
+                        .collect(Collectors.joining(", /")) + "?");
+            }
+            return false;
+        }
+
+        ScienceTool tool = matches.isEmpty() ? null : matches.get(0);
 
         // ensure tool is valid
         if (tool == null) {
@@ -50,14 +61,7 @@ public class Measure extends AbstractSubCommand {
             return false;
         }
 
-        Player player = (Player) sender;
-        String measurement = tool.displayMeasurement(player);
-
-        if (measurement != null) {
-            ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, tool, measurement);
-            Bukkit.getPluginManager().callEvent(event);
-        }
-
+        tool.measure((Player) sender);
         return true;
     }
 

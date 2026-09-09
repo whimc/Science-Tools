@@ -54,7 +54,7 @@ public class Validate extends AbstractSubCommand implements Listener {
     @Override
     public boolean commandRoutine(CommandSender sender, String[] args) {
         ScienceToolManager manager = ScienceTools.getInstance().getToolManager();
-        ScienceTool baseTool = manager.getTool(args[0]);
+        ScienceTool baseTool = manager.resolveTool(args[0]);
 
         // ensure the tool is a valid tool
         if (baseTool == null) {

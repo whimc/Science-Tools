@@ -1,14 +1,15 @@
 package edu.whimc.sciencetools.models.sciencetool;
 
+import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSContext;
 import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.models.conversion.Conversion;
 import edu.whimc.sciencetools.utils.Utils;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,9 +32,9 @@ public class NumericScienceTool extends ScienceTool {
      * @param displayName        The name to be displayed in-game for this tool.
      * @param aliases            Alternate names for the tool.
      * @param defaultMeasurement The default measurement used when no region or world value is found.
-     * @param worldMeasurements  The world-specific global measurements.
-     * @param regionMeasurements The region-specific measurements.
-     * @param disabledWorlds     The worlds where the tool cannot be measured.
+     * @param worldMeasurements  The world-specific global measurements, keyed by world name.
+     * @param regionMeasurements The region-specific measurements, keyed by world name.
+     * @param disabledWorlds     World names where the tool cannot be measured.
      * @param unit               The unit of measurement.
      * @param precision          The decimal precision.
      * @param conversions        The accepted unit conversions.
@@ -42,9 +43,9 @@ public class NumericScienceTool extends ScienceTool {
                               String displayName,
                               List<String> aliases,
                               String defaultMeasurement,
-                              Map<World, String> worldMeasurements,
-                              Map<World, Map<String, String>> regionMeasurements,
-                              Set<World> disabledWorlds,
+                              Map<String, String> worldMeasurements,
+                              Map<String, Map<String, String>> regionMeasurements,
+                              Set<String> disabledWorlds,
                               String unit,
                               int precision,
                               List<Conversion> conversions) {
@@ -62,24 +63,39 @@ public class NumericScienceTool extends ScienceTool {
      */
     @Override
     public @Nullable String displayMeasurement(Player player) {
-        // Check if the player is in a disabled world
-        if (super.disabledWorlds.contains(player.getWorld())) {
+        if (isDisabledWorld(player.getWorld())) {
             Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
             return null;
         }
 
-        String message = Message.NUMERIC_MEASURE.format(this, player);
         double data = getData(player.getLocation());
+        PlayerToolState state = ScienceTools.getInstance().getPlayerToolState();
+        Conversion selected = state.selectedConversion(player, this);
+        String primaryValue;
+        String primaryUnit;
+        if (selected == null) {
+            primaryValue = Utils.trimDecimals(data, this.precision);
+            primaryUnit = this.unit;
+        } else {
+            primaryValue = Utils.trimDecimals(selected.convert(data), selected.getPrecision());
+            primaryUnit = selected.getUnit();
+        }
 
-        // display converted values
-        for (Conversion conversion : conversions) {
+        String message = Message.NUMERIC_MEASURE.format(this, player, primaryValue, primaryUnit);
+
+        if (selected != null) {
+            message += " (" + Utils.trimDecimals(data, this.precision) + this.unit + ")";
+        }
+        for (Conversion conversion : this.conversions) {
+            if (conversion == selected) {
+                continue;
+            }
             String converted = Utils.trimDecimals(conversion.convert(data), conversion.getPrecision());
             message += " (" + converted + conversion.getUnit() + ")";
         }
 
         Utils.msg(player, message);
-
-        return Utils.trimDecimals(data, this.precision) + this.unit;
+        return primaryValue + primaryUnit;
     }
 
     /**
@@ -95,6 +111,15 @@ public class NumericScienceTool extends ScienceTool {
 
     public String getMainUnit() {
         return this.unit;
+    }
+
+    /**
+     * Unit conversions players can cycle through in the GUI.
+     *
+     * @return The conversions for this tool.
+     */
+    public List<Conversion> getConversions() {
+        return Collections.unmodifiableList(this.conversions);
     }
 
     /**

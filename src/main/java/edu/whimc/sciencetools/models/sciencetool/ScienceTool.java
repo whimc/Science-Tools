@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.utils.Utils;
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -38,13 +39,13 @@ public class ScienceTool {
     protected List<String> aliases;
     /* Default measurement to be used when no region or world measurement is found. */
     protected String defaultMeasurement;
-    /* World-specific global measurements. */
-    protected Map<World, String> worldMeasurements;
-    /* Region-specific measurements. Each world has separate regions. */
-    protected Map<World, Map<String, String>> regionMeasurements;
+    /* World-specific global measurements, keyed by world name. */
+    protected Map<String, String> worldMeasurements;
+    /* Region-specific measurements. Each world name has separate regions. */
+    protected Map<String, Map<String, String>> regionMeasurements;
 
-    /* Worlds where you cannot measure the science tool. */
-    protected Set<World> disabledWorlds;
+    /* World names where you cannot measure the science tool. */
+    protected Set<String> disabledWorlds;
 
     /* The root command used to measure this tool */
     protected MeasureCommand command;
@@ -56,17 +57,17 @@ public class ScienceTool {
      * @param displayName        The tool's in-game name.
      * @param aliases            Alternate names for the tool.
      * @param defaultMeasurement The measurement used when no region- or world-specific measurements are found.
-     * @param worldMeasurements  All world-specific global measurements.
-     * @param regionMeasurements All region-specific measurements.
-     * @param disabledWorlds     All worlds where the tool cannot be measured.
+     * @param worldMeasurements  All world-specific global measurements, keyed by world name.
+     * @param regionMeasurements All region-specific measurements, keyed by world name.
+     * @param disabledWorlds     World names where the tool cannot be measured.
      */
     public ScienceTool(String toolKey,
                        String displayName,
                        List<String> aliases,
                        String defaultMeasurement,
-                       Map<World, String> worldMeasurements,
-                       Map<World, Map<String, String>> regionMeasurements,
-                       Set<World> disabledWorlds) {
+                       Map<String, String> worldMeasurements,
+                       Map<String, Map<String, String>> regionMeasurements,
+                       Set<String> disabledWorlds) {
         this.toolKey = toolKey;
         this.displayName = displayName;
         this.aliases = aliases;
@@ -88,7 +89,8 @@ public class ScienceTool {
             return null;
         }
 
-        if (!this.regionMeasurements.containsKey(loc.getWorld())) {
+        World world = loc.getWorld();
+        if (world == null || !this.regionMeasurements.containsKey(world.getName())) {
             return null;
         }
 
@@ -97,14 +99,14 @@ public class ScienceTool {
             return null;
         }
 
-        RegionManager regionManager = container.get(BukkitAdapter.adapt(loc.getWorld()));
+        RegionManager regionManager = container.get(BukkitAdapter.adapt(world));
         if (regionManager == null) {
             return null;
         }
 
         BlockVector3 bv = BlockVector3.at(loc.getX(), loc.getY(), loc.getZ());
         ApplicableRegionSet applicable = regionManager.getApplicableRegions(bv);
-        Map<String, String> measurements = this.regionMeasurements.get(loc.getWorld());
+        Map<String, String> measurements = this.regionMeasurements.get(world.getName());
 
         ProtectedRegion bestRegion = null;
         String bestMeasurement = null;
@@ -129,7 +131,8 @@ public class ScienceTool {
      * @return The measurement string or null if none exists.
      */
     private @Nullable String getWorldMeasurement(Location loc) {
-        return this.worldMeasurements.getOrDefault(loc.getWorld(), null);
+        World world = loc.getWorld();
+        return world == null ? null : this.worldMeasurements.getOrDefault(world.getName(), null);
     }
 
     /**
@@ -159,15 +162,46 @@ public class ScienceTool {
      * @return The measurement
      */
     public @Nullable String displayMeasurement(Player player) {
-        // Check if the player is in a disabled world
-        if (this.disabledWorlds.contains(player.getWorld())) {
+        if (isDisabledWorld(player.getWorld())) {
             Utils.msg(player, Message.DISABLED_IN_WORLD.format(this, player));
             return null;
         }
 
-        String measurement = Message.MEASURE.format(this, player);
-        Utils.msg(player, measurement);
+        String measurement = getMeasurement(player.getLocation());
+        Utils.msg(player, Message.MEASURE.format(this, player, measurement, null));
         return measurement;
+    }
+
+    /**
+     * Measure this tool at the player's location and fire a measure event when successful.
+     *
+     * @param player The player taking the measurement.
+     */
+    public void measure(Player player) {
+        PlayerToolState state = ScienceTools.getInstance().getPlayerToolState();
+        int remaining = state.cooldownRemaining(player, this);
+        if (remaining > 0) {
+            Utils.msg(player, "&cWait " + remaining + " second" + (remaining == 1 ? "" : "s")
+                    + " to measure this again.");
+            return;
+        }
+
+        String measurement = displayMeasurement(player);
+        if (measurement != null) {
+            state.markMeasured(player, this);
+            state.playSuccess(player, this, measurement);
+            Bukkit.getPluginManager().callEvent(new ScienceToolMeasureEvent(player, this, measurement));
+        }
+    }
+
+    /**
+     * Whether this tool is disabled in the given world.
+     *
+     * @param world The world to check.
+     * @return True if measurements are disabled there.
+     */
+    public boolean isDisabledWorld(World world) {
+        return world != null && this.disabledWorlds.contains(world.getName());
     }
 
     public String getToolKey() {
@@ -176,6 +210,10 @@ public class ScienceTool {
 
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    public List<String> getAliases() {
+        return this.aliases;
     }
 
     /**
@@ -267,14 +305,7 @@ public class ScienceTool {
                 return false;
             }
 
-            Player player = (Player) sender;
-            String measurement = ScienceTool.this.displayMeasurement(player);
-
-            if (measurement != null) {
-                ScienceToolMeasureEvent event = new ScienceToolMeasureEvent(player, ScienceTool.this, measurement);
-                Bukkit.getPluginManager().callEvent(event);
-            }
-
+            ScienceTool.this.measure((Player) sender);
             return true;
         }
 

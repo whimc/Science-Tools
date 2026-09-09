@@ -102,6 +102,20 @@ public class JSPlaceholder {
     }
 
     /**
+     * Every placeholder key currently known, including tools that have not finished loading.
+     *
+     * @return Placeholder keys such as {@code {Y}} and {@code {YEAR}}.
+     */
+    public static Set<String> getAllPlaceholderKeys() {
+        Set<String> keys = new HashSet<>();
+        for (JSPlaceholder placeholder : getPlaceholders()) {
+            keys.add(placeholder.getKey());
+        }
+        keys.addAll(knownToolPlaceholderKeys);
+        return keys;
+    }
+
+    /**
      * Swaps out the placeholders in the given expression with their replacement values in the given context.
      *
      * @param ctx  The JavaScript context.

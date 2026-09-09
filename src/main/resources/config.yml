@@ -6,6 +6,55 @@ mysql:
   database: minecraft
   username: user
   password: change-me
+gui:
+  enabled: true
+  # Named Tricorder item. A plain Observer does not open the GUI.
+  trigger-item: OBSERVER
+  item-name: Tricorder
+  # Legacy flag used only if tricorder-mode is missing. true means locked.
+  locked-item: false
+  # off = do not give the item; locked = slot 9, cannot drop; unlocked = give but allow move/drop
+  tricorder-mode: off
+  measure-cooldown-seconds: 5
+  title: "Science Tools"
+  items:
+    ALTITUDE: LADDER
+    AIRFLOW: WIND_CHARGE
+    ATMOSPHERE: GLASS
+    GRAVITY: ANVIL
+    HUMIDITY: SPONGE
+    MAGNETIC_FIELD: COMPASS
+    OXYGEN: TURTLE_HELMET
+    PRESSURE: PISTON
+    RADIATION: GLOWSTONE
+    COSMICRAYS: NETHER_STAR
+    RADIUS: ENDER_PEARL
+    ROTATIONAL_PERIOD: CLOCK
+    TECTONIC: MAGMA_BLOCK
+    TEMPERATURE: BLAZE_POWDER
+    TIDES: PRISMARINE
+    TILT: LEVER
+    YEAR: SUNFLOWER
+    SCALE: MAP
+  lore:
+    ALTITUDE: How high up you are
+    AIRFLOW: How fast the wind is blowing
+    ATMOSPHERE: What gases are in the air
+    GRAVITY: How hard things get pulled down
+    HUMIDITY: How much water is in the air
+    MAGNETIC_FIELD: How strong magnets work here
+    OXYGEN: How much oxygen you can breathe
+    PRESSURE: How hard the air is pushing
+    RADIATION: How much harmful energy is here
+    COSMICRAYS: Tiny space particles hitting here
+    RADIUS: How big this world is
+    ROTATIONAL_PERIOD: How long a day lasts here
+    TECTONIC: How much the ground shakes
+    TEMPERATURE: How hot or cold it is
+    TIDES: How much water rises and falls
+    TILT: How tipped this world is
+    YEAR: How long a year lasts here
+    SCALE: How big or small things are here
 conversions:
   fahrenheit:
     expression: "({VAL} * 9.0 / 5.0) + 32.0"

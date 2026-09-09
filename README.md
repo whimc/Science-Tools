@@ -1,5 +1,4 @@
 # WHIMC-ScienceTools
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/whimc/Science-Tools?label=download&logo=github)](https://github.com/whimc/Science-Tools/releases/latest)
 
 ScienceTools is a Minecraft plugin to simulate values for scientific tools. This plugin uses [WorldGuard](https://worldguard.enginehub.org/en/latest/developer/dependency/) to define regions in which to set scientific values. To set values, edit the config file.
 
@@ -24,34 +23,47 @@ ScienceTools is a Minecraft plugin to simulate values for scientific tools. This
 - **Year** (`YEAR`) — orbital period (length of a year)
 - **Scale** (`SCALE`) — scale/size measurement
 
-_**Requires Java 11+**_
+***Requires Java 11+***
 
 ---
 
+
+
 ## Building
+
 Build the source with Maven:
+
 ```
 $ mvn install
 ```
 
 ---
 
+
+
 ## Configuration
+
 The config file can be found under `/plugins/WHIMC-ScienceTools/config.yml`. Use `/sciencetools reload` whenever you change the config.
 
 ### MySQL
+
 In order to track the history of science tool usage, you have to connect to a SQL database.
 
-| Key | Type | Description |
-|---|---|---|
-|`mysql.enabled`|`boolean`|Whether to use a SQL database|
-|`mysql.host`|`string`|The host of the database|
-|`mysql.port`|`integer`|The port of the database|
-|`mysql.database`|`string`|The name of the database to use|
-|`mysql.username`|`string`|Username for credentials|
-|`mysql.password`|`string`|Password for credentials|
+
+| Key              | Type      | Description                     |
+| ---------------- | --------- | ------------------------------- |
+| `mysql.enabled`  | `boolean` | Whether to use a SQL database   |
+| `mysql.host`     | `string`  | The host of the database        |
+| `mysql.port`     | `integer` | The port of the database        |
+| `mysql.database` | `string`  | The name of the database to use |
+| `mysql.username` | `string`  | Username for credentials        |
+| `mysql.password` | `string`  | Password for credentials        |
+
+
+
 
 #### Example
+
 ```yaml
 mysql:
   enabled: true
@@ -61,7 +73,11 @@ mysql:
   username: user
   password: pass
 ```
+
+
+
 ### Messages
+
 Messages can have either global or tool-specific scope. The global config messages should define all message types. Tool-specific config messages do not need to define all message types, and will default to the global messages config if an undefined message type is needed to display to the player.
 
 Messages config will look like this:
@@ -77,6 +93,7 @@ messages:
 ```
 
 Example for global config messages:
+
 ```yaml
 messages:
   measure-format: '{MEASUREMENT}'
@@ -85,6 +102,7 @@ messages:
 ```
 
 Example for tool-specific config messages:
+
 ```yaml
 tools:
   ALTITUDE:
@@ -93,15 +111,22 @@ tools:
       disabled-in-world: "{TOOL} cannot be measured here"
 ```
 
+
+
 #### Placeholders
 
-| Placeholder    | Description                                          |
-|----------------|------------------------------------------------------|
-|`{MEASUREMENT}` | The measurement of the tool at the player's position |
-|`{TOOL}`        | The display name of the tool                         |
-|`{UNIT}`        | The unit of the tool measurement                     |
+
+| Placeholder     | Description                                          |
+| --------------- | ---------------------------------------------------- |
+| `{MEASUREMENT}` | The measurement of the tool at the player's position |
+| `{TOOL}`        | The display name of the tool                         |
+| `{UNIT}`        | The unit of the tool measurement                     |
+
+
+
 
 ### Unit Conversions
+
 Unit conversions config will look like this:
 
 ```yaml
@@ -117,6 +142,7 @@ conversions:
 ```
 
 Example:
+
 ```yaml
 conversions:
   fahrenheit: # Celsius -> Fahrenheit
@@ -133,11 +159,17 @@ conversions:
     precision: 3
 ```
 
+
+
 #### Placeholders
 
-| Placeholder   | Description                       |
-|---------------|-----------------------------------|
-|`{VAL}`        | The value that is being converted |
+
+| Placeholder | Description                       |
+| ----------- | --------------------------------- |
+| `{VAL}`     | The value that is being converted |
+
+
+
 
 ### Science Tools
 
@@ -146,6 +178,7 @@ If the `default-measurement` is valid JavaScript syntax, the tool will be consid
 Numeric science tools have extra options for configuration.
 
 String-based science tool example:
+
 ```yaml
 tools:
   # The tool key
@@ -172,6 +205,7 @@ tools:
 ```
 
 Numeric science tool example:
+
 ```yaml
 tools:
   NUMERIC_TOOL:
@@ -193,22 +227,28 @@ Region names are defined using [WorldGuard](https://worldguard.enginehub.org/en/
 
 #### Placeholders
 
-| Placeholder       | Description                                          |
-|-------------------|------------------------------------------------------|
-|`{X}`              | The player's current X position                      |
-|`{Y}`              | The player's current Y position                      |
-|`{Z}`              | The player's current Z position                      |
-|`{TIME_TICKS}`     | The time of the world in ticks                       |
-|`{NIGHT}`          | `0` if daytime, `1` otherwise                        |
-|`{WEATHER}`        | `0` if the weather is clear, `1` otherwise           |
-|`rand(min, max)`   | A random decimal between `min` and `max` (inclusive) |
-|`randInt(min, max)`| A random integer between `min` and `max` (inclusive) |
-|`min(a, b)`        | The minimum between `a` and `b`                      |
-|`max(a, b)`        | The maximum between `a` and `b`                      |
-| `{<tool key>}`    | The value from the given _numeric_ tool              |
+
+| Placeholder         | Description                                          |
+| ------------------- | ---------------------------------------------------- |
+| `{X}`               | The player's current X position                      |
+| `{Y}`               | The player's current Y position                      |
+| `{Z}`               | The player's current Z position                      |
+| `{TIME_TICKS}`      | The time of the world in ticks                       |
+| `{NIGHT}`           | `0` if daytime, `1` otherwise                        |
+| `{WEATHER}`         | `0` if the weather is clear, `1` otherwise           |
+| `rand(min, max)`    | A random decimal between `min` and `max` (inclusive) |
+| `randInt(min, max)` | A random integer between `min` and `max` (inclusive) |
+| `min(a, b)`         | The minimum between `a` and `b`                      |
+| `max(a, b)`         | The maximum between `a` and `b`                      |
+| `{<tool key>}`      | The value from the given *numeric* tool              |
+
+
+
 
 ### Validation
+
 Validation config will look like this:
+
 ```yaml
 validation:
   # Amount of 'wiggle room' given when accepting answers
@@ -260,6 +300,7 @@ validation:
 ```
 
 Example Using [Quests](https://github.com/PikaMug/Quests):
+
 ```yaml
 validation:
   tolerance: 1.0
@@ -327,30 +368,87 @@ validation:
       - 'questadmin nextstage {PLAYER} Seas of Lava?'
 ```
 
+
+
 #### Placeholders
 
-| Placeholder   | Description                       |
-|---------------|-----------------------------------|
-|`{TOOL}`       | The current science tool          |
-|`{VAL}`        | The provided value                |
-|`{UNIT}`       | The current science tool's units  |
-|`{PLAYER}`     | The target player                 |
+
+| Placeholder | Description                      |
+| ----------- | -------------------------------- |
+| `{TOOL}`    | The current science tool         |
+| `{VAL}`     | The provided value               |
+| `{UNIT}`    | The current science tool's units |
+| `{PLAYER}`  | The target player                |
+
 
 ---
 
-## Example Science Tools Types, Measurements and Explanations
-[Current WHIMC science tools reference / documentation](https://docs.google.com/document/d/1oX_dHe5SZlKkCxq8a6GdmYuBZfBZeIqgQFrVwMwR3E8/edit?usp=sharing)
-## Commands
-| Command                                                     | Description                                                        |
-|-------------------------------------------------------------|--------------------------------------------------------------------|
-| `/sciencetools`                                             | Display command help                                               |
-| `/sciencetools validate <tool> <player>`                    | Take the value of the tool at the target player's current location |
-| `/sciencetools validate <tool> <player> <world> <x> <y> <z>`| Take the value of the tool at the provided location                |
-| `/sciencetools reload`                                      | Reload the plugin's config                                         |
-| `/sciencetools js`                                          | Run interpreted JavaScript                                         |
-| `/sciencetools measure <tool>`                              | Measure the given science tool                                     |
 
-&nbsp;
+
+## Example Science Tools Types, Measurements and Explanations
+
+[Current WHIMC science tools reference / documentation](https://docs.google.com/document/d/1oX_dHe5SZlKkCxq8a6GdmYuBZfBZeIqgQFrVwMwR3E8/edit?usp=sharing)
+
+## Science Tools GUI (Tricorder)
+
+Right-click a glowing **Tricorder** (an Observer) to open a chest GUI of every loaded science tool. Hover an icon for a short explanation of what it measures; **left-click** to measure at your current location. The GUI closes so the result is visible in chat, with a sound and on-screen title. **Right-click** a numeric tool to cycle its display unit. A book in the top-left shows your last 5 measurements. Requires `sciencetools.user`.
+
+There is a 5-second cooldown per tool (`gui.measure-cooldown-seconds`).
+
+![Science Tools GUI](docs/science-tools-gui.png)
+
+A regular Observer does not open the GUI. Only the named Tricorder item does.
+
+### Locked hotbar item
+
+Operators can give every player a **Tricorder**. Locked mode keeps it in **hotbar slot 9** (cannot drop, move, or lose it on death). Unlock mode still gives the item on join and after reload, but players can move or drop it.
+
+| Command | Description |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| `/tricorder on` | Give every online player a locked Tricorder and give it to players who join later |
+| `/tricorder unlock` | Give the Tricorder but let players move or drop it |
+| `/tricorder off` | Remove it from everyone and stop giving it on join |
+| `/tricorder on <player>` | Locked Tricorder for one online player this session |
+| `/tricorder unlock <player>` | Unlocked Tricorder for one online player this session |
+| `/tricorder off <player>` | Remove it from one player |
+
+`/tricorder` requires `sciencetools.admin`. The global mode is saved as `gui.tricorder-mode` (`off`, `locked`, or `unlocked`).
+
+If a typed command like `/rad` matches more than one tool, chat will ask **Did you mean /radius?** with clickable names.
+
+### GUI configuration
+
+
+| Key | Description |
+| ------------------ | ----------------------------------------------------------------- |
+| `gui.enabled` | Whether right-clicking the Tricorder opens the GUI |
+| `gui.trigger-item` | Material for the Tricorder (default `OBSERVER`) |
+| `gui.item-name` | Display name used to identify the Tricorder (default `Tricorder`) |
+| `gui.tricorder-mode` | `off`, `locked`, or `unlocked` |
+| `gui.locked-item` | Legacy flag; `true` means locked if `tricorder-mode` is missing |
+| `gui.measure-cooldown-seconds` | Wait time before measuring the same tool again (default `5`) |
+| `gui.title` | Chest GUI title |
+| `gui.items` | Material for each tool icon |
+| `gui.lore` | Short hover-text explanation for each tool |
+
+
+Icons sit three per row with a gap between each. Radius uses an **Ender Pearl**; magnetic field still uses a Compass.
+
+## Commands
+
+
+| Command                                                      | Description                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------------ |
+| `/sciencetools`                                              | Display command help                                               |
+| `/sciencetools validate <tool> <player>`                     | Take the value of the tool at the target player's current location |
+| `/sciencetools validate <tool> <player> <world> <x> <y> <z>` | Take the value of the tool at the provided location                |
+| `/sciencetools reload`                                       | Reload the plugin's config                                         |
+| `/sciencetools js`                                           | Run interpreted JavaScript                                         |
+| `/sciencetools measure <tool>`                               | Measure the given science tool                                     |
+| `/tricorder on|off|unlock [player]`                          | Give, unlock, or remove the Tricorder                              |
+
+
+ 
 
 Using `/sciencetools validate OXYGEN MyName` when standing on LunarCrater (outdoors)
 on our server will open a data entry computer prompt in the chat that accepts a
@@ -365,5 +463,10 @@ than the outside (0kPa).
 
 ---
 
+
+
 ## Dependencies
+
 - [WorldGuard](https://worldguard.enginehub.org/en/latest/developer/dependency/)
+- Multiverse-Core (optional; listed as a soft dependency so planetary worlds are loaded before tools)
+

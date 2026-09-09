@@ -4,9 +4,17 @@ description: ${project.description}
 author: Jack Henhapl
 api-version: 1.13
 main: edu.whimc.sciencetools.ScienceTools
-softdepend: [WorldGuard, Quests]
+softdepend: [WorldGuard, Quests, Multiverse-Core]
 loadbefore: [Quests]
 load: POSTWORLD
 commands:
   sciencetools:
     description: Manage the ScienceTools plugin
+  tricorder:
+    description: Enable, unlock, or disable the Tricorder item
+    usage: /tricorder <on|off|unlock> [player]
+    permission: sciencetools.admin
+permissions:
+  sciencetools.admin:
+    description: Administer Science Tools and the Tricorder
+    default: op

@@ -1,9 +1,12 @@
 package edu.whimc.sciencetools.utils;
 
 import edu.whimc.sciencetools.ScienceTools;
+import edu.whimc.sciencetools.models.sciencetool.ScienceTool;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -150,5 +153,28 @@ public class Utils {
      */
     public static void sendComponent(Player player, String text, String... hoverText) {
         player.spigot().sendMessage(createComponent(text, hoverText));
+    }
+
+    /**
+     * Asks the player which tool they meant, with clickable command names.
+     *
+     * @param player The player to ask.
+     * @param tools  The tied tools to offer.
+     */
+    public static void sendDidYouMean(Player player, List<ScienceTool> tools) {
+        TextComponent message = new TextComponent(colored("&eDid you mean "));
+        for (int i = 0; i < tools.size(); i++) {
+            if (i > 0) {
+                message.addExtra(new TextComponent(colored("&e, ")));
+            }
+            String command = "/" + tools.get(i).getToolKey().toLowerCase();
+            TextComponent link = new TextComponent(colored("&b" + command));
+            link.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+            link.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                    new ComponentBuilder(colored("&7Click to measure " + tools.get(i).getDisplayName())).create()));
+            message.addExtra(link);
+        }
+        message.addExtra(new TextComponent(colored("&e?")));
+        player.spigot().sendMessage(message);
     }
 }
