@@ -183,6 +183,7 @@ tools:
   # The tool key
   STRING_TOOL:
     # (optional: defaults to the tool key) A formatted version of the tool
+    # Keep this to about 24 characters (three short words) so it fits the title line
     display-name: "String Tool"
     # The default fallback measurement to be used
     default-measurement: "Value"
@@ -390,7 +391,7 @@ validation:
 
 ## Science Tools GUI (Tricorder)
 
-Right-click a glowing **Tricorder** (an Observer) to open a chest GUI of every loaded science tool. Hover an icon for a short explanation of what it measures; **left-click** to measure at your current location. The GUI closes so the result can show on screen as two small lines: the tool name, then the reading and unit. Chat is off by default. **Shift-click** a numeric tool to cycle its display unit. A book in the top-left shows your last 5 measurements; left-click it to print them in chat. Requires `sciencetools.user`.
+Right-click a glowing **Tricorder** (an Observer) to open a chest GUI of every loaded science tool. Hover an icon for a short explanation of what it measures; **left-click** to measure at your current location. The GUI closes so the result can show on screen as two lines: the tool name (title) and the reading plus unit (subtitle). Minecraft only draws one line per slot, so a newline inside the title or subtitle is dropped. Chat is off by default. **Shift-click** a numeric tool to cycle its display unit. A book in the top-left shows your last 5 measurements; left-click it to print them in chat. Requires `sciencetools.user`.
 
 There is a 5-second cooldown per tool (`gui.measure-cooldown-seconds`). Operators can hide tools in the GUI per world with `/sciencetools hide` (commands like `/gravity` still work).
 
@@ -415,11 +416,11 @@ Operators can give every player a **Tricorder**. Locked mode keeps it in **hotba
 
 ### Measurement display
 
-After a successful measure, the plugin can show the reading on screen, in chat, or both.
+After a successful measure, the plugin can show the reading on screen, in chat, or both. Minecraft can draw two lines (title + subtitle) but only one line in each slot; extra line breaks are ignored. Keep each tool `display-name` to about **24 characters** (three short words), or the title line will clip. The sample names (`atmospheric composition`, `gravitational pull`) are a good length.
 
 | Key | Default | What it does |
 | --- | --- | --- |
-| `gui.show-on-screen` | `true` | Two small lines: tool name, then reading and unit |
+| `gui.show-on-screen` | `true` | Tool name on the title line, reading and unit on the subtitle line |
 | `gui.show-in-chat` | `false` | The usual chat measurement line |
 
 Errors still go to chat (cooldown, tool disabled in this world, unknown tool). Clicking the last-5 book still prints history in chat. Measurements are still stored for Quests and MySQL either way.
@@ -466,7 +467,7 @@ gui:
 | `gui.tricorder-mode` | `off`, `locked`, or `unlocked` (sample default `locked`) |
 | `gui.locked-item` | Legacy flag; `true` means locked if `tricorder-mode` is missing |
 | `gui.measure-cooldown-seconds` | Wait time before measuring the same tool again (default `5`) |
-| `gui.show-on-screen` | Two small on-screen lines: tool name, then reading and unit (default `true`) |
+| `gui.show-on-screen` | Tool name on the title line, reading and unit on the subtitle (default `true`) |
 | `gui.show-in-chat` | Print the measurement in chat (default `false`) |
 | `gui.title` | Chest GUI title |
 | `gui.items` | Material for each tool icon |

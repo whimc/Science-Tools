@@ -56,28 +56,38 @@ gui:
     TILT: How tipped this world is
     YEAR: How long a year lasts here
     SCALE: How big or small things are here
-  hidden:
-    all:
-      - SCALE
-      - COSMICRAYS
-    RocketLaunch:
-      - ALTITUDE
-      - AIRFLOW
-      - ATMOSPHERE
-      - GRAVITY
-      - HUMIDITY
-      - MAGNETIC_FIELD
-      - PRESSURE
-      - RADIATION
-      - COSMICRAYS
-      - RADIUS
-      - ROTATIONAL_PERIOD
-      - TECTONIC
-      - TEMPERATURE
-      - TIDES
-      - TILT
-      - YEAR
-      - SCALE
+    hidden:
+      all:
+        - SCALE
+        - COSMICRAYS
+      RocketLaunch:
+        - ALTITUDE
+        - AIRFLOW
+        - ATMOSPHERE
+        - GRAVITY
+        - HUMIDITY
+        - MAGNETIC_FIELD
+        - PRESSURE
+        - RADIATION
+        - RADIUS
+        - ROTATIONAL_PERIOD
+        - TECTONIC
+        - TEMPERATURE
+        - TIDES
+        - TILT
+        - YEAR
+      LunarCrater:
+        - ALTITUDE
+        - HUMIDITY
+        - MAGNETIC_FIELD
+        - COSMICRAYS
+        - RADIUS
+        - ROTATIONAL_PERIOD
+        - TECTONIC
+        - TIDES
+        - TILT
+        - YEAR
+        - SCALE
 conversions:
   fahrenheit:
     expression: "({VAL} * 9.0 / 5.0) + 32.0"
@@ -275,7 +285,7 @@ tools:
     default-measurement: 78% nitrogen, 21% oxygen, 0.9% argon, 0.04% carbon dioxide
     disabled-worlds:
       - LunarCrater
-    display-name: planetary atmospheric composition
+    display-name: atmospheric comp
     messages:
       measure-format: "{MEASUREMENT}"
       disabled-in-world: No detectable atmosphere
@@ -419,22 +429,7 @@ tools:
     conversions:
       - gravityearth
     default-measurement: "100"
-    disabled-worlds:
-      - EarthControl
-      - RocketLaunch
-      - NoMoon
-      - ColderCold
-      - ColderStrip
-      - ColderHot
-      - TiltedFrozen
-      - TiltedMelting
-      - TiltedWarm
-      - MynoaClose
-      - MynoaFar
-      - MynoaHalf
-      - TwoMoons
-      - TwoMoonsLluna
-      - TwoMoonsLow
+    disabled-worlds: []
     display-name: gravitational pull
     messages:
       numeric-measure-format: The measured {TOOL} is {MEASUREMENT}{UNIT}
@@ -476,6 +471,28 @@ tools:
         global-measurement: "100"
       MynoaMangrove:
         global-measurement: "105"
+      EarthControl:
+        global-measurement: "100"
+      RocketLaunch:
+        global-measurement: "100"
+      NoMoon:
+        global-measurement: "100"
+      ColderCold:
+        global-measurement: "100"
+      ColderStrip:
+        global-measurement: "100"
+      ColderHot:
+        global-measurement: "100"
+      TiltedFrozen:
+        global-measurement: "100"
+      TiltedMelting:
+        global-measurement: "100"
+      TiltedWarm:
+        global-measurement: "100"
+      TwoMoons:
+        global-measurement: "100"
+      TwoMoonsLow:
+        global-measurement: "100"
   HUMIDITY:
     aliases:
       - water
@@ -590,9 +607,9 @@ tools:
       - Gliese
       - Kepler
       - Trappist
-    display-name: magnetic field strength
+    display-name: magnetic field
     messages:
-      measure-format: The {TOOL} is {MEASUREMENT}
+      measure-format: The {TOOL} strength is {MEASUREMENT}
       disabled-in-world: We have no way of measuring this without visiting
     worlds:
       BrownDwarf:
@@ -629,7 +646,7 @@ tools:
     default-measurement: ((1013-((({Y}-63)*0.1)+({WEATHER}*rand(-2,-1))))/1013)*100
     disabled-worlds:
       - blackhole
-    display-name: atmospheric pressure
+    display-name: air pressure
     messages:
       numeric-measure-format: The measured {TOOL} is {MEASUREMENT}{UNIT}
       disabled-in-world: None (no atmosphere)
@@ -707,12 +724,12 @@ tools:
       - mSv
     default-measurement: ((2.4 + rand(-0.01, 0.01) + ({Y} / 180))/2.4)*100
     disabled-worlds: null
-    display-name: overall radiation exposure per year
+    display-name: yearly radiation
     messages:
       numeric-measure-format: "The {TOOL} is {MEASUREMENT}{UNIT} "
       disabled-in-world: We have no way of measuring this without visiting
     precision: 0
-    unit: "% of typical radiation exposure on earth"
+    unit: "% of typical earth exposure"
     worlds:
       BrownDwarf:
         global-measurement: (400/2.4)*100
@@ -775,7 +792,7 @@ tools:
   COSMICRAYS:
     default-measurement: "0"
     disabled-worlds: null
-    display-name: localized galactic cosmic rays
+    display-name: local cosmic rays
     messages:
       numeric-measure-format: The power of {TOOL} is {MEASUREMENT}{UNIT}
       disabled-in-world: We have no way of measuring this without visiting
@@ -799,7 +816,7 @@ tools:
     default-measurement: "1"
     disabled-worlds:
       - Hub
-    display-name: mean radius of the planet
+    display-name: mean planet radius
     messages:
       numeric-measure-format: The {TOOL} is {MEASUREMENT} {UNIT}
       disabled-in-world: This is not a planet with a radius
@@ -848,7 +865,7 @@ tools:
       - Hub
       - Kepler
       - Trappist
-    display-name: planetary rotational period
+    display-name: rotational period
     messages:
       numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
       disabled-in-world: This planetary body or object is tidally-locked OR does not rotate
@@ -920,7 +937,7 @@ tools:
       ({ALTITUDE}/20+{WEATHER}*rand(-3.1,-1.1)+{NIGHT}*rand(-20,-10))
     disabled-worlds:
       - blackhole
-    display-name: ambient temperature
+    display-name: temperature
     messages:
       numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
       disabled-in-world: We have no way of measuring this without visiting
@@ -1204,7 +1221,7 @@ tools:
     disabled-worlds:
       - Hub
       - blackhole
-    display-name: time to orbit the star
+    display-name: time to orbit star
     messages:
       numeric-measure-format: The {TOOL} is {MEASUREMENT}{UNIT}
       disabled-in-world: Unknown at this time

@@ -79,7 +79,9 @@ public class PlayerToolState {
     }
 
     /**
-     * Shows two small subtitle lines: tool name, then the reading and unit.
+     * Shows the tool name on the title line and the reading on the subtitle line.
+     * Newlines inside either line are ignored by the client, so these must be
+     * two separate title slots.
      *
      * @param player The player.
      * @param tool   The tool that was measured.
@@ -102,9 +104,8 @@ public class PlayerToolState {
             amount = reading.isEmpty() ? unitText : reading + " " + unitText;
         }
 
-        // Empty large title so both lines use the smaller subtitle size.
-        player.sendTitle(" ",
-                Utils.colored("&f" + escapeTitle(type) + "\n&b" + escapeTitle(amount)), 5, 50, 10);
+        player.sendTitle(Utils.colored("&f" + escapeTitle(type)),
+                Utils.colored("&b" + escapeTitle(amount)), 5, 50, 10);
     }
 
     private static String escapeTitle(String text) {
