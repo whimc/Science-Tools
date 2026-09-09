@@ -52,7 +52,10 @@ public class ScienceToolManager {
         this.tools.clear();
 
         FileConfiguration config = ScienceTools.getInstance().getConfig();
-        for (String toolKey : config.getConfigurationSection("tools").getKeys(false)) {
+        Set<String> configuredToolKeys = config.getConfigurationSection("tools").getKeys(false);
+        JSPlaceholder.setKnownToolKeys(configuredToolKeys);
+
+        for (String toolKey : configuredToolKeys) {
             Utils.log("&b - &f" + toolKey);
 
             if (toolKey.contains(" ")) {

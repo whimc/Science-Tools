@@ -3,7 +3,6 @@ package edu.whimc.sciencetools.models.conversion;
 import edu.whimc.sciencetools.ScienceTools;
 import edu.whimc.sciencetools.javascript.JSNumericExpression;
 import edu.whimc.sciencetools.utils.Utils;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,6 +12,9 @@ import org.jetbrains.annotations.NotNull;
  * Handles operations regarding Conversions (adding, removing, saving, loading).
  */
 public class ConversionManager {
+
+    /* Used when a conversion does not set its own precision. */
+    private static final int DEFAULT_PRECISION = 3;
 
     private final Map<String, Conversion> conversions;
 
@@ -30,15 +32,18 @@ public class ConversionManager {
     public void loadConversions() {
         FileConfiguration config = ScienceTools.getInstance().getConfig();
         Utils.log("&eLoading Conversions from config");
+        this.conversions.clear();
 
         // collect conversions from config
         for (String conversion : config.getConfigurationSection("conversions").getKeys(false)) {
             Utils.log("&b - &f" + conversion);
             String expr = config.getString("conversions." + conversion + ".expression");
             String unit = config.getString("conversions." + conversion + ".unit");
+            int precision = config.getInt("conversions." + conversion + ".precision", DEFAULT_PRECISION);
 
             Utils.log("&b\t- Expression: \"&f" + expr + "&b\"");
             Utils.log("&b\t- Unit: \"&f" + unit + "&b\"");
+            Utils.log("&b\t- Precision: &f" + precision);
 
             // ensure conversion's expression is valid, skip if not
             JSNumericExpression jsExpr = new JSNumericExpression(expr);
@@ -47,7 +52,7 @@ public class ConversionManager {
                 continue;
             }
 
-            loadConversion(conversion, unit, jsExpr);
+            loadConversion(conversion, unit, jsExpr, precision);
         }
 
         Utils.log("&eConversions loaded!");
@@ -56,13 +61,14 @@ public class ConversionManager {
     /**
      * Creates and loads a new Conversion.
      *
-     * @param name The name of the Conversion.
-     * @param unit The unit being converted to.
-     * @param expr The Conversion equation.
+     * @param name      The name of the Conversion.
+     * @param unit      The unit being converted to.
+     * @param expr      The Conversion equation.
+     * @param precision Decimal places to include when displaying this unit.
      * @return The Conversion.
      */
-    private @NotNull Conversion loadConversion(String name, String unit, JSNumericExpression expr) {
-        Conversion conversion = new Conversion(name, unit, expr);
+    private @NotNull Conversion loadConversion(String name, String unit, JSNumericExpression expr, int precision) {
+        Conversion conversion = new Conversion(name, unit, expr, precision);
         conversions.put(name, conversion);
         return conversion;
     }
@@ -70,13 +76,14 @@ public class ConversionManager {
     /**
      * Creates and saves a new Conversion to the config.
      *
-     * @param name The name of the Conversion.
-     * @param unit The unit being converted to.
-     * @param expr The Conversion equation.
+     * @param name      The name of the Conversion.
+     * @param unit      The unit being converted to.
+     * @param expr      The Conversion equation.
+     * @param precision Decimal places to include when displaying this unit.
      * @return The Conversion.
      */
-    public Conversion createConversion(String name, String unit, JSNumericExpression expr) {
-        Conversion conversion = loadConversion(name, unit, expr);
+    public Conversion createConversion(String name, String unit, JSNumericExpression expr, int precision) {
+        Conversion conversion = loadConversion(name, unit, expr, precision);
         saveToConfig(conversion);
         return conversion;
     }
@@ -111,6 +118,7 @@ public class ConversionManager {
         String name = conversion.getName();
         setConfig(name + ".unit", conversion.getUnit());
         setConfig(name + ".expression", conversion.getExpression().toString());
+        setConfig(name + ".precision", conversion.getPrecision());
     }
 
     /**

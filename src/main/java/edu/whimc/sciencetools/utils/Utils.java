@@ -69,7 +69,7 @@ public class Utils {
      * @return A String decimal trimmed to the desired level of precision.
      */
     public static String trimDecimals(double val, int precision) {
-        return String.format("%,." + precision + "f", val);
+        return String.format("%." + Math.max(0, precision) + "f", val);
     }
 
     /**

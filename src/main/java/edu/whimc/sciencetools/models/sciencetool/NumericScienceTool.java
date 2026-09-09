@@ -73,7 +73,7 @@ public class NumericScienceTool extends ScienceTool {
 
         // display converted values
         for (Conversion conversion : conversions) {
-            String converted = Utils.trimDecimals(conversion.convert(data), precision);
+            String converted = Utils.trimDecimals(conversion.convert(data), conversion.getPrecision());
             message += " (" + converted + conversion.getUnit() + ")";
         }
 

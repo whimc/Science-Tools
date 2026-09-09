@@ -3,8 +3,14 @@ package edu.whimc.sciencetools.javascript;
 import edu.whimc.sciencetools.models.sciencetool.NumericScienceTool;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import org.bukkit.World;
 
@@ -32,6 +38,8 @@ public class JSPlaceholder {
     ));
 
     private static final List<JSPlaceholder> placeholders = new ArrayList<>();
+    /* Tool keys announced before those tools finish loading, so {TOOL} refs work in any order. */
+    private static final Set<String> knownToolPlaceholderKeys = new HashSet<>();
 
     /* The String used in the config */
     private final String key;
@@ -66,8 +74,22 @@ public class JSPlaceholder {
         JSPlaceholder.placeholders.add(new JSPlaceholder(key, usage, replacement));
     }
 
+    /**
+     * Remember every configured tool key so expressions can reference a tool before it is loaded.
+     * Unresolved keys are replaced with {@code 1} during load-time validation.
+     *
+     * @param toolKeys Tool keys from the config.
+     */
+    public static void setKnownToolKeys(Collection<String> toolKeys) {
+        knownToolPlaceholderKeys.clear();
+        for (String toolKey : toolKeys) {
+            knownToolPlaceholderKeys.add("{" + toolKey + "}");
+        }
+    }
+
     public static void unregisterCustomPlaceholders() {
         JSPlaceholder.placeholders.clear();
+        knownToolPlaceholderKeys.clear();
     }
 
     /**
@@ -87,9 +109,19 @@ public class JSPlaceholder {
      * @return The JavaScript expression with placeholders swapped out for their replacements.
      */
     public static String prepareExpression(JSContext ctx, String expr) {
+        Map<String, Function<JSContext, String>> replacements = new HashMap<>();
         for (JSPlaceholder ph : getPlaceholders()) {
-            if (expr.contains(ph.getKey())) {
-                expr = expr.replace(ph.getKey(), String.valueOf(ph.getReplacement(ctx)));
+            replacements.put(ph.getKey(), c -> String.valueOf(ph.getReplacement(c)));
+        }
+        for (String key : knownToolPlaceholderKeys) {
+            replacements.putIfAbsent(key, c -> "1");
+        }
+
+        List<String> keys = new ArrayList<>(replacements.keySet());
+        keys.sort(Comparator.comparingInt(String::length).reversed());
+        for (String key : keys) {
+            if (expr.contains(key)) {
+                expr = expr.replace(key, replacements.get(key).apply(ctx));
             }
         }
         return expr;

@@ -3,11 +3,14 @@ package edu.whimc.sciencetools.models.sciencetool;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import edu.whimc.sciencetools.utils.Utils;
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -100,16 +103,23 @@ public class ScienceTool {
         }
 
         BlockVector3 bv = BlockVector3.at(loc.getX(), loc.getY(), loc.getZ());
-        List<String> regions = regionManager.getApplicableRegionsIDs(bv);
+        ApplicableRegionSet applicable = regionManager.getApplicableRegions(bv);
+        Map<String, String> measurements = this.regionMeasurements.get(loc.getWorld());
 
-        for (String region : regions) {
-            String measurement = this.regionMeasurements.get(loc.getWorld()).getOrDefault(region, null);
-            if (measurement != null) {
-                return measurement;
+        ProtectedRegion bestRegion = null;
+        String bestMeasurement = null;
+        for (ProtectedRegion region : applicable) {
+            String measurement = measurements.get(region.getId());
+            if (measurement == null) {
+                continue;
+            }
+            if (bestRegion == null || region.getPriority() > bestRegion.getPriority()) {
+                bestRegion = region;
+                bestMeasurement = measurement;
             }
         }
 
-        return null;
+        return bestMeasurement;
     }
 
     /**
@@ -177,8 +187,36 @@ public class ScienceTool {
             super(ScienceTool.this.toolKey, "Measure the " + ScienceTool.this.displayName,
                     "", ScienceTool.this.aliases);
 
+            Map<String, Command> known = getKnownCommands();
+            Map<String, Command> alreadyRegistered = new HashMap<>();
+            if (known != null) {
+                rememberExisting(known, alreadyRegistered, ScienceTool.this.toolKey);
+                for (String alias : ScienceTool.this.aliases) {
+                    rememberExisting(known, alreadyRegistered, alias);
+                }
+            }
+
             if (!getCommandMap().register("WHIMC-ScienceTools", this)) {
-                Utils.log("&c\t- Error registering /" + ScienceTool.this.toolKey);
+                Utils.log("&c\t- /" + ScienceTool.this.toolKey + " already registered; using fallback prefix");
+            }
+
+            // Bukkit will overwrite another tool's alias with this tool's primary name.
+            // Keep the first owner so /air and /oxygen can stay on ATMOSPHERE.
+            if (known != null) {
+                for (Map.Entry<String, Command> entry : alreadyRegistered.entrySet()) {
+                    if (known.get(entry.getKey()) == this) {
+                        known.put(entry.getKey(), entry.getValue());
+                        Utils.log("&c\t- /" + entry.getKey() + " already used; not overwritten");
+                    }
+                }
+            }
+        }
+
+        private void rememberExisting(Map<String, Command> known, Map<String, Command> alreadyRegistered, String name) {
+            String key = name.toLowerCase();
+            Command existing = known.get(key);
+            if (existing != null) {
+                alreadyRegistered.put(key, existing);
             }
         }
 
@@ -213,7 +251,13 @@ public class ScienceTool {
                 Utils.log("&c\t- Error unregistering /" + ScienceTool.this.toolKey);
             }
 
-            getKnownCommands().remove(super.getLabel());
+            Map<String, Command> known = getKnownCommands();
+            if (known == null) {
+                return;
+            }
+            if (known.get(super.getLabel()) == this) {
+                known.remove(super.getLabel());
+            }
         }
 
         @Override

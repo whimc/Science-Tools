@@ -112,6 +112,8 @@ conversions:
     expression: "{VAL} * 1.0"
     # The unit of the conversion
     unit: "unit"
+    # Decimal places to show for this unit (optional, defaults to 3)
+    precision: 3
 ```
 
 Example:
@@ -120,9 +122,15 @@ conversions:
   fahrenheit: # Celsius -> Fahrenheit
     expression: "({VAL} * 9.0 / 5.0) + 32.0"
     unit: "°F"
+    precision: 1
   feet: # Meters -> Feet
     expression: "{VAL} * 3.28084"
     unit: "ft"
+    precision: 1
+  gravityearth:
+    expression: "{VAL} * 0.09807"
+    unit: " m/s^2"
+    precision: 3
 ```
 
 #### Placeholders
@@ -341,7 +349,6 @@ validation:
 | `/sciencetools reload`                                      | Reload the plugin's config                                         |
 | `/sciencetools js`                                          | Run interpreted JavaScript                                         |
 | `/sciencetools measure <tool>`                              | Measure the given science tool                                     |
-| `/sciencetools history <player>`                            | View the science tool usage history of a player                    |
 
 &nbsp;
 

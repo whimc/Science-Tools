@@ -1,45 +1,56 @@
 # -- WHIMC Science Tools --
 mysql:
-  enabled: true
+  enabled: false
   host: localhost
   port: 3306
   database: minecraft
   username: user
-  password: pass
+  password: change-me
 conversions:
   fahrenheit:
     expression: "({VAL} * 9.0 / 5.0) + 32.0"
     unit: " °F"
+    precision: 1
   feet:
     expression: "{VAL} * 3.28084"
     unit: " feet"
+    precision: 1
   kelvin:
     expression: "{VAL} + 273.15"
     unit: " °K"
+    precision: 1
   miles:
     expression: "({VAL} * 6371) *.621371"
     unit: " miles"
+    precision: 1
   psi:
     expression: "{VAL} * 0.145038"
     unit: " psi"
+    precision: 2
   bar:
     expression: "{VAL} * 0.01"
     unit: " bar"
+    precision: 2
   hPa:
     expression: "{VAL} * 10.13"
     unit: " hPa"
+    precision: 1
   radiuskm:
     expression: "{VAL} * 6371"
     unit: " kilometers"
+    precision: 1
   gravityearth:
     expression: "{VAL} * 0.09807"
     unit: " m/s^2"
+    precision: 3
   mph:
     expression: "{VAL} * 2.23694"
     unit: " mph"
+    precision: 1
   mSv:
     expression: "{VAL} * 0.024"
     unit: " mSv per year"
+    precision: 2
 messages:
   disabled-in-world: We don't know how to measure that here
   measure-format: "{MEASUREMENT}"
@@ -113,7 +124,7 @@ tools:
       ColderHot:
         global-measurement: 3.8 + rand(5, 20)
         regions:
-          poi_cshunderground: (0.1 + rand(1.0,2.0)        
+          poi_cshunderground: (0.1 + rand(1.0,2.0)) 
       EarthControl:
         regions:
           tent: "0"
@@ -184,6 +195,7 @@ tools:
       - ozone
       - carbon
       - air
+      - oxygen
       - nitrogen
       - methane
       - composition
@@ -382,7 +394,7 @@ tools:
       Trappist:
         global-measurement: "93"
       blackhole:
-        global-measurement: ((7.55 * 10e21)/(({X} - 8)e2 + ({Y} - 128)e2 + ({Z} - 8)e2))*100
+        global-measurement: ((7.55 * 10e21)/(({X} - 8)*({X} - 8) + ({Y} - 128)*({Y} - 128) + ({Z} - 8)*({Z} - 8)))*100
       MynoaClose:
         global-measurement: "95"
       MynoaFar:
@@ -535,7 +547,7 @@ tools:
           on the blackholes spin, which is difficult to determine
   OXYGEN:
     aliases:
-      - air
+      - o2
     default-measurement: 21 + rand(-0.5, 0.5)
     disabled-worlds:
       - BrownDwarf
@@ -635,7 +647,7 @@ tools:
         global-measurement: "0"
         regions:
           airlockleak: "0"
-          3dprintingunderground: 1 + rand(-0.01, 0.03))*100
+          3dprintingunderground: (1 + rand(-0.01, 0.03))*100
           3dprintingcontrol: "(1*100)"
           lunarpbs: (1 + rand(-0.01, 0.03))*100
           frontairlock: (1 + rand(-0.01, 0.03))*100

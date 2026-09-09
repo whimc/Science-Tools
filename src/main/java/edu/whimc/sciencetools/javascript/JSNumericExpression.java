@@ -35,14 +35,4 @@ public class JSNumericExpression extends JSExpression {
         return JSEngine.evaluate(getPreparedExpression(ctx), false);
     }
 
-    /**
-     * Evaluates the JavaScript expression in the given JSContext.
-     *
-     * @param ctx The JavaScript context.
-     * @return The resulting Double value.
-     */
-    private Double evaluateWithArgumentCheck(JSContext ctx) {
-        return JSEngine.evaluate(getPreparedExpression(ctx), true);
-    }
-
 }

@@ -11,7 +11,7 @@ public enum JSFunction {
     ),
     RAND_INT(
             "randInt(min, max)",
-            "Random integer between 'min' and 'max' (inclusive",
+            "Random integer between 'min' and 'max' (inclusive)",
             "function randInt(min, max) { return Math.floor(rand(min, max + 1)) }"
     ),
     MIN(
